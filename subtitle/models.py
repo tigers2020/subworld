@@ -3,9 +3,9 @@ from django.db import models
 # Create your models here.
 
 class language(models.Model):
-    name = models.CharField()
-    ori_name = models.CharField()
-    iso = models.CharField()
+    name = models.CharField(max_length=255)
+    ori_name = models.CharField(max_length=255)
+    iso = models.CharField(max_length=255)
 Rip = {
     "TS",
     "DVDScr",
@@ -29,24 +29,15 @@ Rip = {
     "HD-TS"
 
 }
-RESOLUTION = (
-    (1, "320p"),
-    (2, "480p"),
-    (3, "720p"),
-    (4, "1080i"),
-    (5, "1080p"),
-    (6, "2k"),
-    (7, "4k")
 
-)
 class Subtitle(models.Model):
     db_id = models.IntegerField()
     title = models.CharField(max_length=255)
     sub_file = models.FileField()
     language = models.ForeignKey(language, on_delete=models.CASCADE)
-    resolution = models.CharField(choices=RESOLUTION)
-    rip = models.CharField(choices=Rip, default='')
-    release = models.CharField()
-    author = models.CharField()
-    comment = models.TextField()
+    resolution = models.CharField( max_length=255)
+    rip = models.CharField(default='', max_length=255)
+    release = models.CharField( max_length=255)
+    author = models.CharField(max_length=255)
+    comment = models.TextField(max_length=255)
 

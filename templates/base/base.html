@@ -4,7 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Sub World</title>
+<meta name="description" content="{% block meta_description %}{% endblock %}">
+<meta name="keywords" content="{% block keywords %}{% endblock %}">
+    {% block meta %}
+
+    {% endblock %}
+    <title>Sub World - {% block title %} {% endblock %}</title>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css">
+
     <link rel="stylesheet" href="{% static "main/css/bootstrap.min.css" %}"/>
     <link rel="stylesheet" href="{% static "main/css/mdb.min.css" %}"/>
     <link rel="stylesheet" href="{% static "main/css/style.css" %}"/>
@@ -26,5 +33,9 @@
 <script type="text/javascript" src="{% static "main/js/bootstrap.min.js" %}"></script>
 <!-- MDB core Javascript -->
 <script type="text/javascript" src="{% static "main/js/mdb.min.js" %}"></script>
+
+{% block script %}
+
+{% endblock %}
 </body>
 </html>
