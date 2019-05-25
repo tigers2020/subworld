@@ -1,41 +1,5 @@
 {% extends 'base/base.html' %}
 {% load sub_extras %}
-{% block nav %}
-    <nav class="navbar fixed-top navbar-toggleable-md navbar-expand-lg double-nav"
-         xmlns:https="http://www.w3.org/1999/xhtml">
-        <!-- SideNav slide-out button -->
-        <div class="float-left">
-            <a href="#" data-activates="slide-out" class="button-collapse"><i class="fa fa-bars"></i></a>
-        </div>
-        <!-- Breadcrumb-->
-        <div class="breadcrumb-dn mr-auto">
-            <p>Material Design for Bootstrap</p>
-        </div>
-        <ul class="nav navbar-nav nav-flex-icons ml-auto">
-            <li class="nav-item">
-                <a class="nav-link"><i class="fa fa-envelope"></i> <span class="clearfix d-none d-sm-inline-block">Contact</span></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link"><i class="fa fa-comments-o"></i> <span class="clearfix d-none d-sm-inline-block">Support</span></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link"><i class="fa fa-user"></i> <span
-                        class="clearfix d-none d-sm-inline-block">Account</span></a>
-            </li>
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
-                   aria-haspopup="true" aria-expanded="false">
-                    Dropdown
-                </a>
-                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
-                    <a class="dropdown-item" href="#">Action</a>
-                    <a class="dropdown-item" href="#">Another action</a>
-                    <a class="dropdown-item" href="#">Something else here</a>
-                </div>
-            </li>
-        </ul>
-    </nav>
-{% endblock %}
 {% block body %}
 
     <section class="mt-5 m-3 p-3" id="popular_header">
@@ -52,40 +16,36 @@
                 </div>
             </div>
             <div class="col-8 pl-0">
-                <div class="tab-content p-0 h-100" id="nav-tabContent">
+                <div class="tab-content p-0" id="nav-tabContent">
                     {% for now in nowplaying %}
-                        <div class="tab-pane h-100 fade {% if forloop.first %}active show{% endif %}"
+                        <div class="tab-pane fade {% if forloop.first %}active show{% endif %}"
                              id="list_{{ now.id }}" role="tabpanel"
                              aria-labelledby="list_{{ now.id }}_list">
-                            <div class="row pb-2 pt-3 wow fadeIn"
-                                 style="background-image: url('https://image.tmdb.org/t/p/original{{ now.backdrop_path }}'); background-repeat: no-repeat; background-size: cover; background-position: center top">
+                            <div class="jarallax">
+                                <img class="jarallax-img"
+                                     src="https://image.tmdb.org/t/p/original{{ now.backdrop_path }}"
+                                     alt="{{ now.title }}">
+                                <div class="container flex-center text-left">
+                                    <!-- First column -->
+                                    <div class="col-md-3">
+                                        <!-- Image -->
+                                        <div class="z-depth-1">
+                                            <img src="https://image.tmdb.org/t/p/w500{{ now.poster_path }}"
+                                                 class="img-fluid z-depth-1" alt="Post Image">
+                                            <div class="mask rgba-white-slight"></div>
 
-                                <!-- First column -->
-                                <div class="col-lg-3">
-
-                                    <!-- Image -->
-                                    <div class="view overlay mb-3 z-depth-1">
-
-                                        <img src="https://image.tmdb.org/t/p/w500{{ now.poster_path }}"
-                                             class="img-fluid z-depth-1" alt="Post Image">
-
-                                        <div class="mask rgba-white-slight"></div>
-
+                                        </div>
+                                        <!-- Image -->
                                     </div>
-                                    <!-- Image -->
-
-                                </div>
-                                <!-- First column -->
-
-                                <!-- Second column -->
-                                <div class="col-lg-9 add-margins-2">
-
-                                    <!-- Excerpt -->
-                                    <h3 class="h3-responsive text-uppercase mb-3 font-weight-bold"><a href="#"
-                                                                                                      class="text-white"
-                                                                                                      style="text-shadow: 2px 2px 8px #000000">{{ now.title }}</a>
-                                        <span class="badge badge-danger product mb-4 ml-xl-0 ml-4">{{ now.release_date }}</span>
-                                        </h2>
+                                    <!-- First column -->
+                                    <!-- Second column -->
+                                    <div class="col-md-9">
+                                        <!-- Excerpt -->
+                                        <h3 class="h3-responsive text-uppercase mb-3 font-weight-bold"><a href="#"
+                                                                                                          class="text-white"
+                                                                                                          style="text-shadow: 2px 2px 8px #000000">{{ now.title }}</a>
+                                            <span class="badge badge-danger product mb-4 ml-xl-0 ml-4">{{ now.release_date }}</span>
+                                        </h3>
                                         <div class="progress md-progress" style="height: 20px">
                                             <div class="progress-bar" role="progressbar"
                                                  style="width: {{ now.vote_average|multiply:10 }}%; height: 20px"
@@ -93,7 +53,8 @@
                                                  aria-valuemax="10">{{ now.vote_average }}</div>
                                         </div>
                                         <p>{% for genre_id in now.genre_ids %}
-                                            <a class="btn btn-light-blue" href="#">{{ genre_id|get_genre:genre }}</a>
+                                            <a class="btn btn-light-blue"
+                                               href="#">{{ genre_id|get_genre:genre }}</a>
                                         {% endfor %}
                                         </p>
                                         <p class="grey-text-3 text-justify rgba-black-strong text-white p-3"
@@ -101,8 +62,8 @@
                                         <button class="btn btn-primary">Read More</button>
 
                                         <!-- Excerpt -->
+                                    </div>
                                 </div>
-
                                 <!-- Second column -->
                             </div>
                         </div>
@@ -111,23 +72,73 @@
             </div>
         </div>
     </section>
-    <section class="p-5">
-        <div class="input-group md-form form-sm form-1 pl-0">
-            <div class="input-group-prepend">
-    <span class="input-group-text grey lighten-2" id="basic-text1">
-        <i class="fas fa-search text-white" aria-hidden="true"></i></span>
-            </div>
-            <input class="form-control my-0 py-1" type="text" placeholder="Search" aria-label="Search">
-        </div>
+    <section class="p-5" id="searchbar">
+        <!-- Search form -->
+        <form class="form-inline md-form form-sm active-cyan-2 mt-2" action="/s/">
+            <select class="mdb-select md-form form-control-sm mr-3 w-20" name="type">
+                <option value="" disabled selected>Choose your country</option>
+                <option value="1">USA</option>
+                <option value="2">Germany</option>
+                <option value="3">France</option>
+                <option value="3">Poland</option>
+                <option value="3">Japan</option>
+            </select>
+            <label class="mdb-main-label">Label example</label>
+            <input class="form-control form-control-sm mr-3 w-75" type="text" name="search" placeholder="Search"
+                   aria-label="Search">
+            <button type="submit"> <i class="fas fa-search" aria-hidden="true"></i></button>
+        </form>
     </section>
-    <section class="yellow" id="most_watch">
+    <section id="most_watch">
+        <div id="popular-movie-list" class="carousel slide carousel-multi-item v-2" data-ride="carousel">
 
-        <h1 class="h1-responsive">Most Movie Watch</h1>
+            <!--Controls-->
+            <div class="controls-top">
+                <a class="btn-floating" href="#popular-movie-list" data-slide="prev"><i
+                        class="fas fa-chevron-left"></i></a>
+                <a class="btn-floating" href="#popular-movie-list" data-slide="next"><i
+                        class="fas fa-chevron-right"></i></a>
+            </div>
+            <!--/.Controls-->
+
+            <!-- Indicators -->
+            <ol class="carousel-indicators">
+                {% for popular in populars %}
+                    <li data-target="#popular-movie-list" data-slide-to="{{ forloop.counter0 }}"
+                        class="{% if forloop.first %}active{% endif %}"></li>
+                {% endfor %}
+            </ol>
+            <!--/.Indicators-->
+
+            <div class="carousel-inner v-2" role="listbox">
+                {% for popular in populars %}
+                    <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                        <div class="col-12 col-md-3">
+                            <div class="card mb-2">
+                                <img class="card-img-top img-thumbnail img-fluid"
+                                     src="https://image.tmdb.org/t/p/w500{{ popular.poster_path }}"
+                                     alt="Card image cap">
+                                <div class="card-body">
+                                    <h4 class="card-title font-weight-bold h4-responsive">{{ popular.title }}</h4>
+                                    <p class="card-text">{{ popular.overview|truncatechars:100 }}</p>
+                                    <a class="btn btn-primary btn-md btn-rounded" href="#">Read More</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
     </section>
 {% endblock %}
 
 {% block script %}
     <script>
+        // Material Select Initialization
+        $(document).ready(function () {
+            $('.mdb-select').materialSelect();
+        });
+
         $(function () {
             $('.min-chart#chart-vote').easyPieChart({
                 barColor: "#4caf50",
@@ -137,5 +148,29 @@
             });
         });
 
+        // object-fit polyfill run
+        objectFitImages();
+
+        /* init Jarallax */
+        jarallax(document.querySelectorAll('.jarallax'));
+
+        jarallax(document.querySelectorAll('.jarallax-keep-img'), {
+            keepImg: true,
+        });
+        $('.carousel.carousel-multi-item.v-2 .carousel-item').each(function () {
+            var next = $(this).next();
+            if (!next.length) {
+                next = $(this).siblings(':first');
+            }
+            next.children(':first-child').clone().appendTo($(this));
+
+            for (let i = 0; i < 6; i++) {
+                next = next.next();
+                if (!next.length) {
+                    next = $(this).siblings(':first');
+                }
+                next.children(':first-child').clone().appendTo($(this));
+            }
+        });
     </script>
 {% endblock %}
