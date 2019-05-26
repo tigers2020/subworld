@@ -1,6 +1,7 @@
+import tmdbsimple
 from django.shortcuts import render
 from django.views.generic import TemplateView
-import tmdbsimple
+
 from . import settings
 
 
@@ -13,14 +14,30 @@ class IndexView(TemplateView):
         tmdbsimple.API_KEY = settings.TMDB_API_KEY
 
         movie = tmdbsimple.Movies()
-        movie.popular()
         genre = tmdbsimple.Genres()
+        page = 1
+        if self.request.GET:
+            page = self.request.GET['page']
+        else:
+            page = 1
+        populars = movie.popular(page=page)
+
+        page_lead_in = int(page) - 4
+        if page_lead_in <= 0:
+            page_lead_in = 1
+        page_lead_out = int(page) + 4
+        if page_lead_out > populars['total_pages']:
+            page_lead_out = populars['total_pages']
 
         nowplaying = tmdbsimple.Movies().now_playing()
-        context['populars'] = movie
+        context['populars'] = populars
+        context['pop_pages'] = range(1, populars['total_pages'])
+        context['page_lead_in'] = page_lead_in
+        context['page_lead_out'] = page_lead_out
         context['genre'] = genre.movie_list()
         context['nowplaying'] = nowplaying['results'][:8]
 
+        context['request'] = self.request
         return context
 
 
