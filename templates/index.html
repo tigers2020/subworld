@@ -60,7 +60,7 @@
                                         </p>
                                         <p class="grey-text-3 text-justify rgba-black-strong text-white p-3"
                                            style="height: 150px;">{{ now.overview|truncatechars:255 }}</p>
-                                        <button class="btn btn-primary">Read More</button>
+                                        <a href="{% url 'movie_detail' now.id %}" class="btn btn-primary">Read More</a>
 
                                         <!-- Excerpt -->
                                     </div>
@@ -155,21 +155,6 @@
 
         jarallax(document.querySelectorAll('.jarallax-keep-img'), {
             keepImg: true,
-        });
-        $('.carousel.carousel-multi-item.v-2 .carousel-item').each(function () {
-            var next = $(this).next();
-            if (!next.length) {
-                next = $(this).siblings(':first');
-            }
-            next.children(':first-child').clone().appendTo($(this));
-
-            for (let i = 0; i < 6; i++) {
-                next = next.next();
-                if (!next.length) {
-                    next = $(this).siblings(':first');
-                }
-                next.children(':first-child').clone().appendTo($(this));
-            }
         });
     </script>
 {% endblock %}

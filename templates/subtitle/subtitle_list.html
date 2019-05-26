@@ -1,1 +1,123 @@
-{{ detail.title }}
+{% extends 'base/base.html' %}
+
+{% block body %}
+    <header>
+
+        <div class="view jarallax" style="height: 30vh;">
+            <img class="jarallax-img" src="https://image.tmdb.org/t/p/original{{ movie.backdrop_path }}"
+                 style="background-position: top"
+                 alt="{{ movie.title }}">
+            <div class="mask rgba-blue-slight">
+                <div class="container flex-center text-center">
+                    <div class="row mt-5">
+                        <div class="col-md-12 wow fadeIn mb-3">
+                            <h1 class="display-3 mb-2 wow fadeInDown" data-wow-delay="0.3s">NATALIE <a
+                                    class="indigo-text font-weight-bold">SMITH</a></h1>
+                            <h5 class="text-uppercase mb-3 mt-1 font-weight-bold wow fadeIn" data-wow-delay="0.4s">Web
+                                developer & graphic designer</h5>
+                            <a class="btn btn-light-blue btn-lg wow fadeIn" data-wow-delay="0.4s">portfolio</a> <a
+                                class="btn btn-indigo btn-lg wow fadeIn" data-wow-delay="0.4s">About me</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container-fluid">
+        <div class="row" style="margin-top: -100px">
+            <div class="col-md-12 px-md-5">
+                <ul class="nav nav-tabs nav-justified md-tabs indigo" id="myTabJust" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="home-tab-just" data-toggle="tab" href="#information-just"
+                           role="tab"
+                           aria-controls="information-just"
+                           aria-selected="true">Information</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="vidoe-tab-just" data-toggle="tab" href="#video-just" role="tab"
+                           aria-controls="video-just"
+                           aria-selected="false">Videos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="subtitle-tab-just" data-toggle="tab" href="#subtitle-just" role="tab"
+                           aria-controls="subtitle-just"
+                           aria-selected="false">Subtitles</a>
+                    </li>
+                </ul>
+                <div class="tab-content card pt-5" id="myTabContentJust">
+                    <div class="tab-pane fade show active" id="information-just" role="tabpanel"
+                         aria-labelledby="information-tab-just">
+                        <p>{{ movie.title }}</p>
+                        <p>{{ movie.release_date }}</p>
+                        <p>{{ movie.overview }}</p>
+                        <h3 class="h3-responsive">Actors</h3>
+
+                        <h3 class="h3-responsive">Companies</h3>
+                        <div class="row">
+                            {% for production_company in movie.production_companies %}
+                                <div class="col-md-3">
+                                    <div class="card">
+                                        <div class="card-body text-center align-middle">
+                                            {% if production_company.logo_path %}
+                                                <img src="https://image.tmdb.org/t/p/w500{{ production_company.logo_path }}"
+                                                     alt="{{ production_company.name }}" class="img-thumbnail"/>
+                                            {% else %}
+                                                <p>{{ production_company.name }}</p>
+                                            {% endif %}
+
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+
+                    </div>
+                    <div class="tab-pane fade" id="video-just" role="tabpanel" aria-labelledby="video-tab-just">
+                        <p>Food truck fixie locavore, accusamus mcsweeney's marfa nulla single-origin coffee squid.
+                            Exercitation +1
+                            labore velit, blog sartorial PBR leggings next level wes anderson artisan four loko
+                            farm-to-table craft
+                            beer twee. Qui photo booth letterpress, commodo enim craft beer mlkshk aliquip jean shorts
+                            ullamco ad
+                            vinyl cillum PBR. Homo nostrud organic, assumenda labore aesthetic magna delectus mollit.
+                            Keytar
+                            helvetica VHS salvia yr, vero magna velit sapiente labore stumptown. Vegan fanny pack odio
+                            cillum wes
+                            anderson 8-bit, sustainable jean shorts beard ut DIY ethical culpa terry richardson
+                            biodiesel. Art party
+                            scenester stumptown, tumblr butcher vero sint qui sapiente accusamus tattooed echo park.</p>
+                    </div>
+                    <div class="tab-pane fade" id="subtitle-just" role="tabpanel" aria-labelledby="subtitle-tab-just">
+                        <p>Etsy mixtape wayfarers, ethical wes anderson tofu before they sold out mcsweeney's organic
+                            lomo retro
+                            fanny pack lo-fi farm-to-table readymade. Messenger bag gentrify pitchfork tattooed craft
+                            beer, iphone
+                            skateboard locavore carles etsy salvia banksy hoodie helvetica. DIY synth PBR banksy irony.
+                            Leggings
+                            gentrify squid 8-bit cred pitchfork. Williamsburg banh mi whatever gluten-free, carles
+                            pitchfork
+                            biodiesel fixie etsy retro mlkshk vice blog. Scenester cred you probably haven't heard of
+                            them, vinyl
+                            craft beer blog stumptown. Pitchfork sustainable tofu synth chambray yr.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script>
+        // object-fit polyfill run
+        objectFitImages();
+
+        /* init Jarallax */
+        jarallax(document.querySelectorAll('.jarallax'));
+
+        jarallax(document.querySelectorAll('.jarallax-keep-img'), {
+            keepImg: true,
+        });
+    </script>
+{% endblock %}

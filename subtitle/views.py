@@ -1,5 +1,5 @@
 # Create your views here.
-import tmdbv3api
+import tmdbsimple
 from django.conf import settings
 from django.views import generic
 
@@ -11,13 +11,14 @@ class MovieDetail(generic.ListView):
 
     def get_context_data(self, *args, **kwargs):
         context = super(MovieDetail, self).get_context_data(*args, **kwargs)
+        tmdbsimple.API_KEY = settings.TMDB_API_KEY
 
-        tmdb = tmdbv3api.TMDb()
-        tmdb.api_key = settings.TMDB_API_KEY
+
         print(context)
-        detail = tmdbv3api.Movie().details(movie_id=280960)
+        movie = tmdbsimple.Movies(id=self.kwargs['id']).info()
 
-        context['detail'] = detail
+
+        context['movie'] = movie
 
         return context
 
