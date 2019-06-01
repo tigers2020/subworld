@@ -12,14 +12,13 @@ class MovieDetail(generic.ListView):
     def get_context_data(self, *args, **kwargs):
         context = super(MovieDetail, self).get_context_data(*args, **kwargs)
         tmdbsimple.API_KEY = settings.TMDB_API_KEY
+        movie = tmdbsimple.Movies(id=self.kwargs['id'])
 
-
-        print(context)
-        movie = tmdbsimple.Movies(id=self.kwargs['id']).info()
-
-
-        context['movie'] = movie
-
+        context['movie'] = movie.info()
+        context['persons'] = movie.credits()
+        context['videos'] = movie.videos()
+        context['similar'] = movie.similar_movies()
+        context['keywords'] = movie.keywords()
         return context
 
     def get_queryset(self, **kwargs):
@@ -38,4 +37,3 @@ class TvDetail(generic.ListView):
 
 class Search(generic.TemplateView):
     template_name = 'search.html'
-

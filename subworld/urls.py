@@ -18,12 +18,14 @@ from django.contrib import admin
 from django.urls import path, include
 
 from . import views
+from search import views as search_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.IndexView.as_view(), name='index'),
     path('d/', include('subtitle.urls')),
     path('s/', views.search, name='search' ),
+    path("checkdbinit/", search_view.DbInit.as_view(), name="db_init")
 
 ]
 

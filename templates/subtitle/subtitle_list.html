@@ -11,12 +11,9 @@
                 <div class="container flex-center text-center">
                     <div class="row mt-5">
                         <div class="col-md-12 wow fadeIn mb-3">
-                            <h1 class="display-3 mb-2 wow fadeInDown" data-wow-delay="0.3s">NATALIE <a
-                                    class="indigo-text font-weight-bold">SMITH</a></h1>
-                            <h5 class="text-uppercase mb-3 mt-1 font-weight-bold wow fadeIn" data-wow-delay="0.4s">Web
-                                developer & graphic designer</h5>
-                            <a class="btn btn-light-blue btn-lg wow fadeIn" data-wow-delay="0.4s">portfolio</a> <a
-                                class="btn btn-indigo btn-lg wow fadeIn" data-wow-delay="0.4s">About me</a>
+                            <h2 class="display-3 mb-2 wow fadeInDown text-white"style="text-shadow: 2px 2px #000;" data-wow-delay="0.3s">{{ movie.title }}</h2>
+                            <h5 class="text-uppercase mb-3 mt-1 font-weight-bold wow fadeIn text-white" style="text-shadow: 2px 2px #000;" data-wow-delay="0.4s">W{{ movie.original_title }}r</h5>
+
                         </div>
                     </div>
                 </div>
@@ -35,11 +32,6 @@
                            aria-selected="true">Information</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" id="vidoe-tab-just" data-toggle="tab" href="#video-just" role="tab"
-                           aria-controls="video-just"
-                           aria-selected="false">Videos</a>
-                    </li>
-                    <li class="nav-item">
                         <a class="nav-link" id="subtitle-tab-just" data-toggle="tab" href="#subtitle-just" role="tab"
                            aria-controls="subtitle-just"
                            aria-selected="false">Subtitles</a>
@@ -51,7 +43,55 @@
                         <p>{{ movie.title }}</p>
                         <p>{{ movie.release_date }}</p>
                         <p>{{ movie.overview }}</p>
+                    <h3 class="h3-responsive">Videos</h3>
+                    <div class="text-center">
+                            {% for video in videos.results %}
+                                    <button type="button" class="btn btn-info" data-toggle="modal"
+                                            data-target="#video_{{ forloop.counter0 }}">{{ video.type }}</button>
+                            {% endfor %}
+                        </div>
+                        {% for video in videos.results %}
+                                <div class="modal fade" id="video_{{ forloop.counter0 }}" tabindex="-1" role="dialog"
+                                     aria-labelledby="{{ video.name }}" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                                        <!--Content-->
+                                        <div class="modal-content">
+                                            <!--Body-->
+                                            <div class="modal-body mb-0 p-0">
+                                                <div class="embed-responsive embed-responsive-16by9 z-depth-1-half">
+                                                    <iframe class="embed-responsive-item"
+                                                            src="https://www.youtube.com/embed/{{ video.key }}"
+                                                            allowfullscreen></iframe>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!--/.Content-->
+                                    </div>
+                                </div>
+                        {% endfor %}
                         <h3 class="h3-responsive">Actors</h3>
+                        <div class="row">
+                            {% for person in persons.cast %}
+                                <div class="col-lg-2 col-md-3 col-sm-4 p-3">
+                                <div class="card">
+                                    <div class="card-img-top">
+                                        {% if person.profile_path %}
+                                            <img class="img-fluid zoom hoverable"
+                                                 src="https://image.tmdb.org/t/p/w500{{ person.profile_path }}"
+                                                 alt="{{ person.name }}"/>
+                                        {% else %}
+                                            <p class="text-center">{{ person.name }}</p>
+                                        {% endif %}
+                                    </div>
+                                    <div class="card-body">
+                                        <h6 class=" pink-text h6-responsive">{{ person.character }}</h6>
+                                        <h6 class="title h6-responsive">{{ person.name }}</h6>
+                                    </div>
+                                </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+
 
                         <h3 class="h3-responsive">Companies</h3>
                         <div class="row">
@@ -72,21 +112,6 @@
                             {% endfor %}
                         </div>
 
-                    </div>
-                    <div class="tab-pane fade" id="video-just" role="tabpanel" aria-labelledby="video-tab-just">
-                        <p>Food truck fixie locavore, accusamus mcsweeney's marfa nulla single-origin coffee squid.
-                            Exercitation +1
-                            labore velit, blog sartorial PBR leggings next level wes anderson artisan four loko
-                            farm-to-table craft
-                            beer twee. Qui photo booth letterpress, commodo enim craft beer mlkshk aliquip jean shorts
-                            ullamco ad
-                            vinyl cillum PBR. Homo nostrud organic, assumenda labore aesthetic magna delectus mollit.
-                            Keytar
-                            helvetica VHS salvia yr, vero magna velit sapiente labore stumptown. Vegan fanny pack odio
-                            cillum wes
-                            anderson 8-bit, sustainable jean shorts beard ut DIY ethical culpa terry richardson
-                            biodiesel. Art party
-                            scenester stumptown, tumblr butcher vero sint qui sapiente accusamus tattooed echo park.</p>
                     </div>
                     <div class="tab-pane fade" id="subtitle-just" role="tabpanel" aria-labelledby="subtitle-tab-just">
                         <p>Etsy mixtape wayfarers, ethical wes anderson tofu before they sold out mcsweeney's organic

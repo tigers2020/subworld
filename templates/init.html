@@ -1,0 +1,35 @@
+{% extends 'base/base.html' %}
+
+{% block body %}
+<div class="container mt-5">
+    <h3>{{ check_data }}</h3>
+
+</div>
+    {% for movie in movies %}
+       <p>{{ movie.original_title }}</p>
+    {% endfor %}
+    {% for person in persons %}
+    <p>{{ person.name }}</p>
+    {% endfor %}
+    {% for collection in collections %}
+        <p>{{ collection.name }}</p>
+    {% endfor %}
+    {% for keyword in keywords %}
+        <p>{{keyword.name}}</p>
+    {% endfor %}
+
+    {% for network in tv_network %}
+        <p>{{ network.name }}</p>
+    {% endfor %}
+    {% for tv in tv_series %}
+    <p>{{ tv.original_name }}</p>
+    {% endfor %}
+    {% for company in production_companies %}
+        <p>{{ company.name }}</p>
+    {% endfor %}
+
+
+
+
+
+{% endblock %}
