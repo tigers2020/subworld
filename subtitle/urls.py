@@ -20,5 +20,4 @@ from subtitle import views
 urlpatterns = [
     path("movie/<int:id>", views.MovieDetail.as_view(), name="movie_detail"),
     path("tv/<int:id>", views.TvDetail.as_view(), name="tv_detail"),
-    path("", views.Search.as_view(), name='search')
 ]

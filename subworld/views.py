@@ -22,15 +22,19 @@ class IndexView(TemplateView):
             page = 1
         populars = movie.popular(page=page)
 
-        page_lead_in = int(page) - 4
+        page_lead_in = int(page) - 5
         if page_lead_in <= 0:
             page_lead_in = 1
-        page_lead_out = int(page) + 4
+        page_lead_out = int(page) + 5
         if page_lead_out > populars['total_pages']:
             page_lead_out = populars['total_pages']
 
         nowplaying = tmdbsimple.Movies().now_playing()
+        keywords = []
+        for now in nowplaying['results']:
+            keywords.append(tmdbsimple.Movies(now['id']).keywords())
         context['populars'] = populars
+        context['keywords'] = keywords
         context['pop_pages'] = range(1, populars['total_pages'])
         context['page_lead_in'] = page_lead_in
         context['page_lead_out'] = page_lead_out

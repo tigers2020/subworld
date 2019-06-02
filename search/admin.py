@@ -8,12 +8,12 @@ from search import models
 
 
 class MovieDBAdmin(ImportExportModelAdmin):
-    list_display = ("original_title","id", "adult",  "popularity", "video")
-
+    list_display = ("original_title", "id", "adult", "popularity", "video")
 
 
 class GenreDBAdmin(ImportExportModelAdmin):
-    list_display = ("name", )
+    list_display = ("name",)
+
 
 class CollectionDBAdmin(ImportExportModelAdmin):
     list_display = ("name",)
@@ -24,7 +24,7 @@ class KeywordDBAdmin(ImportExportModelAdmin):
 
 
 class PersonDBAdmin(ImportExportModelAdmin):
-    list_display = ( "name","adult", "popularity")
+    list_display = ("name", "adult", "popularity")
 
 
 class ProductionCompanyDBAdmin(ImportExportModelAdmin):

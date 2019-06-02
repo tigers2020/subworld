@@ -11,6 +11,9 @@ class LanguageAdmin(ImportExportModelAdmin):
     list_display = ("language_family", "iso_language_name", "native_name", "iso_639_1", "notes")
 
 
+class ResolutionAdmin(ImportExportModelAdmin):
+    list_display = ("name", "screen_w", "screen_h", "aspect_ratio", "total_pixel_count")
+
 class RipAdmin(admin.ModelAdmin):
     list_display = ("name",)
 
@@ -22,3 +25,4 @@ class SubtitleAdmin(admin.ModelAdmin):
 admin.site.register(models.Language, LanguageAdmin)
 admin.site.register(models.Rip, RipAdmin)
 admin.site.register(models.Subtitle, SubtitleAdmin)
+admin.site.register(models.Resolution, ResolutionAdmin)

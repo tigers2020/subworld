@@ -21,6 +21,46 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'c@m3p-9e5gx*$l2d92!ox9swchlt3ask!6bvz)@f)3wdmhbuu5'
 
+TMDB_IMAGE_BASE = {
+    "base_url": "http://image.tmdb.org/t/p",
+    "secure_base_url": "https://image.tmdb.org/t/p/"
+}
+TMDB_BACKDROP_SIZE = {
+    "w300": "w300",
+    "w780": "w780",
+    "w1280": 'w1280',
+    "original": "original",
+}
+TMDB_LOGO_SIZE = {
+    "w45": "w45",
+    "w92": "w92",
+    "w154": "w154",
+    "w185": "w185",
+    "w300": "w300",
+    "w500": "w500",
+    "original": "woriginal",
+}
+TMDB_POSTER_SIZE = {
+    "w92": "w92",
+    "w154": "w154",
+    "w185": "w185",
+    "w342": "w342",
+    "w500": "w500",
+    "w780": "W780",
+    "original": "woriginal",
+}
+TMDB_PROFILE_SIZE = {
+    "w45": 'w45',
+    "w185": 'w185',
+    "h632": "h632",
+    "original": "original",
+}
+TMDB_STIL_SIZE = {
+    "w92": 'w92',
+    "w185": "w185",
+    "w300": 'w300',
+    "original": "original",
+}
 TMDB_API_KEY = "c479f9ce20ccbcc06dbcce991a238120"
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -52,7 +92,6 @@ MIDDLEWARE = [
 ]
 
 IMPORT_EXPORT_USE_TRANSACTIONS = True
-
 
 ROOT_URLCONF = 'subworld.urls'
 
@@ -129,4 +168,3 @@ STATICFILES_DIRS = [
 ]
 MEDIA_ROOT = os.path.join(LOCAL_STATIC_CDN_PATH, 'media')
 MEDIA_URL = '/media/'
-

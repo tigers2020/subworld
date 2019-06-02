@@ -1,5 +1,9 @@
 {% extends 'base/base.html' %}
 
+{% block keywords %}
+{% for keyword in keywords.keywords %}{{ keyword.name }}, {% endfor %}
+{% endblock %}
+
 {% block body %}
     <header>
 
@@ -74,9 +78,9 @@
                             {% for person in persons.cast %}
                                 <div class="col-lg-2 col-md-3 col-sm-4 p-3">
                                 <div class="card">
-                                    <div class="card-img-top">
+                                    <div class="card-img-top overlay zoom">
                                         {% if person.profile_path %}
-                                            <img class="img-fluid zoom hoverable"
+                                            <img class="img-fluid"
                                                  src="https://image.tmdb.org/t/p/w500{{ person.profile_path }}"
                                                  alt="{{ person.name }}"/>
                                         {% else %}
@@ -114,6 +118,13 @@
 
                     </div>
                     <div class="tab-pane fade" id="subtitle-just" role="tabpanel" aria-labelledby="subtitle-tab-just">
+
+                        <p>
+                            {% if not subtitle_list %}
+                                <h5>There is no Subtitle for {{ movie.title }}</h5>
+                            {% endif %}
+                            {{ subtitle_list }}
+                        </p>
                         <p>Etsy mixtape wayfarers, ethical wes anderson tofu before they sold out mcsweeney's organic
                             lomo retro
                             fanny pack lo-fi farm-to-table readymade. Messenger bag gentrify pitchfork tattooed craft

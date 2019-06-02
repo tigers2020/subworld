@@ -1,5 +1,8 @@
 {% extends 'base/base.html' %}
 {% load sub_extras %}
+{% block keywords %}
+{% for keyword in keywords %}{% for key in keyword.keywords %}{{ key.name }}, {% endfor %}{% endfor %}
+{% endblock %}
 {% block body %}
 
 
@@ -75,16 +78,11 @@
     </section>
     <section class="p-5" id="searchbar">
         <!-- Search form -->
-        <form class="form-inline md-form form-sm active-cyan-2 mt-2" action="/s/">
-            <select class="mdb-select md-form form-control-sm mr-3 w-20" name="type">
-                <option value="movie" selected>Movie</option>
-                <option value="person">Person</option>
-                <option value="tv_show">TV Shows</option>
-            </select>
+        <form class="form-inline md-form form-sm active-cyan-2 mt-2" action="{% url 'search' %}">
             <label class="mdb-main-label">Label example</label>
-            <input class="form-control form-control-sm mr-3 w-75" type="text" name="search" placeholder="Search"
+            <input class="form-control form-control-sm mr-3 w-75" type="text" id="video_search" name="search" placeholder="Search"
                    aria-label="Search">
-            <button type="submit"><i class="fas fa-search" aria-hidden="true"></i></button>
+            <button type="submit" class="btn btn-action"><i class="fas fa-search" aria-hidden="true"></i></button>
         </form>
     </section>
     <section>
@@ -96,7 +94,7 @@
                         <div class="view overlay zoom">
                             <img class="card-img-top" src="https://image.tmdb.org/t/p/w500/{{ popular.poster_path }}"
                                  alt="{{ popular.title }}">
-                            <a href="#!">
+                            <a href="{% url 'movie_detail' popular.id %}">
                                 <div class="mask rgba-white-slight"></div>
                             </a>
                         </div>
@@ -157,4 +155,12 @@
             keepImg: true,
         });
     </script>
+    <script>
+    $(function() {
+        $("#video_search").autocomplete({
+          source: "{% url 'autocomplete' %}",
+          minLength: 2,
+        });
+      });
+</script>
 {% endblock %}
