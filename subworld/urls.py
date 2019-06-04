@@ -25,6 +25,9 @@ urlpatterns = [
     path('', views.IndexView.as_view(), name='index'),
     path('d/', include('subtitle.urls')),
     path('s/', include('search.urls')),
+    path("checkdb", views.DbInit.as_view(), name='db_init'),
+    path("users/", include("users.urls")),
+    path("accounts/", include("allauth.urls")),
 ]
 
 if settings.DEBUG:

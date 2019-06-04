@@ -49,3 +49,4 @@ def autocomplete(request):
     data = json.dumps(result)
     mimetype = 'application/json'
     return HttpResponse(data, mimetype)
+

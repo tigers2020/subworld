@@ -21,10 +21,6 @@ class MovieDetail(generic.ListView):
         context['keywords'] = movie.keywords()
         return context
 
-    def get_queryset(self, **kwargs):
-        query = super(MovieDetail, self).get_queryset()
-        return query
-
 
 class TvDetail(generic.ListView):
     model = Subtitle

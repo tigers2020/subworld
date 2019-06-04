@@ -1,4 +1,5 @@
 from django import template
+
 from search import models
 
 register = template.Library()
@@ -15,8 +16,9 @@ def divide(value, arg):
 
 
 @register.filter(name="get_genre")
-def get_genre(value, args):
+def get_genre(value):
     return models.GenreDB.objects.get(id=value)
+
 
 @register.filter(name="range")
 def range(value):

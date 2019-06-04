@@ -8,13 +8,15 @@ from subtitle import models
 
 
 class LanguageAdmin(ImportExportModelAdmin):
-    list_display = ("language_family", "iso_language_name", "native_name", "iso_639_1", "notes")
+    list_display = ("iso_language_name", "language_family", "native_name", "iso_639_1", "notes")
+    ordering = ("iso_language_name",)
 
 
 class ResolutionAdmin(ImportExportModelAdmin):
     list_display = ("name", "screen_w", "screen_h", "aspect_ratio", "total_pixel_count")
 
-class RipAdmin(admin.ModelAdmin):
+
+class RipAdmin(ImportExportModelAdmin):
     list_display = ("name",)
 
 
