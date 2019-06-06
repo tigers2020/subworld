@@ -54,12 +54,14 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
       this.uuid = this.options.nativeID !== null && this.options.nativeID !== '' && this.options.nativeID !== undefined && typeof this.options.nativeID === 'string' ? this.options.nativeID : this._randomUUID();
       this.$selectWrapper = $('<div class="select-wrapper"></div>');
       this.$materialOptionsList = $("<ul id=\"select-options-".concat(this.uuid, "\" class=\"dropdown-content select-dropdown w-100 ").concat(this.isMultiple ? 'multiple-select-dropdown' : '', "\"></ul>"));
-      this.$materialSelectInitialOption = $nativeSelect.find('option:selected').text() || $nativeSelect.find('option:first').text() || '';
+      this.$materialSelectedOption = this.$nativeSelect.find('option:selected');
+      this.$materialSelectInitialOption = this.$nativeSelect.find('option:first').text() || '';
       this.$nativeSelectChildren = this.$nativeSelect.children('option, optgroup');
-      this.$materialSelect = $("<input type=\"text\" class=\"".concat(this.options.BSinputText ? 'browser-default custom-select multi-bs-select select-dropdown' : 'select-dropdown', "\" readonly=\"true\" ").concat(this.$nativeSelect.is(':disabled') ? 'disabled' : '', " data-activates=\"select-options-").concat(this.uuid, "\" value=\"\"/>"));
+      this.$materialSelect = $("<input type=\"text\" class=\"".concat(this.options.BSinputText ? 'browser-default custom-select multi-bs-select select-dropdown' : 'select-dropdown', "\" readonly=\"true\" ").concat(this.$nativeSelect.is(' :disabled') ? 'disabled' : '', " data-activates=\"select-options-").concat(this.uuid, "\" value=\"\"/>"));
       this.$dropdownIcon = this.options.BSinputText ? '' : $('<span class="caret">&#9660;</span>');
       this.$searchInput = null;
-      this.$toggleAll = $("<li class=\"select-toggle-all\"><span><input type=\"checkbox\" class=\"form-check-input\"><label>Select all</label></span></li>");
+      this.$toggleAll = $('<li class="select-toggle-all"><span><input type="checkbox" class="form-check-input"><label>Select all</label></span></li>');
+      this.label = this.$nativeSelect.next('label').not('.mdb-main-label');
       this.mainLabel = this.$nativeSelect.next('.mdb-main-label');
       this.valuesSelected = [];
       this.keyCodes = {
@@ -104,7 +106,18 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
         this.$nativeSelect.data('select-id', this.uuid);
         var sanitizedLabelHtml = this.$materialSelectInitialOption.replace(/"/g, '&quot;').replace(/  +/g, ' ').trim();
-        this.mainLabel.length === 0 ? this.$materialSelect.val(sanitizedLabelHtml) : this.mainLabel.text();
+
+        if (this.mainLabel.length === 0) {
+          this.$materialSelect.val(sanitizedLabelHtml);
+        } else {
+          this.mainLabel.text();
+        }
+
+        if (this.$materialSelectedOption.length > 0 && this.$nativeSelect.hasClass('md-selected')) {
+          this.mainLabel.addClass('active');
+          this.$materialSelect.val(this.$materialSelectedOption.text());
+        }
+
         this.renderMaterialSelect();
         this.bindEvents();
 
@@ -136,14 +149,14 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
         if (this.$materialSelect.hasClass('custom-select') && this.$materialSelect.hasClass('select-dropdown')) {
           this.$materialSelect.css({
-            'display': 'inline-block',
-            'width': '100%',
-            'height': 'calc(1.5em + .75rem + 2px)',
-            'padding': '.375rem 1.75rem .375rem .75rem',
-            'font-size': '1rem',
-            'line-height': '1.5',
-            'background-color': '#fff',
-            'border': '1px solid #ced4da'
+            display: 'inline-block',
+            width: '100%',
+            height: 'calc(1.5em + .75rem + 2px)',
+            padding: '.375rem 1.75rem .375rem .75rem',
+            fontSize: '1rem',
+            lineHeight: '1.5',
+            backgroundColor: '#fff',
+            border: '1px solid #ced4da'
           });
         }
       }
@@ -244,7 +257,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
         }
 
         this.$materialOptionsList.append(this.$searchInput);
-        this.$searchInput.on("click", function (e) {
+        this.$searchInput.on('click', function (e) {
           e.stopPropagation();
         });
       }
@@ -363,7 +376,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
           if ($select.data('stop-refresh') !== true && (mutation.type === 'childList' || mutation.type === 'attributes' && $(mutation.target).is('option'))) {
             MaterialSelect.clearMutationObservers();
             $select.materialSelect({
-              'destroy': true
+              destroy: true
             });
             $select.materialSelect();
           }
@@ -371,7 +384,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
       }
     }, {
       key: "_onSaveSelectBtnClick",
-      value: function _onSaveSelectBtnClick(e) {
+      value: function _onSaveSelectBtnClick() {
         $('input.multi-bs-select').trigger('close');
         this.$materialOptionsList.hide();
         this.$materialSelect.removeClass('active');
@@ -454,8 +467,10 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
         var $this = $(e.target);
 
         if ($('ul.select-dropdown').not(this.$materialOptionsList.get(0)).is(':visible')) {
-          $("input.select-dropdown").trigger('close');
+          $('input.select-dropdown').trigger('close');
         }
+
+        this.mainLabel.addClass('active');
 
         if (!this.$materialOptionsList.is(':visible')) {
           $this.trigger('open', ['focus']);
@@ -468,13 +483,19 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
         }
 
         if (!this.isMultiple) {
-          this.mainLabel.addClass('active active-check');
+          this.mainLabel.addClass('active ');
         }
+
+        $(document).find('input.select-dropdown').each(function (i, el) {
+          return $(el).val().length <= 0;
+        }).parent().next('.mdb-main-label').filter(function (i, el) {
+          return $(el).prev().find('input.select-dropdown').val().length <= 0 && !$(el).prev().find('input.select-dropdown').hasClass('active');
+        }).removeClass('active');
       }
     }, {
       key: "_onMaterialSelectClick",
       value: function _onMaterialSelectClick(e) {
-        this.mainLabel.addClass('active-check');
+        this.mainLabel.addClass('active ');
         e.stopPropagation();
       }
     }, {
@@ -487,13 +508,6 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
         }
 
         this.$materialOptionsList.find('li.selected').removeClass('selected');
-        this.mainLabel.removeClass('active-check');
-
-        if (this.mainLabel.prev().find('input').hasClass('select-dropdown')) {
-          if (this.mainLabel.prev().find('input.select-dropdown').val() === '') {
-            this.mainLabel.removeClass('active');
-          }
-        }
       }
     }, {
       key: "_onSingleMaterialOptionClick",
@@ -510,15 +524,16 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
             e.preventDefault();
           }
         }
-
-        this.mainLabel.removeClass('active-check');
       }
     }, {
       key: "_onHTMLClick",
       value: function _onHTMLClick(e) {
         if (!$(e.target).closest("#select-options-".concat(this.uuid)).length && !$(e.target).hasClass('mdb-select') && $("#select-options-".concat(this.uuid)).hasClass('active')) {
           this.$materialSelect.trigger('close');
-          this.mainLabel.removeClass('active-check');
+
+          if (!this.$materialSelect.val().length > 0) {
+            this.mainLabel.removeClass('active');
+          }
         }
 
         if (this.isSearchable && this.$searchInput !== null && this.$materialOptionsList.hasClass('active')) {
@@ -791,9 +806,9 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
         });
         itemsCount >= 5 ? value = "".concat(itemsCount, " ").concat(optionsSelected) : value = value.substring(2);
         value.length === 0 && this.mainLabel.length === 0 ? value = this.$nativeSelect.find('option:disabled').eq(0).text() : null;
-        value.length > 0 && !this.options.BSinputText ? this.mainLabel.addClass('active active-check') : this.mainLabel.removeClass('active');
+        value.length > 0 && !this.options.BSinputText ? this.mainLabel.addClass('active ') : this.mainLabel.removeClass('active');
         this.options.BSinputText ? this.mainLabel.css('top', '-7px') : null;
-        this.$nativeSelect.siblings("".concat(this.options.BSinputText ? "input.multi-bs-select" : "input.select-dropdown")).val(value);
+        this.$nativeSelect.siblings("".concat(this.options.BSinputText ? 'input.multi-bs-select' : 'input.select-dropdown')).val(value);
       }
     }, {
       key: "_randomUUID",
@@ -836,7 +851,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
       if (this.data('stop-refresh') !== true && this.hasClass('mdb-select') && this.hasClass('initialized')) {
         MaterialSelect.clearMutationObservers();
         this.materialSelect({
-          'destroy': true
+          destroy: true
         });
         var ret = originalVal.call(this, value);
         this.materialSelect();
@@ -848,7 +863,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
   })($.fn.val);
 })(jQuery);
 
-jQuery('select').siblings('input.select-dropdown', 'input.multi-bs-select').on('mousedown', function (e) {
+$('select').siblings('input.select-dropdown', 'input.multi-bs-select').on('mousedown', function (e) {
   if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
     if (e.clientX >= e.target.clientWidth || e.clientY >= e.target.clientHeight) {
       e.preventDefault();

@@ -7,10 +7,10 @@
   var rangeMousedown = false;
   var left;
 
-  var addThumb = function addThumb() {
+  function addThumb() {
     var $thumb = $(thumbHtml);
     $(rangeType).after($thumb);
-  };
+  }
 
   $(document).on('change', rangeType, function () {
     var $thumb = $(this);

@@ -32,7 +32,9 @@
                 {{ form.media }}
 
                 {% for field in form %}
-                    {{ field.widget_type }}
+                    {#                      <div class="field {{ field|field_type }} {{ field|widget_type }} {{ field.html_name }}">#}
+                    {#                        {{ field }}#}
+                    {#                    </div>#}
                     {% if field.html_name == "title" %}
                         {% render_field form.title value=movie.title class="form-control p-3" %}
                     {% elif field.html_name == "user" %}
@@ -40,17 +42,15 @@
                     {% else %}
                         {% if field|widget_type == "select" %}
                             {{ field|add_class:"mdb-select md-form p-3"|attr:"searchable:search here" }}
-                        {% elif field|widget_type == "file" %}
+                        {% elif field|field_type == "filefield" %}
                             <div class="file-upload-wrapper">
-                                {{ field|add_class:"file-upload  p-3"|attr:"searchable:search here" }}
+                                {{ field|add_class:"file-upload  p-3" |attr:'data-max-file-size="2M"'}}
                             </div>
                         {% else %}
                             {{ field|add_class:"form-control p-3" }}
                         {% endif %}
                     {% endif %}
-                    {#<div class="field {{ field|field_type }} {{ field|widget_type }} {{ field.html_name }}">#}
-                    {#    {{ field }}#}
-                    {#</div>#}
+
                 {% endfor %}
 
                 <button class="btn btn-success" type="submit">Upload</button>
@@ -68,7 +68,7 @@
         $(document).ready(function () {
             $('.mdb-select').materialSelect();
         });
-
+        $('.file-upload').file_upload();
 
     </script>
     <script>

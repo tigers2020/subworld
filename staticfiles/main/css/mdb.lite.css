@@ -1,7 +1,7 @@
 @charset "UTF-8";
 /*!
  * Material Design for Bootstrap 4
- * Version: MDB Lite 4.8.1
+ * Version: MDB Lite 4.8.2
  *
  *
  * Copyright: Material Design for Bootstrap
@@ -5383,6 +5383,7 @@ body.scrollable {
   .md-form label {
     position: absolute;
     top: 0;
+    left: 0;
     font-size: 1rem;
     -webkit-transition: color .2s ease-out, -webkit-transform .2s ease-out;
     transition: color .2s ease-out, -webkit-transform .2s ease-out;
@@ -8471,6 +8472,30 @@ table.table a.btn.btn-discord {
       -webkit-box-shadow: none !important;
       box-shadow: none !important; }
 
+.chips-autocomplete .chips {
+  padding-bottom: unset; }
+
+.chips-autocomplete .chip-span {
+  position: relative;
+  left: -15px; }
+
+.chips-autocomplete .chip-ul {
+  position: absolute;
+  z-index: 100;
+  right: 0;
+  width: 140px;
+  background: #fff;
+  list-style-type: none;
+  overflow-y: auto;
+  max-height: 210px;
+  padding-left: 0; }
+  .chips-autocomplete .chip-ul li {
+    padding: 12px 15px;
+    cursor: pointer;
+    font-size: .875rem; }
+    .chips-autocomplete .chip-ul li:hover {
+      background: #eee; }
+
 .table fieldset.form-check {
   margin-bottom: 0; }
 
@@ -8904,7 +8929,8 @@ label.btn input[type="checkbox"]:disabled:checked + label:after {
     padding: 0;
     display: block;
     -o-text-overflow: ellipsis;
-    text-overflow: ellipsis; }
+    text-overflow: ellipsis;
+    z-index: 2; }
     .select-wrapper input.select-dropdown:disabled {
       color: rgba(0, 0, 0, 0.3);
       border-bottom-color: rgba(0, 0, 0, 0.2);
@@ -8947,13 +8973,18 @@ label.btn input[type="checkbox"]:disabled:checked + label:after {
     -o-transition: 0.2s ease-out;
     transition: 0.2s ease-out;
     color: #757575;
-    z-index: -1; }
+    font-weight: 300; }
     .select-wrapper + label.active {
-      -webkit-transform: translateY(-140%);
-      -ms-transform: translateY(-140%);
-      transform: translateY(-140%); }
+      -webkit-transform: translateY(-14px);
+      -ms-transform: translateY(-14px);
+      transform: translateY(-14px);
+      font-size: .8rem;
+      top: 1.5rem;
+      left: 15px; }
     .select-wrapper + label.active-check {
       color: #4285f4; }
+  .select-wrapper + label.mdb-main-label {
+    z-index: 1; }
   .select-wrapper + label.disabled {
     color: rgba(0, 0, 0, 0.3); }
   .select-wrapper i {
@@ -10876,10 +10907,17 @@ button.md-toast-close-button {
       color: #fff; }
       .test-skin .side-nav .collapsible li .collapsible-body a:hover, .test-skin .side-nav .collapsible li .collapsible-body a.active, .test-skin .side-nav .collapsible li .collapsible-body a:active {
         color: #fff; }
-  .test-skin .side-nav .fas,
-  .test-skin .side-nav .fab,
-  .test-skin .side-nav .far {
-    color: #fff; }
+      .test-skin .side-nav .collapsible li .collapsible-body a .fas,
+      .test-skin .side-nav .collapsible li .collapsible-body a .fab,
+      .test-skin .side-nav .collapsible li .collapsible-body a .far {
+        color: #fff; }
+    .test-skin .side-nav .collapsible li a:not(.collapsible-header) {
+      color: #fff;
+      -webkit-transition: all 0.3s linear;
+      -o-transition: all 0.3s linear;
+      transition: all 0.3s linear; }
+      .test-skin .side-nav .collapsible li a:not(.collapsible-header):hover, .test-skin .side-nav .collapsible li a:not(.collapsible-header).active, .test-skin .side-nav .collapsible li a:not(.collapsible-header):active {
+        color: #fff !important; }
   .test-skin .side-nav .sidenav-bg:after, .test-skin .side-nav .sidenav-bg.mask-strong:after {
     background: #fff; }
   .test-skin .side-nav .sidenav-bg.mask-light:after {
@@ -11275,10 +11313,17 @@ button.md-toast-close-button {
       color: #424242; }
       .white-skin .side-nav .collapsible li .collapsible-body a:hover, .white-skin .side-nav .collapsible li .collapsible-body a.active, .white-skin .side-nav .collapsible li .collapsible-body a:active {
         color: #4285F4; }
-  .white-skin .side-nav .fas,
-  .white-skin .side-nav .fab,
-  .white-skin .side-nav .far {
-    color: #424242; }
+      .white-skin .side-nav .collapsible li .collapsible-body a .fas,
+      .white-skin .side-nav .collapsible li .collapsible-body a .fab,
+      .white-skin .side-nav .collapsible li .collapsible-body a .far {
+        color: #424242; }
+    .white-skin .side-nav .collapsible li a:not(.collapsible-header) {
+      color: #424242;
+      -webkit-transition: all 0.3s linear;
+      -o-transition: all 0.3s linear;
+      transition: all 0.3s linear; }
+      .white-skin .side-nav .collapsible li a:not(.collapsible-header):hover, .white-skin .side-nav .collapsible li a:not(.collapsible-header).active, .white-skin .side-nav .collapsible li a:not(.collapsible-header):active {
+        color: #4285F4 !important; }
   .white-skin .side-nav .sidenav-bg:after, .white-skin .side-nav .sidenav-bg.mask-strong:after {
     background: rgba(255, 255, 255, 0.8); }
   .white-skin .side-nav .sidenav-bg.mask-light:after {
@@ -11648,10 +11693,17 @@ button.md-toast-close-button {
       color: #fff; }
       .black-skin .side-nav .collapsible li .collapsible-body a:hover, .black-skin .side-nav .collapsible li .collapsible-body a.active, .black-skin .side-nav .collapsible li .collapsible-body a:active {
         color: #2AD1A3; }
-  .black-skin .side-nav .fas,
-  .black-skin .side-nav .fab,
-  .black-skin .side-nav .far {
-    color: #fff; }
+      .black-skin .side-nav .collapsible li .collapsible-body a .fas,
+      .black-skin .side-nav .collapsible li .collapsible-body a .fab,
+      .black-skin .side-nav .collapsible li .collapsible-body a .far {
+        color: #fff; }
+    .black-skin .side-nav .collapsible li a:not(.collapsible-header) {
+      color: #fff;
+      -webkit-transition: all 0.3s linear;
+      -o-transition: all 0.3s linear;
+      transition: all 0.3s linear; }
+      .black-skin .side-nav .collapsible li a:not(.collapsible-header):hover, .black-skin .side-nav .collapsible li a:not(.collapsible-header).active, .black-skin .side-nav .collapsible li a:not(.collapsible-header):active {
+        color: #2AD1A3 !important; }
   .black-skin .side-nav .sidenav-bg:after, .black-skin .side-nav .sidenav-bg.mask-strong:after {
     background: rgba(0, 0, 0, 0.8); }
   .black-skin .side-nav .sidenav-bg.mask-light:after {
@@ -12021,10 +12073,17 @@ button.md-toast-close-button {
       color: #fff; }
       .cyan-skin .side-nav .collapsible li .collapsible-body a:hover, .cyan-skin .side-nav .collapsible li .collapsible-body a.active, .cyan-skin .side-nav .collapsible li .collapsible-body a:active {
         color: #ffa742; }
-  .cyan-skin .side-nav .fas,
-  .cyan-skin .side-nav .fab,
-  .cyan-skin .side-nav .far {
-    color: #fff; }
+      .cyan-skin .side-nav .collapsible li .collapsible-body a .fas,
+      .cyan-skin .side-nav .collapsible li .collapsible-body a .fab,
+      .cyan-skin .side-nav .collapsible li .collapsible-body a .far {
+        color: #fff; }
+    .cyan-skin .side-nav .collapsible li a:not(.collapsible-header) {
+      color: #fff;
+      -webkit-transition: all 0.3s linear;
+      -o-transition: all 0.3s linear;
+      transition: all 0.3s linear; }
+      .cyan-skin .side-nav .collapsible li a:not(.collapsible-header):hover, .cyan-skin .side-nav .collapsible li a:not(.collapsible-header).active, .cyan-skin .side-nav .collapsible li a:not(.collapsible-header):active {
+        color: #ffa742 !important; }
   .cyan-skin .side-nav .sidenav-bg:after, .cyan-skin .side-nav .sidenav-bg.mask-strong:after {
     background: rgba(21, 78, 96, 0.8); }
   .cyan-skin .side-nav .sidenav-bg.mask-light:after {
@@ -12394,10 +12453,17 @@ button.md-toast-close-button {
       color: #fff; }
       .mdb-skin .side-nav .collapsible li .collapsible-body a:hover, .mdb-skin .side-nav .collapsible li .collapsible-body a.active, .mdb-skin .side-nav .collapsible li .collapsible-body a:active {
         color: #67d5ff; }
-  .mdb-skin .side-nav .fas,
-  .mdb-skin .side-nav .fab,
-  .mdb-skin .side-nav .far {
-    color: #fff; }
+      .mdb-skin .side-nav .collapsible li .collapsible-body a .fas,
+      .mdb-skin .side-nav .collapsible li .collapsible-body a .fab,
+      .mdb-skin .side-nav .collapsible li .collapsible-body a .far {
+        color: #fff; }
+    .mdb-skin .side-nav .collapsible li a:not(.collapsible-header) {
+      color: #fff;
+      -webkit-transition: all 0.3s linear;
+      -o-transition: all 0.3s linear;
+      transition: all 0.3s linear; }
+      .mdb-skin .side-nav .collapsible li a:not(.collapsible-header):hover, .mdb-skin .side-nav .collapsible li a:not(.collapsible-header).active, .mdb-skin .side-nav .collapsible li a:not(.collapsible-header):active {
+        color: #67d5ff !important; }
   .mdb-skin .side-nav .sidenav-bg:after, .mdb-skin .side-nav .sidenav-bg.mask-strong:after {
     background: rgba(13, 36, 60, 0.8); }
   .mdb-skin .side-nav .sidenav-bg.mask-light:after {
@@ -12767,10 +12833,17 @@ button.md-toast-close-button {
       color: #fff; }
       .deep-purple-skin .side-nav .collapsible li .collapsible-body a:hover, .deep-purple-skin .side-nav .collapsible li .collapsible-body a.active, .deep-purple-skin .side-nav .collapsible li .collapsible-body a:active {
         color: #c9abfc; }
-  .deep-purple-skin .side-nav .fas,
-  .deep-purple-skin .side-nav .fab,
-  .deep-purple-skin .side-nav .far {
-    color: #fff; }
+      .deep-purple-skin .side-nav .collapsible li .collapsible-body a .fas,
+      .deep-purple-skin .side-nav .collapsible li .collapsible-body a .fab,
+      .deep-purple-skin .side-nav .collapsible li .collapsible-body a .far {
+        color: #fff; }
+    .deep-purple-skin .side-nav .collapsible li a:not(.collapsible-header) {
+      color: #fff;
+      -webkit-transition: all 0.3s linear;
+      -o-transition: all 0.3s linear;
+      transition: all 0.3s linear; }
+      .deep-purple-skin .side-nav .collapsible li a:not(.collapsible-header):hover, .deep-purple-skin .side-nav .collapsible li a:not(.collapsible-header).active, .deep-purple-skin .side-nav .collapsible li a:not(.collapsible-header):active {
+        color: #c9abfc !important; }
   .deep-purple-skin .side-nav .sidenav-bg:after, .deep-purple-skin .side-nav .sidenav-bg.mask-strong:after {
     background: rgba(36, 9, 56, 0.88); }
   .deep-purple-skin .side-nav .sidenav-bg.mask-light:after {
@@ -13140,10 +13213,17 @@ button.md-toast-close-button {
       color: #fff; }
       .navy-blue-skin .side-nav .collapsible li .collapsible-body a:hover, .navy-blue-skin .side-nav .collapsible li .collapsible-body a.active, .navy-blue-skin .side-nav .collapsible li .collapsible-body a:active {
         color: #40c6c6; }
-  .navy-blue-skin .side-nav .fas,
-  .navy-blue-skin .side-nav .fab,
-  .navy-blue-skin .side-nav .far {
-    color: #fff; }
+      .navy-blue-skin .side-nav .collapsible li .collapsible-body a .fas,
+      .navy-blue-skin .side-nav .collapsible li .collapsible-body a .fab,
+      .navy-blue-skin .side-nav .collapsible li .collapsible-body a .far {
+        color: #fff; }
+    .navy-blue-skin .side-nav .collapsible li a:not(.collapsible-header) {
+      color: #fff;
+      -webkit-transition: all 0.3s linear;
+      -o-transition: all 0.3s linear;
+      transition: all 0.3s linear; }
+      .navy-blue-skin .side-nav .collapsible li a:not(.collapsible-header):hover, .navy-blue-skin .side-nav .collapsible li a:not(.collapsible-header).active, .navy-blue-skin .side-nav .collapsible li a:not(.collapsible-header):active {
+        color: #40c6c6 !important; }
   .navy-blue-skin .side-nav .sidenav-bg:after, .navy-blue-skin .side-nav .sidenav-bg.mask-strong:after {
     background: rgba(14, 15, 32, 0.8); }
   .navy-blue-skin .side-nav .sidenav-bg.mask-light:after {
@@ -13513,10 +13593,17 @@ button.md-toast-close-button {
       color: #fff; }
       .pink-skin .side-nav .collapsible li .collapsible-body a:hover, .pink-skin .side-nav .collapsible li .collapsible-body a.active, .pink-skin .side-nav .collapsible li .collapsible-body a:active {
         color: #ffb0e6; }
-  .pink-skin .side-nav .fas,
-  .pink-skin .side-nav .fab,
-  .pink-skin .side-nav .far {
-    color: #fff; }
+      .pink-skin .side-nav .collapsible li .collapsible-body a .fas,
+      .pink-skin .side-nav .collapsible li .collapsible-body a .fab,
+      .pink-skin .side-nav .collapsible li .collapsible-body a .far {
+        color: #fff; }
+    .pink-skin .side-nav .collapsible li a:not(.collapsible-header) {
+      color: #fff;
+      -webkit-transition: all 0.3s linear;
+      -o-transition: all 0.3s linear;
+      transition: all 0.3s linear; }
+      .pink-skin .side-nav .collapsible li a:not(.collapsible-header):hover, .pink-skin .side-nav .collapsible li a:not(.collapsible-header).active, .pink-skin .side-nav .collapsible li a:not(.collapsible-header):active {
+        color: #ffb0e6 !important; }
   .pink-skin .side-nav .sidenav-bg:after, .pink-skin .side-nav .sidenav-bg.mask-strong:after {
     background: rgba(152, 47, 88, 0.8); }
   .pink-skin .side-nav .sidenav-bg.mask-light:after {
@@ -13886,10 +13973,17 @@ button.md-toast-close-button {
       color: #fff; }
       .indigo-skin .side-nav .collapsible li .collapsible-body a:hover, .indigo-skin .side-nav .collapsible li .collapsible-body a.active, .indigo-skin .side-nav .collapsible li .collapsible-body a:active {
         color: #ff89ac; }
-  .indigo-skin .side-nav .fas,
-  .indigo-skin .side-nav .fab,
-  .indigo-skin .side-nav .far {
-    color: #fff; }
+      .indigo-skin .side-nav .collapsible li .collapsible-body a .fas,
+      .indigo-skin .side-nav .collapsible li .collapsible-body a .fab,
+      .indigo-skin .side-nav .collapsible li .collapsible-body a .far {
+        color: #fff; }
+    .indigo-skin .side-nav .collapsible li a:not(.collapsible-header) {
+      color: #fff;
+      -webkit-transition: all 0.3s linear;
+      -o-transition: all 0.3s linear;
+      transition: all 0.3s linear; }
+      .indigo-skin .side-nav .collapsible li a:not(.collapsible-header):hover, .indigo-skin .side-nav .collapsible li a:not(.collapsible-header).active, .indigo-skin .side-nav .collapsible li a:not(.collapsible-header):active {
+        color: #ff89ac !important; }
   .indigo-skin .side-nav .sidenav-bg:after, .indigo-skin .side-nav .sidenav-bg.mask-strong:after {
     background: rgba(35, 65, 134, 0.8); }
   .indigo-skin .side-nav .sidenav-bg.mask-light:after {
@@ -14259,10 +14353,17 @@ button.md-toast-close-button {
       color: #fff; }
       .light-blue-skin .side-nav .collapsible li .collapsible-body a:hover, .light-blue-skin .side-nav .collapsible li .collapsible-body a.active, .light-blue-skin .side-nav .collapsible li .collapsible-body a:active {
         color: #aadeff; }
-  .light-blue-skin .side-nav .fas,
-  .light-blue-skin .side-nav .fab,
-  .light-blue-skin .side-nav .far {
-    color: #fff; }
+      .light-blue-skin .side-nav .collapsible li .collapsible-body a .fas,
+      .light-blue-skin .side-nav .collapsible li .collapsible-body a .fab,
+      .light-blue-skin .side-nav .collapsible li .collapsible-body a .far {
+        color: #fff; }
+    .light-blue-skin .side-nav .collapsible li a:not(.collapsible-header) {
+      color: #fff;
+      -webkit-transition: all 0.3s linear;
+      -o-transition: all 0.3s linear;
+      transition: all 0.3s linear; }
+      .light-blue-skin .side-nav .collapsible li a:not(.collapsible-header):hover, .light-blue-skin .side-nav .collapsible li a:not(.collapsible-header).active, .light-blue-skin .side-nav .collapsible li a:not(.collapsible-header):active {
+        color: #aadeff !important; }
   .light-blue-skin .side-nav .sidenav-bg:after, .light-blue-skin .side-nav .sidenav-bg.mask-strong:after {
     background: rgba(87, 134, 180, 0.8); }
   .light-blue-skin .side-nav .sidenav-bg.mask-light:after {
@@ -14632,10 +14733,17 @@ button.md-toast-close-button {
       color: #fff; }
       .grey-skin .side-nav .collapsible li .collapsible-body a:hover, .grey-skin .side-nav .collapsible li .collapsible-body a.active, .grey-skin .side-nav .collapsible li .collapsible-body a:active {
         color: #afdffc; }
-  .grey-skin .side-nav .fas,
-  .grey-skin .side-nav .fab,
-  .grey-skin .side-nav .far {
-    color: #fff; }
+      .grey-skin .side-nav .collapsible li .collapsible-body a .fas,
+      .grey-skin .side-nav .collapsible li .collapsible-body a .fab,
+      .grey-skin .side-nav .collapsible li .collapsible-body a .far {
+        color: #fff; }
+    .grey-skin .side-nav .collapsible li a:not(.collapsible-header) {
+      color: #fff;
+      -webkit-transition: all 0.3s linear;
+      -o-transition: all 0.3s linear;
+      transition: all 0.3s linear; }
+      .grey-skin .side-nav .collapsible li a:not(.collapsible-header):hover, .grey-skin .side-nav .collapsible li a:not(.collapsible-header).active, .grey-skin .side-nav .collapsible li a:not(.collapsible-header):active {
+        color: #afdffc !important; }
   .grey-skin .side-nav .sidenav-bg:after, .grey-skin .side-nav .sidenav-bg.mask-strong:after {
     background: rgba(121, 121, 121, 0.8); }
   .grey-skin .side-nav .sidenav-bg.mask-light:after {

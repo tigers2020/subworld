@@ -151,14 +151,16 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
     }, {
       key: "changeSVGcolors",
       value: function changeSVGcolors() {
+        var _this6 = this;
+
         if (this.$input.hasClass('mdb-autocomplete')) {
           this.$input.on('click keyup', function (e) {
             e.preventDefault();
-            $(e.target).parent().find('.mdb-autocomplete-clear').find('svg').css('fill', xColor);
+            $(e.target).parent().find('.mdb-autocomplete-clear').find('svg').css('fill', _this6.options.xColor);
           });
           this.$input.on('blur', function (e) {
             e.preventDefault();
-            $(e.target).parent().find('.mdb-autocomplete-clear').find('svg').css('fill', xBlurColor);
+            $(e.target).parent().find('.mdb-autocomplete-clear').find('svg').css('fill', _this6.options.xBlurColor);
           });
         }
       }
@@ -171,8 +173,5 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
     return this.each(function () {
       new mdbAutocomplete($(this), options);
     });
-  }; //deprecated, delete soon
-
-
-  $.fn.mdb_autocomplete = $.fn.mdbAutocomplete;
+  };
 })(jQuery);

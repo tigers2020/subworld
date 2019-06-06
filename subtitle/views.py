@@ -42,7 +42,6 @@ class UploadView(generic.CreateView):
         if self.request.GET:
             context['movie'] = tmdbsimple.Movies(self.request.GET.get('movie_id')).info()
 
-
         context['image_url'] = settings.TMDB_IMAGE_BASE
         context['poster_size'] = settings.TMDB_POSTER_SIZE
         return context

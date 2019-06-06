@@ -1,6 +1,6 @@
 /*
  * MDBootstrap Range Slider
- * Learn more:  https://mdbootstrap.com/plugins/jquery/plugins/multi-range,
+ * Learn more:  https://mdbootstrap.com/plugins/jquery/multi-range/,
  *
  * About MDBootstrap: https://mdbootstrap.com/
  * Support: https://mdbootstrap.com/support/
@@ -20,7 +20,7 @@
         direction: 'vertical',
         value: {
           min: 0,
-          max: 100,
+          max: 100
         },
         single: {
           active: true,
@@ -43,9 +43,9 @@
             countingTarget: null,
             bgThumbColor: '#4285F4',
             textThumbColor: '#fff'
-          },
+          }
         }
-      }
+      };
 
       this.$range = range;
       this.options = this.assignedOptions(options);
@@ -57,7 +57,7 @@
     }
 
     assignedOptions(newOptions) {
-      return $.extend({}, this.defaults, newOptions)
+      return $.extend({}, this.defaults, newOptions);
     }
 
     init() {
@@ -77,25 +77,25 @@
     randomLetter(...letter) {
 
       let text = '';
-      let charset = 'abcdefghijklmnopqrstuvwxyz123456789';
+      const charset = 'abcdefghijklmnopqrstuvwxyz123456789';
 
       for (let i = 0; i < new Number(letter); i++) {
         text += charset.charAt(Math.floor(Math.random() * charset.length));
       }
       return text;
-    };
+    }
 
     addThumb() {
 
       if (this.options.single.active === true) {
 
         $(this.$range.prop({
-          'id': this.randomLetter(10),
-          'disabled': false
-        })).after($(this.thumbHtml).attr('data-id', ``));
+          id: this.randomLetter(10),
+          disabled: false
+        })).after($(this.thumbHtml).attr('data-id', ''));
       } else {
 
-        $(this.$range.prop('disabled', true))
+        $(this.$range.prop('disabled', true));
       }
 
       this.options.direction === 'horizontal' ? this.$rangeWrapper.addClass('thumb-horizontal-wrapper') : null;
@@ -118,10 +118,10 @@
     multiRangeInit() {
 
       this.$range.attr({
-        'min': this.options.value.min,
-        'max': this.options.value.max,
-        'step': this.options.single.value !== undefined ? this.options.single.value.step : this.defaults.single.value.step,
-        'symbol': this.options.single.value !== undefined ? this.options.single.value.symbol : this.defaults.single.value.symbol
+        min: this.options.value.min,
+        max: this.options.value.max,
+        step: this.options.single.value !== undefined ? this.options.single.value.step : this.defaults.single.value.step,
+        symbol: this.options.single.value !== undefined ? this.options.single.value.symbol : this.defaults.single.value.symbol
       });
 
       this.$range.addClass('mdbMultiRange original');
@@ -151,7 +151,7 @@
             height: '30px',
             width: '30px',
             top: '-23px',
-            marginLeft: '-15px',
+            marginLeft: '-15px'
           });
         }
 
@@ -199,7 +199,7 @@
         }
 
         this.options.single.value !== undefined ? $thumb.find('.value').html(`${$etarget.val()} ${this.options.single.value.symbol}`) : $thumb.find('.value').html($etarget.val());
-      });;
+      });
     }
 
     mouseUponInput() {
@@ -262,39 +262,49 @@
 
           $thumb.css('left', this.left);
 
-          if ($etarget.length < 1) $thumb.find('.value').html(`${$etarget.val()} ${this.options.single.value.symbol}`);
+          if ($etarget.length < 1) {
+            $thumb.find('.value').html(`${$etarget.val()} ${this.options.single.value.symbol}`);
+          }
         }
       });
     }
 
     mouseOutFromInput() {
 
-      this.$range.on('mouseout', e => {
+      this.$range.on('mouseout touchend', e => {
 
         if (!this.rangeMousedown) {
 
-          const $thumb = $(e.target).siblings('.thumb');
+          this.hasClassActive(e);
+        } else {
 
-          if ($thumb.hasClass('active')) {
-
-            $thumb.animate({
-              marginLeft: '0px',
-              top: '12px',
-              height: `0px`,
-              width: `0px`
-            }, 230);
-
-          }
-          $thumb.removeClass('active');
+          this.hasClassActive(e);
         }
       });
+    }
+
+    hasClassActive(e) {
+
+      const $thumb = $(e.target).siblings('.thumb');
+
+      if ($thumb.hasClass('active')) {
+
+        $thumb.animate({
+          marginLeft: '0px',
+          top: '12px',
+          height: '0px',
+          width: '0px'
+        }, 230);
+
+      }
+      $thumb.removeClass('active');
     }
 
     multiRangeValue() {
 
       if (this.options.single.countingTarget !== null && this.options.single.countingTarget !== undefined && this.options.single.countingTarget !== '' && this.options.single.counting === true) {
 
-        let $orginalTarget = $(`${[...this.options.single.countingTarget.split(' ')]}`);
+        const $orginalTarget = $(`${[...this.options.single.countingTarget.split(' ')]}`);
 
         this.$range.on('input mousedown touchstart', () => {
 
@@ -323,25 +333,25 @@
 
         for (let i = 0; i < this.options.single.multi.rangeLength; i++) {
 
-          let $ghost = this.$range.clone(true, true).prop('id', this.randomLetter(10));
+          const $ghost = this.$range.clone(true, true).prop('id', this.randomLetter(10));
 
           if (this.options.single.multi.bgThumbColor !== undefined && this.options.single.multi.textThumbColor !== undefined && this.options.single.multi.bgThumbColor.length > 1) {
 
             $ghost.attr({
               'data-color': this.options.single.multi.bgThumbColor.length > 1 ? [...this.options.single.multi.bgThumbColor][i] : [...this.options.single.multi.bgThumbColor][0],
-              'data-text-color': this.options.single.multi.textThumbColor.length > 1 ? [...this.options.single.multi.textThumbColor][i] : [...this.options.single.multi.textThumbColor][0],
+              'data-text-color': this.options.single.multi.textThumbColor.length > 1 ? [...this.options.single.multi.textThumbColor][i] : [...this.options.single.multi.textThumbColor][0]
             });
           } else {
 
             $ghost.attr({
               'data-color': [],
-              'data-text-color': [],
+              'data-text-color': []
             });
           }
 
           $ghost.attr({
-            'step': this.options.single.multi.value !== undefined ? this.options.single.multi.value.step : null,
-            'symbol': this.options.single.multi.value !== undefined ? this.options.single.multi.value.symbol : null
+            step: this.options.single.multi.value !== undefined ? this.options.single.multi.value.step : null,
+            symbol: this.options.single.multi.value !== undefined ? this.options.single.multi.value.symbol : null
           });
 
           $ghost.val($ghost.attr('max'));
@@ -351,7 +361,7 @@
 
           if (this.options.single.multi.countingTarget !== null && this.options.single.multi.countingTarget !== undefined && typeof this.options.single.multi.countingTarget === 'object' && this.options.single.multi.counting) {
 
-            let $ghostTargetValue = $(`${Object.values([...this.options.single.multi.countingTarget])[i]}`);
+            const $ghostTargetValue = $(`${Object.values([...this.options.single.multi.countingTarget])[i]}`);
 
             $ghost.on('input mousedown', e => {
 
@@ -374,8 +384,8 @@
   $.fn.mdbRange = function (options) {
 
     return this.each(function () {
-      new mdbRange($(this), options)
+      new mdbRange($(this), options);
     });
-  }
+  };
 
 })(jQuery);

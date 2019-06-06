@@ -161,14 +161,33 @@ $data in $skins {
           &:active {
             color: map-get($data, skin-sn-child);
           }
+
+          .fas,
+          .fab,
+          .far {
+            color: map-get($data, skin-text);
+          }
+        }
+
+        a {
+          &:not(.collapsible-header) {
+            color: map-get($data, skin-text);
+            transition: $skins-side-nav-hover-transition;
+
+            &:hover,
+            &.active,
+            &:active {
+              color: map-get($data, skin-sn-child) !important;
+            }
+          }
         }
       }
 
-      .fas,
-      .fab,
-      .far {
-        color: map-get($data, skin-text);
-      }
+      // .fas,
+      // .fab,
+      // .far {
+      //   color: map-get($data, skin-text);
+      // }
 
       .sidenav-bg {
 
@@ -186,7 +205,7 @@ $data in $skins {
         }
       }
     }
-
+  
     @include make-button("primary", map-get($data, skin-btn-primary));
     @include make-button("secondary", map-get($data, skin-btn-secondary));
     @include make-button("default", map-get($data, skin-btn-default));

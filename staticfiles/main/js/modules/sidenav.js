@@ -70,7 +70,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
     _createClass(SideNav, [{
       key: "init",
       value: function init() {
-        this.setMENU_WIDTH();
+        this.setMenuWidth();
         this.setMenuTranslation();
         this.closeOnClick();
         this.openOnClick();
@@ -84,10 +84,10 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
         var _this = this;
 
         this.$dragTarget.on('click', function () {
-          _this.removeMenu();
+          return _this.removeMenu();
         });
         this.$elementCloned.on('click', function () {
-          _this.removeMenu();
+          return _this.removeMenu();
         });
         this.$dragTarget.on('touchstart', function (e) {
           _this.lastTouchVelocity.x.startPosition = e.touches[0].clientX;
@@ -203,7 +203,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
         if (this.options.showOverlay === true) {
           this.$sidenavOverlay = $('<div id="sidenav-overlay"></div>');
           this.$sidenavOverlay.css('opacity', 0).on('click', function () {
-            _this2.removeMenu();
+            return _this2.removeMenu();
           });
           this.$body.append(this.$sidenavOverlay);
         }
@@ -365,7 +365,6 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
             $(this).remove();
           }
         });
-        this.$sidenavOverlay = $();
       }
     }, {
       key: "showSidenavOverlay",
@@ -424,7 +423,15 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
             });
 
             _this3.$sidenavOverlay.on('click', function () {
-              _this3.removeMenu();
+              return _this3.removeMenu();
+            });
+
+            _this3.$sidenavOverlay.on('touchmove', _this3.touchmoveEventHandler.bind(_this3));
+
+            _this3.$menu.on('touchmove', function (e) {
+              e.preventDefault();
+
+              _this3.$menu.find('.custom-scrollbar').css('padding-bottom', '30px');
             });
           }
         });
@@ -436,7 +443,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
         if (this.options.closeOnClick === true) {
           this.$menu.on('click', 'a:not(.collapsible-header)', function () {
-            _this4.removeMenu();
+            return _this4.removeMenu();
           });
         }
       }
@@ -472,7 +479,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
             this.$menu.css('transform', 'translateX(0)');
           }
 
-          this.$menu.find('input[type=text]').on('touchstart', function (e) {
+          this.$menu.find('input[type=text]').on('touchstart', function () {
             _this5.$menu.addClass('transform-fix-input');
           });
           $(window).resize(function () {
@@ -491,8 +498,8 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
         }
       }
     }, {
-      key: "setMENU_WIDTH",
-      value: function setMENU_WIDTH() {
+      key: "setMenuWidth",
+      value: function setMenuWidth() {
         var $sidenavBg = $("#".concat(this.$menu.attr('id'))).find('> .sidenav-bg');
 
         if (this.options.MENU_WIDTH !== MENU_WIDTH) {
@@ -505,8 +512,8 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
       value: function inputOnClick() {
         var _this6 = this;
 
-        this.$menu.find('input[type=text]').on('touchstart', function (e) {
-          _this6.$menu.css('transform', 'translateX(0)');
+        this.$menu.find('input[type=text]').on('touchstart', function () {
+          return _this6.$menu.css('transform', 'translateX(0)');
         });
       }
     }, {
@@ -543,16 +550,6 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
         }
 
         this.hideSidenavOverlay();
-      }
-    }, {
-      key: "show",
-      value: function show() {
-        this.trigger('click');
-      }
-    }, {
-      key: "hide",
-      value: function hide() {
-        this.trigger('click');
       }
     }]);
 
