@@ -1,7 +1,7 @@
 {% extends 'base/base.html' %}
 
 {% block keywords %}
-{% for keyword in keywords.keywords %}{{ keyword.name }}, {% endfor %}
+    {% for keyword in keywords.keywords %}{{ keyword.name }}, {% endfor %}
 {% endblock %}
 
 {% block body %}
@@ -15,8 +15,10 @@
                 <div class="container flex-center text-center">
                     <div class="row mt-5">
                         <div class="col-md-12 wow fadeIn mb-3">
-                            <h2 class="display-3 mb-2 wow fadeInDown text-white"style="text-shadow: 2px 2px #000;" data-wow-delay="0.3s">{{ movie.title }}</h2>
-                            <h5 class="text-uppercase mb-3 mt-1 font-weight-bold wow fadeIn text-white" style="text-shadow: 2px 2px #000;" data-wow-delay="0.4s">W{{ movie.tagline }}r</h5>
+                            <h2 class="display-3 mb-2 wow fadeInDown text-white" style="text-shadow: 2px 2px #000;"
+                                data-wow-delay="0.3s">{{ movie.title }}</h2>
+                            <h5 class="text-uppercase mb-3 mt-1 font-weight-bold wow fadeIn text-white"
+                                style="text-shadow: 2px 2px #000;" data-wow-delay="0.4s">W{{ movie.tagline }}r</h5>
 
                         </div>
                     </div>
@@ -47,51 +49,51 @@
                         <p>{{ movie.title }}</p>
                         <p>{{ movie.release_date }}</p>
                         <p>{{ movie.overview }}</p>
-                    <h3 class="h3-responsive">Videos</h3>
-                    <div class="text-center">
+                        <h3 class="h3-responsive">Videos</h3>
+                        <div class="text-center">
                             {% for video in videos.results %}
-                                    <button type="button" class="btn btn-info" data-toggle="modal"
-                                            data-target="#video_{{ forloop.counter0 }}">{{ video.type }}</button>
+                                <button type="button" class="btn btn-info" data-toggle="modal"
+                                        data-target="#video_{{ forloop.counter0 }}">{{ video.type }}</button>
                             {% endfor %}
                         </div>
                         {% for video in videos.results %}
-                                <div class="modal fade" id="video_{{ forloop.counter0 }}" tabindex="-1" role="dialog"
-                                     aria-labelledby="{{ video.name }}" aria-hidden="true">
-                                    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-                                        <!--Content-->
-                                        <div class="modal-content">
-                                            <!--Body-->
-                                            <div class="modal-body mb-0 p-0">
-                                                <div class="embed-responsive embed-responsive-16by9 z-depth-1-half">
-                                                    <iframe class="embed-responsive-item"
-                                                            src="https://www.youtube.com/embed/{{ video.key }}"
-                                                            allowfullscreen></iframe>
-                                                </div>
+                            <div class="modal fade" id="video_{{ forloop.counter0 }}" tabindex="-1" role="dialog"
+                                 aria-labelledby="{{ video.name }}" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                                    <!--Content-->
+                                    <div class="modal-content">
+                                        <!--Body-->
+                                        <div class="modal-body mb-0 p-0">
+                                            <div class="embed-responsive embed-responsive-16by9 z-depth-1-half">
+                                                <iframe class="embed-responsive-item"
+                                                        src="https://www.youtube.com/embed/{{ video.key }}"
+                                                        allowfullscreen></iframe>
                                             </div>
                                         </div>
-                                        <!--/.Content-->
                                     </div>
+                                    <!--/.Content-->
                                 </div>
+                            </div>
                         {% endfor %}
                         <h3 class="h3-responsive">Actors</h3>
                         <div class="row">
                             {% for person in persons.cast %}
                                 <div class="col-lg-2 col-md-3 col-sm-4 p-3">
-                                <div class="card">
-                                    <div class="card-img-top overlay zoom">
-                                        {% if person.profile_path %}
-                                            <img class="img-fluid"
-                                                 src="https://image.tmdb.org/t/p/w500{{ person.profile_path }}"
-                                                 alt="{{ person.name }}"/>
-                                        {% else %}
-                                            <p class="text-center">{{ person.name }}</p>
-                                        {% endif %}
+                                    <div class="card">
+                                        <div class="card-img-top overlay zoom">
+                                            {% if person.profile_path %}
+                                                <img class="img-fluid"
+                                                     src="https://image.tmdb.org/t/p/w500{{ person.profile_path }}"
+                                                     alt="{{ person.name }}"/>
+                                            {% else %}
+                                                <p class="text-center">{{ person.name }}</p>
+                                            {% endif %}
+                                        </div>
+                                        <div class="card-body">
+                                            <h6 class=" pink-text h6-responsive">{{ person.character }}</h6>
+                                            <h6 class="title h6-responsive">{{ person.name }}</h6>
+                                        </div>
                                     </div>
-                                    <div class="card-body">
-                                        <h6 class=" pink-text h6-responsive">{{ person.character }}</h6>
-                                        <h6 class="title h6-responsive">{{ person.name }}</h6>
-                                    </div>
-                                </div>
                                 </div>
                             {% endfor %}
                         </div>
@@ -122,8 +124,17 @@
                         <p>
                             {% if not subtitle_list %}
                                 <h5>There is no Subtitle for {{ movie.title }}</h5>
+
+                                <h6> Be the First upload Subtitle for this movie/Tv Show</h6>
+                                <form method="get" action="{% url "sub-upload" %}" class="text-center">
+                                    <input class="form-control" type="hidden" name="movie_id" value="{{ movie.id }}"/>
+                                    <button class="btn btn-action" type="submit">Upload Subtitle</button>
+
+                                </form>
+                            {% else %}
+                                {{ subtitle_list }}
                             {% endif %}
-                            {{ subtitle_list }}
+
                         </p>
                         <p>Etsy mixtape wayfarers, ethical wes anderson tofu before they sold out mcsweeney's organic
                             lomo retro

@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import models
+from ckeditor.fields import RichTextField
 
 
 # Create your models here.
@@ -13,7 +14,7 @@ class Language(models.Model):
     iso_639_2_t = models.CharField(max_length=8)
     iso_639_2_b = models.CharField(max_length=8)
     iso_639_3 = models.CharField(max_length=8, null=True)
-    notes = models.CharField(max_length=255, null=True)
+    notes = RichTextField(null=True)
 
     def __str__(self):
         return self.iso_language_name + '[' + self.native_name + ']'
@@ -39,7 +40,7 @@ class Resolution(models.Model):
 
 
 class Subtitle(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.IntegerField()
     type = models.IntegerField()
     db_id = models.IntegerField()
     title = models.CharField(max_length=255)
@@ -52,7 +53,7 @@ class Subtitle(models.Model):
     release = models.DateField(null=True )
     author = models.CharField(max_length=255)
     downloaded = models.IntegerField(default=0)
-    comment = models.TextField(max_length=255, null=True)
+    comment = RichTextField()
 
     def __str__(self):
         return self.title

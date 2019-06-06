@@ -15,10 +15,14 @@
     <div class="col-md-12">
         <ul class="list-group">
             {% for movie in movie_lists.results %}
+                <a href="{% url "movie_detail" movie.id %}">
                 <li class="list-group-item">
                 <img src="{{ image_url.base_url }}/{{ image_size.w154 }}{{ movie.poster_path }}"alt="{{ movie.title }}" class="img-thumbnail thumb"/>
-                {{ movie.title }}
+                    <p>{{ movie.title }}</p>
+                <p>{{ movie.release_date }}</p>
+                <p>{{ movie.overview|truncatechars:155 }}</p>
                 </li>
+                </a>
             {% endfor %}
 
         </ul>

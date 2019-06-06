@@ -31,5 +31,18 @@ class TvDetail(generic.ListView):
         return query
 
 
-class Search(generic.TemplateView):
-    template_name = 'search.html'
+class UploadView(generic.CreateView):
+    model = Subtitle
+    fields = ['user', 'title', 'sub_file', 'language', 'resolution', 'rip', 'comment']
+
+    def get_context_data(self, **kwargs):
+        context = super(UploadView, self).get_context_data(**kwargs)
+        tmdbsimple.API_KEY = settings.TMDB_API_KEY
+
+        if self.request.GET:
+            context['movie'] = tmdbsimple.Movies(self.request.GET.get('movie_id')).info()
+
+
+        context['image_url'] = settings.TMDB_IMAGE_BASE
+        context['poster_size'] = settings.TMDB_POSTER_SIZE
+        return context

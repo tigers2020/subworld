@@ -87,7 +87,13 @@ INSTALLED_APPS = [
     'search',
     'import_export',
     'users',
+
+    'ckeditor',
+    'widget_tweaks',
+
 ]
+
+### All Auth ###
 
 AUTH_USER_MODEL = 'users.SubUser'
 
@@ -100,11 +106,8 @@ SITE_ID = 1
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_REQUIRED = True
 
-
-
 LOGIN_REDIRECT_URL = "index"
 LOGOUT_REDIRECT_URL = "index"
-
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -193,3 +196,15 @@ STATICFILES_DIRS = [
 ]
 MEDIA_ROOT = os.path.join(LOCAL_STATIC_CDN_PATH, 'media')
 MEDIA_URL = '/media/'
+
+#### ckeditor ####
+
+CKEDITOR_UPLOAD_PATH = "ckeditor/uploades/"
+
+KEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'Basic',
+    },
+}
+
+
