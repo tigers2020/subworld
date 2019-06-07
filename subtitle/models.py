@@ -20,25 +20,6 @@ class Language(models.Model):
         return self.iso_language_name + '[' + self.native_name + ']'
 
 
-class Rip(models.Model):
-    name = models.CharField(max_length=16)
-
-    def __str__(self):
-        return self.name
-
-
-class Resolution(models.Model):
-    name = models.CharField(max_length=80)
-    screen_w = models.IntegerField()
-    screen_h = models.IntegerField()
-    aspect_ratio = models.CharField(max_length=16)
-    total_pixel_count = models.IntegerField()
-
-    def __str__(self):
-        name = "{0} ({1} x {2})".format(self.name, self.screen_w, self.screen_h)
-        return name
-
-
 class Subtitle(models.Model):
     user = models.IntegerField()
     type = models.IntegerField()
@@ -46,12 +27,11 @@ class Subtitle(models.Model):
     title = models.CharField(max_length=255)
     sub_file = models.FileField()
     language = models.ForeignKey(Language, on_delete=models.CASCADE)
-    resolution = models.ForeignKey(Resolution, on_delete=models.CASCADE)
-    rip = models.ForeignKey(Rip, on_delete=models.CASCADE)
+    run_time = models.DurationField(null=True)
+    rate_star = models.IntegerField(default=0)
     rate_good = models.IntegerField(default=0)
     rate_bad = models.IntegerField(default=0)
-    release = models.DateField(null=True )
-    author = models.CharField(max_length=255)
+    upload_date = models.DateTimeField(auto_now_add=True)
     downloaded = models.IntegerField(default=0)
     comment = RichTextField()
 

@@ -12,19 +12,9 @@ class LanguageAdmin(ImportExportModelAdmin):
     ordering = ("iso_language_name",)
 
 
-class ResolutionAdmin(ImportExportModelAdmin):
-    list_display = ("name", "screen_w", "screen_h", "aspect_ratio", "total_pixel_count")
-
-
-class RipAdmin(ImportExportModelAdmin):
-    list_display = ("name",)
-
-
 class SubtitleAdmin(admin.ModelAdmin):
-    list_display = ("db_id", "title", "sub_file", "language", "resolution", "rip", "author", "comment")
+    list_display = ("title", "db_id", "type",  "language", "run_time", "rate_star", "rate_good", "rate_bad", "upload_date", "downloaded", "sub_file","comment")
 
 
 admin.site.register(models.Language, LanguageAdmin)
-admin.site.register(models.Rip, RipAdmin)
 admin.site.register(models.Subtitle, SubtitleAdmin)
-admin.site.register(models.Resolution, ResolutionAdmin)
