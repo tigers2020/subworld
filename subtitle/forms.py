@@ -7,7 +7,7 @@ from django.utils.translation import ugettext_lazy as _
 from .models import Subtitle
 
 CONTENT_TYPES = ['image', 'video', 'smi']
-FILE_EXTENSIONS = ['psb', 'srt', 'ssa', 'ass', 'sub', 'sami', 'smil', 'smi', 'usf', 'vtt']
+FILE_EXTENSIONS = ['.psb', '.srt', '.ssa', '.ass', '.sub', '.sami', '.smil', '.smi', '.usf', '.vtt']
 # 2.5MB - 2621440
 # 5MB - 5242880
 # 10MB - 10485760
@@ -22,19 +22,21 @@ MAX_UPLOAD_SIZE = "2621440"
 class SubtitleForm(forms.ModelForm):
     class Meta:
         model = Subtitle
-        fields = ("user", "title", 'language', 'run_time', 'sub_file', 'comment')
+        fields = ("user", "type", "db_id", "title", 'language', 'run_time', 'sub_file', 'comment')
 
     def clean_sub_file(self):
-
         subfile = self.cleaned_data['sub_file']
         file_type = os.path.splitext(subfile.name)[1]
 
-        for extension in FILE_EXTENSIONS:
-            if file_type == extension:
-                if subfile.size > int(MAX_UPLOAD_SIZE):
-                    raise forms.ValidationError(
-                        _(u"Max Size: %s, Your file size is too big.") % (filesizeformat(subfile.size))
-                    )
-            raise forms.ValidationError(
-                _(u"Extension Error: %s is not valid file format") % extension
+        if file_type in FILE_EXTENSIONS:
+            print("extension: ", file_type)
+            print("matched")
+            if subfile.size > int(MAX_UPLOAD_SIZE):
+                raise forms.ValidationError(
+                    _(u"Max Size: %s, Your file size is too big.") % (filesizeformat(subfile.size))
+                )
+        else:
+            raise  forms.ValidationError(
+                _(u"Extension Error: %s is not valid file format") %(file_type)
             )
+        return subfile

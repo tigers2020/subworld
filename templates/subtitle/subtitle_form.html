@@ -7,14 +7,14 @@
 
         <div class="card">
             <div class="card-img-top">
-                {% if movie %}
-                    <img src="{{ image_url.base_url }}/{{ poster_size.w500 }}{{ movie.backdrop_path }}"/>
+                {% if info %}
+                    <img src="{{ image_url.base_url }}/{{ poster_size.w500 }}{{ info.backdrop_path }}"/>
 
                 {% endif %}
             </div>
             <div class="card-body">
-                {% if movie %}
-                    <h3>{{ movie.title }}</h3>
+                {% if info %}
+                    <h3>{{ info.title }}</h3>
                 {% endif %}
             </div>
             <div class="card-footer">
@@ -27,17 +27,18 @@
         </div>
         <div class="card m-3 p-2">
 
-            <form class="form-elegant z-depth-1 range-field" method="post" action="{% url 'sub-upload' %}">
+            <form class="form-elegant z-depth-1 range-field" method="post" action="{% url 'sub-upload' %}" enctype="multipart/form-data">
                 {% csrf_token %}
                 {{ form.media }}
-                {% render_field form.user class="form-control" type="hidden" value=user.id %}
-                {% render_field form.db_id class="form-control" value=movie.id type="hidden" %}
-                {% render_field form.title class="form-control" value=movie.title %}
+                {% render_field form.user class="mdb-select md-form" type="hidden" value=user.id %}
+                {% render_field form.type class="form-control" type="hidden" value=show_type %}
+                {% render_field form.db_id class="form-control" value=info.id type="hidden" %}
+                {% render_field form.title class="form-control" value=info.title %}
                 {% render_field form.language class="mdb-select md-form" searchable="search here" %}
                 <input id="duration_hour" , class="no-border" type="range" value="0" min="0" max="6"/>
                 <input id="duration_min" , class="no-boarder" type="range" value="0" min="0" max="60"/>
                 <div id="run_time_label">00:00</div>
-                {% render_field form.run_time class="form-control disabled" type="hidden"%}
+                {% render_field form.run_time class="form-control" %}
                 <div class="file-upload-wrapper">
                     {% render_field form.sub_file class="file-upload" %}
                 </div>

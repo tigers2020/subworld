@@ -127,6 +127,7 @@
 
                                 <h6> Be the First upload Subtitle for this movie/Tv Show</h6>
                                 <form method="get" action="{% url "sub-upload" %}" class="text-center">
+
                                     <input class="form-control" type="hidden" name="movie_id" value="{{ movie.id }}"/>
                                     <button class="btn btn-action" type="submit">Upload Subtitle</button>
 

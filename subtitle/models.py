@@ -5,6 +5,8 @@ from ckeditor.fields import RichTextField
 
 
 # Create your models here.
+from django.urls import reverse
+
 
 class Language(models.Model):
     language_family = models.CharField(max_length=126)
@@ -21,7 +23,7 @@ class Language(models.Model):
 
 
 class Subtitle(models.Model):
-    user = models.IntegerField()
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     type = models.IntegerField()
     db_id = models.IntegerField()
     title = models.CharField(max_length=255)
@@ -37,4 +39,8 @@ class Subtitle(models.Model):
 
     def __str__(self):
         return self.title
+
+    def get_absolute_url(self):
+        return reverse("subtitle:movie_detail", kwargs={"id": self.db_id})
+
 
