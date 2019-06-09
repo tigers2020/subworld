@@ -34,7 +34,7 @@ class TvDetail(generic.ListView):
 
 class UploadView(generic.CreateView):
     model = Subtitle
-    fields = ['user', 'title', 'sub_file', 'language', 'resolution', 'rip', 'comment']
+    fields = ['user', 'title', 'db_id', 'language', 'run_time', 'sub_file',  'comment']
 
     def get_context_data(self, **kwargs):
         context = super(UploadView, self).get_context_data(**kwargs)
@@ -48,3 +48,4 @@ class UploadView(generic.CreateView):
             return context
 
         return context
+
