@@ -1,12 +1,12 @@
 {% extends 'base/base.html' %}
 {% load sub_extras %}
 {% block keywords %}
-{% for keyword in keywords %}{% for key in keyword.keywords %}{{ key.name }}, {% endfor %}{% endfor %}
+    {% for keyword in keywords %}{% for key in keyword.keywords %}{{ key.name }}, {% endfor %}{% endfor %}
 {% endblock %}
 {% block body %}
 
 
-    <section class="mt-5 m-3 p-3" id="popular_header">
+    <section class="carousel" id="popular_header">
         <div class="row">
             <div class="col-4 pr-0">
                 <div class="list-group" id="list-tab" role="tablist">
@@ -45,9 +45,8 @@
                                     <!-- Second column -->
                                     <div class="col-md-9">
                                         <!-- Excerpt -->
-                                        <h3 class="h3-responsive text-uppercase mb-3 font-weight-bold"><a href="#"
-                                                                                                          class="text-white"
-                                                                                                          style="text-shadow: 2px 2px 8px #000000">{{ now.title }}</a>
+                                        <h3 class="h3-responsive text-uppercase mb-3 font-weight-bold">
+                                            <a href="#" class="text-white mt-3"style="text-shadow: 2px 2px 8px #000000">{{ now.title }}</a>
                                             <span class="badge badge-danger product mb-4 ml-xl-0 ml-4">{{ now.release_date }}</span>
                                         </h3>
                                         <div class="progress md-progress" style="height: 20px">
@@ -80,52 +79,70 @@
         <!-- Search form -->
         <form class="form-inline md-form form-sm active-cyan-2 mt-2" action="{% url 'search' %}">
             <label class="mdb-main-label">Label example</label>
-            <input class="form-control form-control-sm mr-3 w-75" type="text" id="video_search" name="search" placeholder="Search"
+            <input class="form-control form-control-sm mr-3 w-75" type="text" id="video_search" name="search"
+                   placeholder="Search"
                    aria-label="Search">
             <button type="submit" class="btn btn-action"><i class="fas fa-search" aria-hidden="true"></i></button>
         </form>
     </section>
     <section>
-        <div class="container">
-            <div class="row">
-                {% for popular in populars.results %}
-                    <!-- Image overlay card -->
-                    <div class="card card-image p-4 col-md-3">
-                        <div class="view overlay zoom">
-                            <img class="card-img-top" src="https://image.tmdb.org/t/p/w500/{{ popular.poster_path }}"
-                                 alt="{{ popular.title }}">
-                            <a href="{% url 'movie_detail' popular.id %}">
-                                <div class="mask rgba-white-slight"></div>
-                            </a>
-                        </div>
+        <div class="row">
+            <div class="col-sm-8">
+                <div class="container">
+                    <div class="row">
+                        {% for popular in populars.results %}
+                            <!-- Image overlay card -->
+                            <div class="card card-image p-4 col-md-3">
+                                <div class="view overlay zoom">
+                                    <img class="card-img-top"
+                                         src="https://image.tmdb.org/t/p/w500/{{ popular.poster_path }}"
+                                         alt="{{ popular.title }}">
+                                    <a href="{% url 'movie_detail' popular.id %}">
+                                        <div class="mask rgba-white-slight"></div>
+                                    </a>
+                                </div>
 
+                            </div>
+                        {% endfor %}
                     </div>
-                {% endfor %}
+                </div>
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination pg-blue justify-content-center">
+                        <li class="page-item disabled">
+                            <a class="page-link" tabindex="-1">Previous</a>
+                        </li>
+                        {% for page  in pop_pages %}
+                            {% if forloop.first %}
+                                <li class="page-item"><a class="page-link {% if request.GET.page %}active{% endif %}"
+                                                         href="?page={{ page }}">{{ page }}</a></li>
+                                ...
+                            {% elif page > page_lead_in and page < page_lead_out %}
+                                <li class="page-item"><a class="page-link {% if request.GET.page %}active{% endif %}"
+                                                         href="?page={{ page }}">{{ page }}</a></li>
+                            {% elif forloop.last %}
+                                ...
+                                <li class="page-item"><a class="page-link {% if request.GET.page %}active{% endif %}"
+                                                         href="?page={{ page }}">{{ page }}</a></li>
+                            {% endif %}
+
+                        {% endfor %}
+                        <li class="page-item">
+                            <a class="page-link">Next</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            <div class="col-sd-4">
+                <h4>Resent Subtitles</h4>
+                <div class="list-group">
+                    {% for subtile in subtitles %}
+                        <a href="{% url 'movie_detail'  subtile.db_id %}"
+                           class="list-group-item list-group-item-action">{{ subtile.title }}<span
+                                class="badge-info">{{ subtile.upload_date }}</span></a>
+                    {% endfor %}
+                </div>
             </div>
         </div>
-
-        <nav aria-label="Page navigation example">
-            <ul class="pagination pg-blue justify-content-center">
-                <li class="page-item disabled">
-                    <a class="page-link" tabindex="-1">Previous</a>
-                </li>
-                {% for page  in pop_pages %}
-                    {% if forloop.first %}
-                      <li class="page-item"><a class="page-link {% if request.GET.page %}active{% endif %}" href="?page={{ page }}">{{ page }}</a></li>
-                    ...
-                    {% elif page > page_lead_in and page < page_lead_out %}
-                <li class="page-item"><a class="page-link {% if request.GET.page %}active{% endif %}" href="?page={{ page }}">{{ page }}</a></li>
-                    {% elif forloop.last %}
-                        ...
-                          <li class="page-item"><a class="page-link {% if request.GET.page %}active{% endif %}" href="?page={{ page }}">{{ page }}</a></li>
-                    {% endif %}
-
-                {% endfor %}
-                <li class="page-item">
-                    <a class="page-link">Next</a>
-                </li>
-            </ul>
-        </nav>
     </section>
 {% endblock %}
 
@@ -156,11 +173,11 @@
         });
     </script>
     <script>
-    $(function() {
-        $("#video_search").autocomplete({
-          source: "{% url 'autocomplete' %}",
-          minLength: 2,
+        $(function () {
+            $("#video_search").autocomplete({
+                source: "{% url 'autocomplete' %}",
+                minLength: 2,
+            });
         });
-      });
-</script>
+    </script>
 {% endblock %}

@@ -23,19 +23,18 @@ class Language(models.Model):
 
 
 class Subtitle(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
     type = models.IntegerField()
     db_id = models.IntegerField()
     title = models.CharField(max_length=255)
     sub_file = models.FileField()
     language = models.ForeignKey(Language, on_delete=models.CASCADE)
-    run_time = models.DurationField(null=True)
     rate_star = models.IntegerField(default=0)
     rate_good = models.IntegerField(default=0)
     rate_bad = models.IntegerField(default=0)
     upload_date = models.DateTimeField(auto_now_add=True)
     downloaded = models.IntegerField(default=0)
-    comment = RichTextField()
+    comment = RichTextField(blank=True, null=True)
 
     def __str__(self):
         return self.title

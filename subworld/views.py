@@ -4,6 +4,7 @@ import tmdbsimple
 from django.views.generic import TemplateView
 
 from search import models
+from subtitle.models import Subtitle
 from . import settings
 
 
@@ -12,6 +13,7 @@ class IndexView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(IndexView, self).get_context_data(**kwargs)
+        subtitle = Subtitle.objects.all().order_by('-upload_date')[:20]
 
         tmdbsimple.API_KEY = settings.TMDB_API_KEY
 
@@ -33,6 +35,8 @@ class IndexView(TemplateView):
         keywords = []
         for now in nowplaying['results']:
             keywords.append(tmdbsimple.Movies(now['id']).keywords())
+
+        context['subtitles'] = subtitle
         context['populars'] = populars
         context['keywords'] = keywords
         context['pop_pages'] = range(1, populars['total_pages'])

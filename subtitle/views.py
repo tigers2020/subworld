@@ -55,6 +55,10 @@ class CreateSubView(generic.CreateView):
 
         return reverse_lazy("movie_detail", args=(self.object.db_id,))
 
+    def form_invalid(self, form):
+        print(form.errors)
+
+        return super(CreateSubView, self).form_invalid(form)
     def form_valid(self, form):
         print(form.cleaned_data)
         subtitle = form.save(commit=False)

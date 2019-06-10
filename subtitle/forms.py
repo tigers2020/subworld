@@ -3,6 +3,7 @@ import os
 from django import forms
 from django.template.defaultfilters import filesizeformat
 from django.utils.translation import ugettext_lazy as _
+from wtforms.widgets import HiddenInput
 
 from .models import Subtitle
 
@@ -22,7 +23,11 @@ MAX_UPLOAD_SIZE = "2621440"
 class SubtitleForm(forms.ModelForm):
     class Meta:
         model = Subtitle
-        fields = ("user", "type", "db_id", "title", 'language', 'run_time', 'sub_file', 'comment')
+        fields = ("type", "db_id", "title", 'language', 'sub_file', 'comment')
+        widgets = {
+            'type': forms.HiddenInput(),
+            'db_id': forms.HiddenInput(),
+        }
 
     def clean_sub_file(self):
         subfile = self.cleaned_data['sub_file']

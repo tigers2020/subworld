@@ -2,10 +2,9 @@
 {% load widget_tweaks %}
 {% load socialaccount %}
 {% block body %}
-    <div class="container mt-5">
 
-
-        <div class="card">
+    <div class="container">
+        <div class="card" id="movie_info">
             <div class="card-img-top">
                 {% if info %}
                     <img src="{{ image_url.base_url }}/{{ poster_size.w500 }}{{ info.backdrop_path }}"/>
@@ -27,22 +26,46 @@
         </div>
         <div class="card m-3 p-2">
 
-            <form class="form-elegant z-depth-1 range-field" method="post" action="{% url 'sub-upload' %}" enctype="multipart/form-data">
+            <form class="form-elegant z-depth-1 range-field" method="post" action="{% url 'sub-upload' %}"
+                  enctype="multipart/form-data">
+              {#<div class="field {{ field|field_type }} {{ field|widget_type }} {{ field.html_name }}">#}
                 {% csrf_token %}
                 {{ form.media }}
-                {% render_field form.user class="mdb-select md-form" type="hidden" value=user.id %}
-                {% render_field form.type class="form-control" type="hidden" value=show_type %}
-                {% render_field form.db_id class="form-control" value=info.id type="hidden" %}
-                {% render_field form.title class="form-control" value=info.title %}
-                {% render_field form.language class="mdb-select md-form" searchable="search here" %}
-                <input id="duration_hour" , class="no-border" type="range" value="0" min="0" max="6"/>
-                <input id="duration_min" , class="no-boarder" type="range" value="0" min="0" max="60"/>
-                <div id="run_time_label">00:00</div>
-                {% render_field form.run_time class="form-control" %}
-                <div class="file-upload-wrapper">
-                    {% render_field form.sub_file class="file-upload" %}
-                </div>
-                {% render_field form.comment class="form-control" %}
+                {% for hidden in form.hidden_fields %}
+                    {{ hidden }}
+                {% endfor %}
+                {% for field in form.visible_fields %}
+                    <div class="form-group">
+                        <label for="{{ field.id_for_label }}">{{ field.name }}</label>
+                        {% if field|field_type == "modelchoicefield" %}
+                            {{ field|add_class:'mdb-select md-form' }}
+                        {% else %}
+                            {{ field|add_class:"form-control" }}
+                        {% endif %}
+                        {% for error in field.errors %}
+                            <div class="invalid-feedback">{{ error }}</div>
+
+                            {% if field.help_text %}
+                                <small class="form-text text-muted">{{ field.help_text }}</small>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+
+{##}
+{#                {% render_field form.user class="mdb-select md-form" type="hidden" value=user.id %}#}
+{#                {% render_field form.type class="form-control" type="hidden" value=show_type %}#}
+{#                {% render_field form.db_id class="form-control" value=info.id type="hidden" %}#}
+{#                {% render_field form.title class="form-control" value=info.title %}#}
+{#                {% render_field form.language class="mdb-select md-form" searchable="search here" %}#}
+{#                <input id="duration_hour" , class="no-border" type="range" value="0" min="0" max="6"/>#}
+{#                <input id="duration_min" , class="no-boarder" type="range" value="0" min="0" max="60"/>#}
+{#                <div id="run_time_label">00:00</div>#}
+{#                {% render_field form.run_time class="form-control" %}#}
+{#                <div class="file-upload-wrapper">#}
+{#                    {% render_field form.sub_file class="file-upload" %}#}
+{#                </div>#}
+{#                {% render_field form.comment class="form-control" %}#}
                 <button class="btn btn-success" type="submit">Upload</button>
             </form>
 
@@ -59,6 +82,17 @@
             $('.mdb-select').materialSelect();
             {#$('.file-upload').file_upload();#}
         });
+
+        $(function () {
+            $("#id_title").autocomplete({
+                source: "{% url 'autocomplete' %}",
+                minLength: 2,
+            });
+        });
+       $('#id_type').val({{ show_type }});
+       $('#id_db_id').val({{ info.id }});
+       $('#id_title').val('{{ info.title }}');
+
 
     </script>
     <script>
