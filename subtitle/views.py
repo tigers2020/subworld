@@ -11,15 +11,26 @@ from subtitle.models import Subtitle
 from .forms import SubtitleForm
 
 
-class MovieDetail(generic.ListView):
+class MovieDetailList(generic.ListView):
     model = Subtitle
+    ordering = ('title', 'language',)
+
+    def get_queryset(self):
+        print("kwargs: ", self.kwargs)
+        queryset = Subtitle.objects.filter(db_id=self.kwargs['db_id'])
+
+        return queryset
 
     def get_context_data(self, *args, **kwargs):
-        context = super(MovieDetail, self).get_context_data(*args, **kwargs)
+        context = super(MovieDetailList, self).get_context_data(*args, **kwargs)
         tmdbsimple.API_KEY = settings.TMDB_API_KEY
-        movie = tmdbsimple.Movies(id=self.kwargs['id'])
+        movie = tmdbsimple.Movies(id=self.kwargs['db_id'])
 
+        context['image_url'] = settings.BASE_DIR
+        context['poster_size'] = settings.TMDB_POSTER_SIZE
+        context['backdrop_size'] = settings.TMDB_BACKDROP_SIZE
         context['movie'] = movie.info()
+        context['images'] = movie.images()
         context['persons'] = movie.credits()
         context['videos'] = movie.videos()
         context['similar'] = movie.similar_movies()
@@ -46,27 +57,31 @@ class CreateSubView(generic.CreateView):
 
     def form_valid(self, form):
         print(form.cleaned_data)
+        subtitle = form.save(commit=False)
+        subtitle.user = self.request.user
         if self.request.FILES:
             upload_file = self.request.FILES['sub_file']
+            subtitles = Subtitle.objects.all()
+            if upload_file.name in subtitles:
+                print("file is already exist.")
             path_1 = ""
             fs = FileSystemStorage()
 
-            video_type = form.cleaned_data['type']
-            db_id = form.cleaned_data['db_id']
+            video_type = subtitle.type
+            db_id = subtitle.db_id
+            language = subtitle.language
 
             if video_type == 1:
                 path_1 = "movie"
             elif video_type == 2:
                 path_1 = "tv"
-            file_path = os.path.join(path_1, str(db_id), upload_file.name)
+            file_path = os.path.join(path_1, str(db_id), language.iso_639_1, upload_file.name)
             print(file_path)
             fs.save(file_path, upload_file)
 
             form.user = self.request.user
+            form.save()
             return super(CreateSubView, self).form_valid(form)
-
-    def form_invalid(self, form):
-        print("form error: ", form.errors)
 
     def get_context_data(self, **kwargs):
         context = super(CreateSubView, self).get_context_data(**kwargs)

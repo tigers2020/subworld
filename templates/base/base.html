@@ -24,7 +24,7 @@
 
 </head>
 <body class="indigo-skin">
-<nav class="mb-1 navbar navbar-expand-lg navbar-dark secondary-color lighten-1">
+<nav class="navbar navbar-expand-md fixed-top navbar-dark scrolling-navbar">
     <a class="navbar-brand" href="#">SubWorld</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent-555"
             aria-controls="navbarSupportedContent-555" aria-expanded="false" aria-label="Toggle navigation">
@@ -33,7 +33,7 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent-555">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
-                <a class="nav-link" href="#">Home
+                <a class="nav-link" href="{% url 'index' %}">Home
                     <span class="sr-only">(current)</span>
                 </a>
             </li>
@@ -44,7 +44,7 @@
                 <a class="nav-link" href="#">Tv Show</a>
             </li>
             <li>
-                <a class="nav-link" href="#">Upload</a>
+                <a class="nav-link" href="{% url 'sub-upload' %}">Upload</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="#">Forum</a>
