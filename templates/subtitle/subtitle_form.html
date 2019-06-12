@@ -38,7 +38,7 @@
                     <div class="form-group">
                         <label for="{{ field.id_for_label }}">{{ field.name }}</label>
                         {% if field|field_type == "modelchoicefield" %}
-                            {{ field|add_class:'mdb-select md-form' }}
+                            {{ field|add_class:'mdb-select md-form'|attr:"searchable=search here" }}
                         {% else %}
                             {{ field|add_class:"form-control" }}
                         {% endif %}
@@ -52,20 +52,6 @@
                     </div>
                 {% endfor %}
 
-{##}
-{#                {% render_field form.user class="mdb-select md-form" type="hidden" value=user.id %}#}
-{#                {% render_field form.type class="form-control" type="hidden" value=show_type %}#}
-{#                {% render_field form.db_id class="form-control" value=info.id type="hidden" %}#}
-{#                {% render_field form.title class="form-control" value=info.title %}#}
-{#                {% render_field form.language class="mdb-select md-form" searchable="search here" %}#}
-{#                <input id="duration_hour" , class="no-border" type="range" value="0" min="0" max="6"/>#}
-{#                <input id="duration_min" , class="no-boarder" type="range" value="0" min="0" max="60"/>#}
-{#                <div id="run_time_label">00:00</div>#}
-{#                {% render_field form.run_time class="form-control" %}#}
-{#                <div class="file-upload-wrapper">#}
-{#                    {% render_field form.sub_file class="file-upload" %}#}
-{#                </div>#}
-{#                {% render_field form.comment class="form-control" %}#}
                 <button class="btn btn-success" type="submit">Upload</button>
             </form>
 
@@ -92,7 +78,6 @@
        $('#id_type').val({{ show_type }});
        $('#id_db_id').val({{ info.id }});
        $('#id_title').val('{{ info.title }}');
-
 
     </script>
     <script>

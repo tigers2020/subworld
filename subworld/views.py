@@ -4,6 +4,7 @@ import tmdbsimple
 from django.views.generic import TemplateView
 
 from search import models
+from search.models import MovieDB
 from subtitle.models import Subtitle
 from . import settings
 
@@ -16,13 +17,21 @@ class IndexView(TemplateView):
         subtitle = Subtitle.objects.all().order_by('-upload_date')[:20]
 
         tmdbsimple.API_KEY = settings.TMDB_API_KEY
-
         movie = tmdbsimple.Movies()
         if self.request.GET:
             page = self.request.GET['page']
         else:
             page = 1
         populars = movie.popular(page=page)
+        nowplaying = tmdbsimple.Movies().now_playing()
+
+        keywords = []
+        for now in populars['results'][:3]:
+            keywords.append(tmdbsimple.Movies(now['id']).keywords())
+
+
+        check_new_db(MovieDB, populars)
+        check_new_db(MovieDB, nowplaying)
 
         page_lead_in = int(page) - 5
         if page_lead_in <= 0:
@@ -31,21 +40,30 @@ class IndexView(TemplateView):
         if page_lead_out > populars['total_pages']:
             page_lead_out = populars['total_pages']
 
-        nowplaying = tmdbsimple.Movies().now_playing()
-        keywords = []
-        for now in nowplaying['results']:
-            keywords.append(tmdbsimple.Movies(now['id']).keywords())
+
+
+        context['image_url'] = settings.TMDB_IMAGE_BASE
+        context['poster_size'] = settings.TMDB_POSTER_SIZE
+        context['backdrop_size'] = settings.TMDB_BACKDROP_SIZE
 
         context['subtitles'] = subtitle
         context['populars'] = populars
         context['keywords'] = keywords
+        context['nowplaying'] = nowplaying['results'][:8]
+        #
         context['pop_pages'] = range(1, populars['total_pages'])
         context['page_lead_in'] = page_lead_in
         context['page_lead_out'] = page_lead_out
-        context['nowplaying'] = nowplaying['results'][:8]
 
-        context['request'] = self.request
+        # context['request'] = self.request
         return context
+
+
+def check_new_db(db, data):
+    for info in data['results']:
+        print("create/update: ", info['title'])
+        db.objects.update_or_create(id=info['id'],
+                                    defaults=info)
 
 
 def check_db(db, data):

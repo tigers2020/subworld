@@ -21,10 +21,12 @@ class Search(generic.TemplateView):
             tmdbsimple.API_KEY = settings.TMDB_API_KEY
 
             search = self.request.GET.get('search')
+            print("searching: ", search)
             tmdbSearch = tmdbsimple.Search()
 
             movie_list = tmdbSearch.movie(query=search)
 
+            print(movie_list)
             context['image_url'] = settings.TMDB_IMAGE_BASE
             context['image_size'] = settings.TMDB_POSTER_SIZE
             context['movie_lists'] = movie_list
@@ -50,3 +52,12 @@ def autocomplete(request):
     mimetype = 'application/json'
     return HttpResponse(data, mimetype)
 
+
+def autoinfo(request):
+    print('autoinfo')
+    print(request.GET)
+    if request.is_ajax():
+        search = request.GET.get('term', default='')
+
+
+    return None

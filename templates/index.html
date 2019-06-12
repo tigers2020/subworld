@@ -1,5 +1,6 @@
 {% extends 'base/base.html' %}
 {% load sub_extras %}
+{% load static %}
 {% block keywords %}
     {% for keyword in keywords %}{% for key in keyword.keywords %}{{ key.name }}, {% endfor %}{% endfor %}
 {% endblock %}
@@ -26,16 +27,17 @@
                              id="list_{{ now.id }}" role="tabpanel"
                              aria-labelledby="list_{{ now.id }}_list">
                             <div class="jarallax">
-                                <img class="jarallax-img"
-                                     src="https://image.tmdb.org/t/p/original{{ now.backdrop_path }}"
+                                <img class="jarallax-img lazy" src="{% static 'main/img/lightbox/loading.gif'  %}"
+                                     data-src="{{ image_url.base_url }}/{{ backdrop_size.w1280 }}{{ now.backdrop_path }}"
                                      alt="{{ now.title }}">
                                 <div class="container flex-center text-left">
                                     <!-- First column -->
                                     <div class="col-md-3">
                                         <!-- Image -->
                                         <div class="z-depth-1">
-                                            <img src="https://image.tmdb.org/t/p/w500{{ now.poster_path }}"
-                                                 class="img-fluid z-depth-1" alt="Post Image">
+                                            <img src="{% static 'main/img/lightbox/loading.gif'  %}"
+                                     data-src="{{ image_url.base_url }}/{{ poster_size.w185 }}{{ now.poster_path }}"
+                                                 class="img-fluid z-depth-1 lazy" alt="Post Image">
                                             <div class="mask rgba-white-slight"></div>
 
                                         </div>
@@ -79,29 +81,31 @@
         <!-- Search form -->
         <form class="form-inline md-form form-sm active-cyan-2 mt-2" action="{% url 'search' %}">
             <label class="mdb-main-label">Label example</label>
-            <input class="form-control form-control-sm mr-3 w-75" type="text" id="video_search" name="search"
+            <input class="form-control form-control-sm mr-3 w-75" type="text" id="main_search" name="search"
                    placeholder="Search"
                    aria-label="Search">
             <button type="submit" class="btn btn-action"><i class="fas fa-search" aria-hidden="true"></i></button>
         </form>
     </section>
     <section>
-        <div class="row">
-            <div class="col-sm-8">
+    <div class="row">
+            <div class="col-md-8">
                 <div class="container">
                     <div class="row">
                         {% for popular in populars.results %}
                             <!-- Image overlay card -->
-                            <div class="card card-image p-4 col-md-3">
+                            <div class="col-sm-4  col-md-3 col-lg-2 mt-3">
+                            <div class="card card-image">
                                 <div class="view overlay zoom">
-                                    <img class="card-img-top"
-                                         src="https://image.tmdb.org/t/p/w500/{{ popular.poster_path }}"
+                                    <img class="card-img-top lazy"
+                                         src="{% static 'main/img/lightbox/loading.gif'  %}"
+                                     data-src="{{ image_url.base_url }}/{{ poster_size.w185 }}{{ popular.poster_path }}"
                                          alt="{{ popular.title }}">
                                     <a href="{% url 'movie_detail' popular.id %}">
                                         <div class="mask rgba-white-slight"></div>
                                     </a>
                                 </div>
-
+                            </div>
                             </div>
                         {% endfor %}
                     </div>
@@ -132,17 +136,22 @@
                     </ul>
                 </nav>
             </div>
-            <div class="col-sd-4">
+            <div class="col-md-4">
                 <h4>Resent Subtitles</h4>
                 <div class="list-group">
-                    {% for subtile in subtitles %}
-                        <a href="{% url 'movie_detail'  subtile.db_id %}"
-                           class="list-group-item list-group-item-action">{{ subtile.title }}<span
-                                class="badge-info">{{ subtile.upload_date }}</span></a>
+                    {% for subtitle in subtitles %}
+                        <a href="{% url 'movie_detail'  subtitle.db_id %}"
+                           class="list-group-item list-group-item-action">
+                        <i class="{{ subtitle.language.iso_language_name }} flag"></i>
+
+                            {{ subtitle.title }}<span
+                                class="badge-info">{{ subtitle.upload_date.year }}</span>
+                        <p class="text-right badge-success">{{ subtitle.user }}</p>
+                        </a>
                     {% endfor %}
                 </div>
             </div>
-        </div>
+    </div>
     </section>
 {% endblock %}
 

@@ -1,6 +1,7 @@
 from django import template
 
 from search import models
+from subtitle import models as sub_models
 
 register = template.Library()
 
@@ -23,3 +24,10 @@ def get_genre(value):
 @register.filter(name="range")
 def range(value):
     return range(value)
+
+
+@register.filter(name="flag")
+def flag(value):
+    FLAG = sub_models.FLAG
+
+    return FLAG[value]

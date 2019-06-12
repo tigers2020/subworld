@@ -10,6 +10,7 @@ from subtitle import models
 class LanguageAdmin(ImportExportModelAdmin):
     list_display = ("iso_language_name", "language_family", "native_name", "iso_639_1", "notes")
     ordering = ("iso_language_name",)
+    search_fields = ("iso_language_name", "native_name",)
 
 
 class SubtitleAdmin(admin.ModelAdmin):

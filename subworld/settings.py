@@ -38,7 +38,7 @@ TMDB_LOGO_SIZE = {
     "w185": "w185",
     "w300": "w300",
     "w500": "w500",
-    "original": "woriginal",
+    "original": "original",
 }
 TMDB_POSTER_SIZE = {
     "w92": "w92",
@@ -47,7 +47,7 @@ TMDB_POSTER_SIZE = {
     "w342": "w342",
     "w500": "w500",
     "w780": "W780",
-    "original": "woriginal",
+    "original": "original",
 }
 TMDB_PROFILE_SIZE = {
     "w45": 'w45',

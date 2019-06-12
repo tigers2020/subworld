@@ -81,7 +81,7 @@
                         <a class="dropdown-item" href="#">account</a>
                         <a class="dropdown-item" href="#">edit</a>
                         <a class="dropdown-item" href="{% url "account_logout" %}">log out</a>
-                        {% else %}
+                    {% else %}
                         <a href="{% url "account_login" %}" class="dropdown-item">login</a>
                         <a href="{% url "account_signup" %}" class="dropdown-item">Sign Up</a>
                     {% endif %}
@@ -108,9 +108,22 @@
 <script type="text/javascript" src="{% static "main/js/bootstrap.min.js" %}"></script>
 <!-- MDB core Javascript -->
 <script type="text/javascript" src="{% static "main/js/mdb.min.js" %}"></script>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery.lazy/1.7.4/jquery.lazy.min.js"></script>
+
 <script>window.CKEDITOR_BASEPATH = '/static/ckeditor/ckeditor/';</script>
 {{ block.super }}
 
+    <script>
+        $(function () {
+            $("#main_search").autocomplete({
+                source: "{% url 'autocomplete' %}",
+                minLength: 2,
+            });
+        });
+            $(function() {
+        $('.lazy').lazy();
+    });
+    </script>
 {% block script %}
 
 {% endblock %}

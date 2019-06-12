@@ -9,6 +9,7 @@ from search import models
 
 class MovieDBAdmin(ImportExportModelAdmin):
     list_display = ("original_title", "id", "adult", "popularity", "video")
+    search_fields = ("original_title", )
 
 
 class GenreDBAdmin(ImportExportModelAdmin):
@@ -17,22 +18,27 @@ class GenreDBAdmin(ImportExportModelAdmin):
 
 class CollectionDBAdmin(ImportExportModelAdmin):
     list_display = ("name",)
+    search_fields = ("name",)
 
 
 class KeywordDBAdmin(ImportExportModelAdmin):
     list_display = ("name",)
+    search_fields = ("name",)
 
 
 class PersonDBAdmin(ImportExportModelAdmin):
     list_display = ("name", "adult", "popularity")
+    search_fields = ("name",)
 
 
 class ProductionCompanyDBAdmin(ImportExportModelAdmin):
     list_display = ("name",)
+    search_fields = ("name",)
 
 
 class TvSeriesDBAdmin(ImportExportModelAdmin):
     list_display = ("original_name", "popularity")
+    search_fields = ("original_name",)
 
 
 admin.site.register(models.MovieDB, MovieDBAdmin)
