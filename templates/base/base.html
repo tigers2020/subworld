@@ -25,40 +25,39 @@
 </head>
 <body class="indigo-skin">
 <nav class="navbar navbar-expand-md fixed-top navbar-dark scrolling-navbar">
-    <a class="navbar-brand" href="#">SubWorld</a>
+    <a class="navbar-brand" href="{% url 'index' %}">SubWorld</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent-555"
             aria-controls="navbarSupportedContent-555" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent-555">
         <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
+            <li class="nav-item {% if locator == 'index' %}active{% endif %}">
                 <a class="nav-link" href="{% url 'index' %}">Home
-                    <span class="sr-only">(current)</span>
+                {% if locator == 'index' %}<span class="sr-only">(current)</span>{% endif %}
                 </a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Movie</a>
+            <li class="nav-item {% if locator == 'movie_index' %}active{% endif %}">
+                <a class="nav-link" href="{% url 'movie_index' %}">Movie
+                {% if locator == 'movie_index' %}<span class="sr-only">(current)</span>{% endif %}
+                </a>
+
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Tv Show</a>
+            <li class="nav-item {% if locator == 'tv_show_index' %}active{% endif %}">
+                <a class="nav-link" href="{% url 'tv_show_index' %}">Tv Show
+                {% if locator == 'tv_show_index' %}<span class="sr-only">(current)</span>{% endif %}
+                </a>
             </li>
-            <li>
-                <a class="nav-link" href="{% url 'sub-upload' %}">Upload</a>
+            <li class="nav-item {% if locator == 'sub_upload' %}active{% endif %}">
+                <a class="nav-link " href="{% url 'sub-upload' %}">Upload
+                {% if locator == 'sub_upload' %}<span class="sr-only">(current)</span>{% endif %}
+                </a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Forum</a>
+            <li class="nav-item {% if locator == 'forum' %}active{% endif %}">
+                <a class="nav-link " href="#">Forum
+                    {% if locator == 'forum' %}<span class="sr-only">(current)</span>{% endif %}
+                </a>
             </li>
-            {#      <li class="nav-item dropdown">#}
-            {#        <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink-555" data-toggle="dropdown"#}
-            {#          aria-haspopup="true" aria-expanded="false">Dropdown#}
-            {#        </a>#}
-            {#        <div class="dropdown-menu dropdown-secondary" aria-labelledby="navbarDropdownMenuLink-555">#}
-            {#          <a class="dropdown-item" href="#">Action</a>#}
-            {#          <a class="dropdown-item" href="#">Another action</a>#}
-            {#          <a class="dropdown-item" href="#">Something else here</a>#}
-            {#        </div>#}
-            {#      </li>#}
         </ul>
         <ul class="navbar-nav ml-auto nav-flex-icons">
             <li class="nav-item">
@@ -70,9 +69,11 @@
                 <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink-55" data-toggle="dropdown"
                    aria-haspopup="true" aria-expanded="false">
                     {% if user.is_authenticated %}
-                        <img src="https://mdbootstrap.com/img/Photos/Avatars/avatar-2.jpg"
+                        <img src="{{ user.socialaccount_set.all.0.get_avatar_url }}"
                              class="rounded-circle z-depth-0"
-                             alt="avatar image">{{ user.username }}
+                             alt="avatar image">{{ user.name }}
+                        <p>{{ user }}
+                        </p>
                     {% endif %}
                 </a>
                 <div class="dropdown-menu dropdown-menu-lg-right dropdown-secondary"
@@ -108,22 +109,23 @@
 <script type="text/javascript" src="{% static "main/js/bootstrap.min.js" %}"></script>
 <!-- MDB core Javascript -->
 <script type="text/javascript" src="{% static "main/js/mdb.min.js" %}"></script>
-<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery.lazy/1.7.4/jquery.lazy.min.js"></script>
+<script type="text/javascript"
+        src="http://cdnjs.cloudflare.com/ajax/libs/jquery.lazy/1.7.4/jquery.lazy.min.js"></script>
 
 <script>window.CKEDITOR_BASEPATH = '/static/ckeditor/ckeditor/';</script>
 {{ block.super }}
 
-    <script>
-        $(function () {
-            $("#main_search").autocomplete({
-                source: "{% url 'autocomplete' %}",
-                minLength: 2,
-            });
+<script>
+    $(function () {
+        $("#main_search").autocomplete({
+            source: "{% url 'autocomplete' %}",
+            minLength: 2,
         });
-            $(function() {
+    });
+    $(function () {
         $('.lazy').lazy();
     });
-    </script>
+</script>
 {% block script %}
 
 {% endblock %}

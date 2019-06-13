@@ -36,21 +36,35 @@ class Search(generic.TemplateView):
 
 def autocomplete(request):
     result = []
-    print("autocomplete")
     if request.is_ajax():
-        print("is ajax")
-        print("request", request.GET)
         search = request.GET.get('term', default="")
-        print('search', search)
-        db = models.MovieDB.objects.filter(original_title__icontains=search)[:10]
-    else:
-        db = models.MovieDB.objects.order_by("-popularity")[:10]
-    for r in db:
-        result.append(r.original_title)
+        db = search_data(models.MovieDB, search)
+        for r in db:
+            result.append(r.original_title)
 
     data = json.dumps(result)
     mimetype = 'application/json'
     return HttpResponse(data, mimetype)
+
+
+def tv_autocomplete(request):
+    result = []
+    if request.is_ajax():
+        search = request.GET.get('term', default="")
+        db = search_data(models.TvSeriesDB, search)
+        for r in db:
+            result.append(r.original_title)
+
+    data = json.dumps(result)
+    mimetype = 'application/json'
+    return HttpResponse(data, mimetype)
+
+
+def search_data(model, search):
+    if model == models.MovieDB:
+        return model.objects.filter(original_title__icontains=search)[:10]
+    elif model == models.TvSeriesDB:
+        return model.objects.filter(original_name__icontains=search)[:10]
 
 
 def autoinfo(request):
@@ -58,6 +72,5 @@ def autoinfo(request):
     print(request.GET)
     if request.is_ajax():
         search = request.GET.get('term', default='')
-
 
     return None

@@ -6,6 +6,7 @@ SEARCH_TYPE = [
 
 urlpatterns = [
     path("autocomplete/", views.autocomplete, name='autocomplete'),
+    path("tv_autocomplete/", views.tv_autocomplete, name="tv_com"),
     path('autoinfo/', views.autoinfo, name="autoinfo"),
     path("", views.Search.as_view(), name='search'),
     # path("movie/", views.MovieSearch.asview(), name="movie_search"),

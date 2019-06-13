@@ -23,9 +23,11 @@ from search import views as search_view
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.IndexView.as_view(), name='index'),
+    path('movie/', views.MovieIndexView.as_view(), name='movie_index'),
+    path('tv_show/', views.TvShowIndexView.as_view(), name='tv_show_index'),
     path('d/', include('subtitle.urls')),
     path('s/', include('search.urls')),
-    path("checkdb", views.DbInit.as_view(), name='db_init'),
+    # path("checkdb", views.DbInit.as_view(), name='db_init'),
     path("users/", include("users.urls")),
     path("accounts/", include("allauth.urls")),
     path('ckeditor/', include('ckeditor_uploader.urls')),

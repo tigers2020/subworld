@@ -7,6 +7,10 @@ from subtitle import models
 # Register your models here.
 
 
+class CountryAdmin(admin.ModelAdmin):
+    list_display = ("name", "iso_3166_1")
+    search_fields = ('name', 'iso_3166_1')
+
 class LanguageAdmin(ImportExportModelAdmin):
     list_display = ("iso_language_name", "language_family", "native_name", "iso_639_1", "notes")
     ordering = ("iso_language_name",)

@@ -1,5 +1,4 @@
 import gzip
-import json
 import os
 import re
 from datetime import datetime, timedelta
@@ -47,7 +46,6 @@ def download_file(url, local_filename):
 def check_files_expired():
     print('check file in', os.path.join(BASE_DIR, "dataset"))
     directory = os.path.join(BASE_DIR, "dataset")
-    f = []
     for (dirpath, dirnames, filenames) in os.walk(directory):
         for name in filenames:
             print("name", name)
@@ -66,18 +64,12 @@ def check_files_expired():
             except:
                 print("not exist")
 
+
 def extract_json(local_filename):
-
     with gzip.GzipFile(local_filename, 'r') as fin:
-        data = json.loads(fin.read().decode('utf-8'))
-        filename = os.path.splitext(local_filename)
-        with open(filename, 'w') as fn:
-
-
-
-
+        filename = local_filename.split("_ids_")[0] + ".json"
+        open(filename, 'wb').write(fin.read())
 
 
 download_daily_files()
 check_files_expired()
-

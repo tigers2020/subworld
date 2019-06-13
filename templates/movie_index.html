@@ -5,8 +5,7 @@
     {% for keyword in keywords %}{% for key in keyword.keywords %}{{ key.name }}, {% endfor %}{% endfor %}
 {% endblock %}
 {% block body %}
-
-
+{{ locator }}
     <section class="carousel" id="popular_header">
         <div class="row">
             <div class="col-4 pr-0">

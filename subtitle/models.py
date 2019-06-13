@@ -255,6 +255,12 @@ FLAG = {
 from django.urls import reverse
 
 
+class Country(models.Model):
+    name = models.CharField(max_length=128)
+    iso_3166_2 = models.CharField(max_length=8)
+    additional_aliases = models.CharField(max_length=128, null=True)
+
+
 class Language(models.Model):
     language_family = models.CharField(max_length=126)
     iso_language_name = models.CharField(max_length=255)
