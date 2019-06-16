@@ -1,9 +1,47 @@
 {% extends 'base/base.html' %}
 
+{% load django_tables2 %}
+
 {% block body %}
+    <div class="row">
+        <div class="col-4">
+            <div class="position-static">test</div>
+            <div class="text-center info-color text-white" id="sticky-content">
+                <div class="list-group">
+                    <a class="list-group-item" href="{% url 'search' %}{% querystring "page"="1" %}">Search All</a>
+                    <a class="list-group-item" href="{% url 'search_movies' %}{% querystring "page"="1" %}">Movies</a>
+                    <a class="list-group-item" href="{% url 'search_shows' %}{% querystring "page"="1" %}">Tv Shows</a>
+                    <a class="list-group-item" href="{% url 'search_episodes' %}{% querystring "page"="1" %}">Episodes</a>
+                    <a class="list-group-item" href="{% url 'search_collections' %}{% querystring "page"="1" %}">Collections</a>
+                    <a class="list-group-item" href="{% url 'search_people' %}{% querystring "page"="1" %}">Person</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-8">
+            <div class="container mt-5">
+                <section class="p-5 mt-3" id="searchbar">
+                   {% include 'base/search_bar.html' %}
+                </section>
+                <div class="col-md-12">
+                    <ul class="list-group">
+                        {% for tv_info in tv_lists.results %}
+                            <a href="{% url "movie_detail" tv_info.id %}">
+                                <li class="list-group-item">
+                                    <img src="{{ image_base.base_url }}/{{ poster_size.w154 }}{{ tv_info.poster_path }}"
+                                         alt="{{ tv_info.name }}" class="img-thumbnail thumb"/>
+                                    <p>{{ tv_info.name }}</p>
+                                    <p>{{ tv_info.first_air_date }}</p>
+                                    <p>{{ tv_info.overview|truncatechars:155 }}</p>
+                                </li>
+                            </a>
+                        {% endfor %}
+                    </ul>
+                    {% if paginator.has_other_pages %}
+                        {% include 'base/pagination.html' %}
+                    {% endif %}
 
-    <h1>Search</h1>
-
-    {{ s }}
-    {{ t }}
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

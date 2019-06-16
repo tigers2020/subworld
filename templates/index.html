@@ -28,7 +28,7 @@
                              aria-labelledby="list_{{ now.id }}_list">
                             <div class="jarallax">
                                 <img class="jarallax-img lazy" src="{% static 'main/img/lightbox/loading.gif' %}"
-                                     data-src="{{ image_url.base_url }}/{{ backdrop_size.w1280 }}{{ now.backdrop_path }}"
+                                     data-src="{{ image_base.base_url }}/{{ backdrop_size.w1280 }}{{ now.backdrop_path }}"
                                      alt="{{ now.title }}">
                                 <div class="container flex-center text-left">
                                     <!-- First column -->
@@ -36,7 +36,7 @@
                                         <!-- Image -->
                                         <div class="z-depth-1">
                                             <img src="{% static 'main/img/lightbox/loading.gif' %}"
-                                                 data-src="{{ image_url.base_url }}/{{ poster_size.w185 }}{{ now.poster_path }}"
+                                                 data-src="{{ image_base.base_url }}/{{ poster_size.w185 }}{{ now.poster_path }}"
                                                  class="img-fluid z-depth-1 lazy" alt="Post Image">
                                             <div class="mask rgba-white-slight"></div>
 
@@ -79,14 +79,7 @@
         </div>
     </section>
     <section class="p-5" id="searchbar">
-        <!-- Search form -->
-        <form class="form-inline md-form form-sm active-cyan-2 mt-2" action="{% url 'search' %}">
-            <label class="mdb-main-label">Label example</label>
-            <input class="form-control form-control-sm mr-3 w-75" type="text" id="main_search" name="search"
-                   placeholder="Search"
-                   aria-label="Search">
-            <button type="submit" class="btn btn-action"><i class="fas fa-search" aria-hidden="true"></i></button>
-        </form>
+        {% include "base/search_bar.html" %}
     </section>
     <section>
         <div class="row">
@@ -100,7 +93,7 @@
                                     <div class="view overlay zoom">
                                         <img class="card-img-top lazy"
                                              src="{% static 'main/img/lightbox/loading.gif' %}"
-                                             data-src="{{ image_url.base_url }}/{{ poster_size.w185 }}{{ popular.poster_path }}"
+                                             data-src="{{ image_base.base_url }}/{{ poster_size.w185 }}{{ popular.poster_path }}"
                                              alt="{{ popular.title }}">
                                         <a href="{% url 'movie_detail' popular.id %}">
                                             <div class="mask rgba-white-slight"></div>
@@ -186,12 +179,5 @@
             keepImg: true,
         });
     </script>
-    <script>
-        $(function () {
-            $("#video_search").autocomplete({
-                source: "{% url 'autocomplete' %}",
-                minLength: 2,
-            });
-        });
-    </script>
+
 {% endblock %}

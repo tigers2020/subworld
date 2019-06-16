@@ -8,16 +8,39 @@ from subtitle.models import Subtitle
 from . import settings
 
 
-class LocatorMixin:
+class BaseSetMixin:
     locator = ''
+    image_base = ""
+    poster_size = ""
+    backdrop_size = ""
+    logo_size = ""
+    profile_size = ""
+    still_size = ""
+    tmdb = ""
+
+    def __init__(self):
+        self.image_base = settings.TMDB_IMAGE_BASE
+        self.poster_size = settings.TMDB_POSTER_SIZE
+        self.backdrop_size = settings.TMDB_BACKDROP_SIZE
+        self.logo_size = settings.TMDB_LOGO_SIZE
+        self.profile_size = settings.TMDB_PROFILE_SIZE
+        self.still_size = settings.TMDB_STIL_SIZE
+        self.tmdb = tmdbsimple
+        self.tmdb.API_KEY = settings.TMDB_API_KEY
 
     def get_context_data(self, **kwargs):
-        context = super(LocatorMixin, self).get_context_data(**kwargs)
+        context = super(BaseSetMixin, self).get_context_data(**kwargs)
         context['locator'] = self.locator
+        context['image_base'] = self.image_base
+        context['poster_size'] = self.poster_size
+        context['backdrop_size'] = self.backdrop_size
+        context['logo_size'] = self.logo_size
+        context['profile_size'] = self.profile_size
+        context['still_size'] = self.still_size
         return context
 
 
-class IndexView(LocatorMixin, TemplateView):
+class IndexView(BaseSetMixin, TemplateView):
     template_name = 'index.html'
     locator = 'index'
 
@@ -25,15 +48,13 @@ class IndexView(LocatorMixin, TemplateView):
         context = super(IndexView, self).get_context_data(**kwargs)
         subtitle = Subtitle.objects.all().order_by('-upload_date')[:20]
 
-        tmdbsimple.API_KEY = settings.TMDB_API_KEY
-        movie = tmdbsimple.Movies()
+        movie = self.tmdb.Movies()
         if self.request.GET:
             page = self.request.GET['page']
         else:
             page = 1
         populars = movie.popular(page=page)
-        nowplaying = tmdbsimple.Movies().now_playing()
-
+        nowplaying = movie.now_playing()
         keywords = []
         for now in populars['results'][:3]:
             keywords.append(tmdbsimple.Movies(now['id']).keywords())
@@ -48,9 +69,6 @@ class IndexView(LocatorMixin, TemplateView):
         if page_lead_out > populars['total_pages']:
             page_lead_out = populars['total_pages']
 
-        context['image_url'] = settings.TMDB_IMAGE_BASE
-        context['poster_size'] = settings.TMDB_POSTER_SIZE
-        context['backdrop_size'] = settings.TMDB_BACKDROP_SIZE
         context['subtitles'] = subtitle
         context['populars'] = populars
         context['keywords'] = keywords
@@ -63,12 +81,12 @@ class IndexView(LocatorMixin, TemplateView):
         return context
 
 
-class MovieIndexView(LocatorMixin, TemplateView):
+class MovieIndexView(BaseSetMixin, TemplateView):
     template_name = 'movie_index.html'
     locator = 'movie_index'
 
 
-class TvShowIndexView(LocatorMixin, TemplateView):
+class TvShowIndexView(BaseSetMixin, TemplateView):
     template_name = 'tv_show_index.html'
     locator = 'tv_show_index'
 

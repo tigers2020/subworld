@@ -98,6 +98,7 @@
 
     {% endblock %}
 </main>
+{% include 'base/footer.html' %}
 <!--SCRIPTS -->
 <!-- JQuery -->
 <script type="text/javascript" src="{% static "/main/js/jquery-3.4.0.min.js" %}"></script>
@@ -116,18 +117,24 @@
 {{ block.super }}
 
 <script>
-    $(function () {
-        $("#main_search").autocomplete({
-            source: "{% url 'autocomplete' %}",
-            minLength: 2,
+        $(document).ready(function () {
+            $("select#s_type").change(function () {
+                var selected = $(this).children("option:selected").val();
+                        $(function () {
+            $("#search").autocomplete({
+                source: '/s/'+selected+"_autocomplete",
+                minLength: 2,
+            });
         });
-    });
-    $(function () {
-        $('.lazy').lazy();
-    });
-</script>
+            })
+        });
+
+    $(".lazy").lazy()
+
+    </script>
 {% block script %}
 
 {% endblock %}
+
 </body>
 </html>

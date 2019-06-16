@@ -1,50 +1,47 @@
 {% extends 'base/base.html' %}
 
+{% load django_tables2 %}
+
 {% block body %}
+    <div class="row">
+        <div class="col-4">
+            <div class="position-static">test</div>
+            <div class="text-center info-color text-white" id="sticky-content">
+                <div class="list-group">
+                    <a class="list-group-item" href="{% url 'search' %}{% querystring "page"="1" %}">Search All</a>
+                    <a class="list-group-item" href="{% url 'search_movies' %}{% querystring "page"="1" %}">Movies</a>
+                    <a class="list-group-item" href="{% url 'search_shows' %}{% querystring "page"="1" %}">Tv Shows</a>
+                    <a class="list-group-item" href="{% url 'search_episodes' %}{% querystring "page"="1" %}">Episodes</a>
+                    <a class="list-group-item" href="{% url 'search_collections' %}{% querystring "page"="1" %}">Collections</a>
+                    <a class="list-group-item" href="{% url 'search_people' %}{% querystring "page"="1" %}">Person</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-8">
+            <div class="container mt-5">
+                <section class="p-5 mt-3" id="searchbar">
+                   {% include 'base/search_bar.html' %}
+                </section>
+                <div class="col-md-12">
+                    <ul class="list-group">
+                        {% for movie in movie_lists.results %}
+                            <a href="{% url "movie_detail" movie.id %}">
+                                <li class="list-group-item">
+                                    <img src="{{ image_base.base_url }}/{{ poster_size.w154 }}{{ movie.poster_path }}"
+                                         alt="{{ movie.title }}" class="img-thumbnail thumb"/>
+                                    <p>{{ movie.title }}</p>
+                                    <p>{{ movie.release_date }}</p>
+                                    <p>{{ movie.overview|truncatechars:155 }}</p>
+                                </li>
+                            </a>
+                        {% endfor %}
+                    </ul>
+                    {% if paginator.has_other_pages %}
+                        {% include 'base/pagination.html' %}
+                    {% endif %}
 
-    <div class="container mt-5">
-        <section class="p-5 mt-3" id="searchbar">
-        <!-- Search form -->
-        <form class="form-inline md-form form-sm active-cyan-2 mt-2 text-center" action="{% url 'search' %}">
-            <label class="mdb-main-label">Movie Search</label>
-            <input class="form-control form-control-sm mr-3 w-75" type="text" id="video_search" name="search" placeholder="Search"
-                   aria-label="Search">
-            <button type="submit" class="btn btn-action w-20"><i class="fas fa-search" aria-hidden="true"></i></button>
-        </form>
-    </section>
-    <div class="col-md-12">
-        <ul class="list-group">
-            {% for movie in movie_lists.results %}
-                <a href="{% url "movie_detail" movie.id %}">
-                <li class="list-group-item">
-                <img src="{{ image_url.base_url }}/{{ image_size.w154 }}{{ movie.poster_path }}"alt="{{ movie.title }}" class="img-thumbnail thumb"/>
-                    <p>{{ movie.title }}</p>
-                <p>{{ movie.release_date }}</p>
-                <p>{{ movie.overview|truncatechars:155 }}</p>
-                </li>
-                </a>
-            {% endfor %}
-
-        </ul>
-
+                </div>
+            </div>
+        </div>
     </div>
-    </div>
-    <h1>Movie Search</h1>
-    {% for movie in movie_lists.results %}
-        {{ movie }}
-    {% endfor %}
-
-    {{ s }}
-    {{ t }}
-{% endblock %}
-
-{% block script %}
-
-     <script>
-    $(function() {
-        $("#video_search").autocomplete({
-          source: "{% url 'autocomplete' %}",
-          minLength: 2,
-        });
-      });
 {% endblock %}

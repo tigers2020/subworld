@@ -78,14 +78,7 @@
         </div>
     </section>
     <section class="p-5" id="searchbar">
-        <!-- Search form -->
-        <form class="form-inline md-form form-sm active-cyan-2 mt-2" action="{% url 'search' %}">
-            <label class="mdb-main-label">Label example</label>
-            <input class="form-control form-control-sm mr-3 w-75" type="text" id="tv_search" name="search"
-                   placeholder="Search"
-                   aria-label="Search">
-            <button type="submit" class="btn btn-action"><i class="fas fa-search" aria-hidden="true"></i></button>
-        </form>
+                {% include "base/search_bar.html" %}
     </section>
     <section>
         <div class="row">
@@ -185,12 +178,19 @@
             keepImg: true,
         });
     </script>
-    <script>
-        $(function () {
-            $("#tv_search").autocomplete({
-                source: "{% url 'tv_autocomplete' %}",
-                minLength: 2,
-            });
-        });
-    </script>
+{#    <script>#}
+{#        $(document).ready(function () {#}
+{#            $("select#s_type").change(function () {#}
+{#                var selected = $(this).children("option:selected").val();#}
+{#                        $(function () {#}
+{#            $("#tv_search").autocomplete({#}
+{#                source: selected,#}
+{#                minLength: 2,#}
+{#            });#}
+{#        });#}
+{#            })#}
+{#        });#}
+{##}
+{##}
+{#    </script>#}
 {% endblock %}
