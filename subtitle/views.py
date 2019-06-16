@@ -9,11 +9,13 @@ from django.views import generic
 
 from subtitle.models import Subtitle
 from .forms import SubtitleForm
+from subworld.views import BaseSetMixin
 
 
-class MovieDetailList(generic.ListView):
+class MovieDetailList(BaseSetMixin, generic.ListView):
     model = Subtitle
     ordering = ('title', 'language',)
+    locator = "movie_detail"
 
     def get_queryset(self):
         print("kwargs: ", self.kwargs)
@@ -26,9 +28,6 @@ class MovieDetailList(generic.ListView):
         tmdbsimple.API_KEY = settings.TMDB_API_KEY
         movie = tmdbsimple.Movies(id=self.kwargs['db_id'])
 
-        context['image_url'] = settings.BASE_DIR
-        context['poster_size'] = settings.TMDB_POSTER_SIZE
-        context['backdrop_size'] = settings.TMDB_BACKDROP_SIZE
         context['movie'] = movie.info()
         context['images'] = movie.images()
         context['persons'] = movie.credits()
@@ -45,6 +44,7 @@ class TvDetail(generic.ListView):
         query = super(TvDetail, self).get_queryset()
 
         return query
+
 
 
 class CreateSubView(generic.CreateView):
@@ -104,3 +104,7 @@ class CreateSubView(generic.CreateView):
             return context
 
         return context
+
+
+class CollectionDetail(generic.TemplateView):
+    pass

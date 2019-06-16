@@ -12,10 +12,9 @@ urlpatterns = [
     path('autoinfo/', views.autoinfo, name="autoinfo"),
     path("", views.MultiSearch.as_view(), name='search'),
     path('movies/', views.MovieSearch.as_view(), name='search_movies'),
-    path('shows/', views.ShowSearch.as_view(), name='search_shows'),
-    path('episodes/', views.EpisodeSearch.as_view(), name='search_episodes'),
-    path('collections/', views.CollectionSearch.as_view(), name='search_collections'),
-    path('people', views.PersonSearch.as_view(), name='search_people'),
+    path('shows/', views.TvShowSearch.as_view(), name='search_shows'),
+    # path('collections/', views.CollectionSearch.as_view(), name='search_collections'),
+    # path('people', views.PersonSearch.as_view(), name='search_people'),
 
     # path("movie/", views.MovieSearch.asview(), name="movie_search"),
     # path("movie/<int:movie_id>/detail/", views.MovieDetail.as_view(), name="movie_detail"),

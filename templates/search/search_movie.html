@@ -1,39 +1,61 @@
 {% extends 'base/base.html' %}
-
+{% load static %}
 {% load django_tables2 %}
 
 {% block body %}
     <div class="row">
         <div class="col-4">
-            <div class="position-static">test</div>
-            <div class="text-center info-color text-white" id="sticky-content">
-                <div class="list-group">
-                    <a class="list-group-item" href="{% url 'search' %}{% querystring "page"="1" %}">Search All</a>
-                    <a class="list-group-item" href="{% url 'search_movies' %}{% querystring "page"="1" %}">Movies</a>
-                    <a class="list-group-item" href="{% url 'search_shows' %}{% querystring "page"="1" %}">Tv Shows</a>
-                    <a class="list-group-item" href="{% url 'search_episodes' %}{% querystring "page"="1" %}">Episodes</a>
-                    <a class="list-group-item" href="{% url 'search_collections' %}{% querystring "page"="1" %}">Collections</a>
-                    <a class="list-group-item" href="{% url 'search_people' %}{% querystring "page"="1" %}">Person</a>
-                </div>
-            </div>
+            {% include 'base/search_side_bar.html' %}
         </div>
         <div class="col-8">
             <div class="container mt-5">
                 <section class="p-5 mt-3" id="searchbar">
-                   {% include 'base/search_bar.html' %}
+                    {% include 'base/search_bar.html' %}
                 </section>
                 <div class="col-md-12">
                     <ul class="list-group">
-                        {% for movie in movie_lists.results %}
-                            <a href="{% url "movie_detail" movie.id %}">
-                                <li class="list-group-item">
-                                    <img src="{{ image_base.base_url }}/{{ poster_size.w154 }}{{ movie.poster_path }}"
-                                         alt="{{ movie.title }}" class="img-thumbnail thumb"/>
-                                    <p>{{ movie.title }}</p>
-                                    <p>{{ movie.release_date }}</p>
-                                    <p>{{ movie.overview|truncatechars:155 }}</p>
-                                </li>
-                            </a>
+                        {% for info in lists.results %}
+                            {% if info.media_type == "movie" %}
+                                <li class="info-color list-group-item">Movie</li>
+                                <a href="{% url 'movie_detail' info.id %}">
+                            {% else %}
+                                <li class="danger-color list-group-item">Tv Show</li>
+                                <a href="{% url 'tv_detail' info.id %}">
+                            {% endif %}
+                        <li class="list-group-item">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <img src="{% static 'main/img/lightbox/loading.gif' %}"
+                                         data-src="{{ image_base.base_url }}/{{ poster_size.w154 }}{{ info.poster_path }}"
+                                         alt="{{ info.name }}" class="img-thumbnail thumb lazy"/>
+                                </div>
+                                <div class="col-md-9">
+                                    <h3 class="title h3-responsive">
+                                        {% if info.name %}{{ info.name }}{% else %}{{ info.title }}{% endif %}
+                                    </h3>
+                                    {% if info.name != info.original_name %}
+                                        <h3 class="sub-title">
+                                            {{ info.original_name }}
+                                        </h3>
+                                    {% endif %}
+                                    {% if info.title != info.original_title %}
+                                        <h3 class="sub-title">
+                                            {{ info.original_title }}
+                                        </h3>
+                                    {% endif %}
+                                    {% if info.first_air_date %}
+                                        <h4 class="h4-responsive">{{ info.first_air_date }}</h4>
+                                    {% else %}
+                                        <h4 class="h4-responsive">{{ info.release_date }}</h4>
+                                    {% endif %}
+                                    <div class="">
+                                        {{ info.vote_average }}({{ info.vote_count }})
+                                    </div>
+                                    <p class="description">{{ info.overview|truncatechars:255 }}</p>
+                                </div>
+                            </div>
+                        </li>
+                        </a>
                         {% endfor %}
                     </ul>
                     {% if paginator.has_other_pages %}

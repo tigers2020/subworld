@@ -11,9 +11,9 @@
                         class="fas fa-backward"></i></a>
             </li>
         {% else %}
-            <li class="disabled"><i class="fas fa-backward"></i></li>
+            <li class="page-link disabled"><i class="fas fa-backward"></i></li>
         {% endif %}
-     <li class="page-item {% if paginator.number == i %} active{% endif %}">
+     <li class="page-item {% if paginator.number == 1 %} active{% endif %}">
                     <a href="{% querystring "page"=1 %}" class="page-link">1</a>
                 </li>
         {% for i in paginator.paginator.page_range %}
@@ -25,7 +25,7 @@
             {% endif %}
 
         {% endfor %}
-     <li class="page-item {% if paginator.number == i %} active{% endif %}">
+     <li class="page-item {% if paginator.number == paginator.paginator.num_pages %} active{% endif %}">
                     <a href="{% querystring "page"=paginator.paginator.num_pages %}" class="page-link">{{ paginator.paginator.num_pages }}</a>
                 </li>
 

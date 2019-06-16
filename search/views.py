@@ -13,60 +13,67 @@ from subworld.views import BaseSetMixin
 
 # Create your views here.
 
+def searching(context, object_lists, page):
+    print(object_lists)
+    paginator = Paginator(object_lists=object_lists['total_results'], total_results=object_lists['total_results'],
+                          total_pages=object_lists['total_pages'])
+    try:
+        paginator = paginator.get_page(page)
+    except PageNotAnInteger:
+        paginator = paginator.get_page(1)
+    except EmptyPage:
+        paginator = paginator.get_page(paginator.num_pages)
+
+    context['page'] = page
+    context['lists'] = object_lists
+    context['paginator'] = paginator
+
+    return context
+
+
 class MultiSearch(BaseSetMixin, generic.TemplateView):
     template_name = 'search/search_multi.html'
     locator = 'search'
 
     def get_context_data(self, **kwargs):
         context = super(MultiSearch, self).get_context_data(**kwargs)
-
         if self.request.GET:
             tmdbsimple.API_KEY = settings.TMDB_API_KEY
-
             page = int(self.request.GET.get('page', 1))
-            if self.request.GET.get('search'):
-                search = self.request.GET.get('search')
-            else:
-                search = ''
-            print("searching: ", search)
-            tmdbSearch = tmdbsimple.Search()
-
-            list = tmdbSearch.multi(query=search, page=page)
-            paginator = Paginator(object_lists=list['results'], total_results=list['total_results'],
-                                  total_pages=list['total_pages'])
-
-            try:
-                paginator = paginator.get_page(page)
-            except PageNotAnInteger:
-                paginator = paginator.get_page(1)
-            except EmptyPage:
-                paginator = paginator.get_page(paginator.num_pages())
-
-            context['page'] = page
-            context['lists'] = list
-            context['paginator'] = paginator
-
+            query = self.request.GET.get('search', "")
+            tmdb_search = tmdbsimple.Search()
+            context = searching(context, tmdb_search.multi(query=query, page=page), page)
         return context
 
 
 class MovieSearch(BaseSetMixin, generic.TemplateView):
     template_name = 'search/search_movie.html'
+    locator = 'search_movie'
+
+    def get_context_data(self, **kwargs):
+        context = super(MovieSearch, self).get_context_data(**kwargs)
+        if self.request.GET:
+            tmdbsimple.API_KEY = settings.TMDB_API_KEY
+            page = int(self.request.GET.get('page', 1))
+            query = self.request.GET.get('search', "")
+            tmdb_search = tmdbsimple.Search()
+            context = searching(context, tmdb_search.movie(query=query, page=page), page)
+        return context
 
 
-class ShowSearch(BaseSetMixin, generic.TemplateView):
-    template_name = 'search/search_movie.html'
+class TvShowSearch(BaseSetMixin, generic.TemplateView):
+    template_name = 'search/search_tv_show.html'
+    locator = 'search_tv_show'
 
-
-class EpisodeSearch(BaseSetMixin, generic.TemplateView):
-    template_name = 'search/search_movie.html'
-
-
-class CollectionSearch(BaseSetMixin, generic.TemplateView):
-    template_name = 'search/search_movie.html'
-
-
-class PersonSearch(BaseSetMixin, generic.TemplateView):
-    template_name = 'search/search_movie.html'
+    def get_context_data(self, **kwargs):
+        context = super(TvShowSearch, self).get_context_data(**kwargs)
+        if self.request.GET:
+            tmdbsimple.API_KEY = settings.TMDB_API_KEY
+            page = int(self.request.GET.get('page', 1))
+            query = self.request.GET.get('search', "")
+            tmdb_search = tmdbsimple.Search()
+            context = searching(context, tmdb_search.tv(query=query, page=page), page)
+        return context
 
 
 def autocomplete(request):

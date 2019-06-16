@@ -1,0 +1,10 @@
+{% load django_tables2 %}
+<div class="text-center info-color text-white" id="sticky-content">
+    <div class="list-group">
+        <a class="list-group-item" href="{% url 'search' %}{% querystring "page"="1" %}">Search All</a>
+        <a class="list-group-item" href="{% url 'search_movies' %}{% querystring "page"="1" %}">Movies</a>
+        <a class="list-group-item" href="{% url 'search_shows' %}{% querystring "page"="1" %}">Tv Shows</a>
+{#        <a class="list-group-item" href="{% url 'search_collections' %}{% querystring "page"="1" %}">Collections</a>#}
+{#        <a class="list-group-item" href="{% url 'search_people' %}{% querystring "page"="1" %}">Person</a>#}
+    </div>
+</div>
