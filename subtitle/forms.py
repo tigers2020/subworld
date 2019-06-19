@@ -5,7 +5,7 @@ from django.template.defaultfilters import filesizeformat
 from django.utils.translation import ugettext_lazy as _
 from wtforms.widgets import HiddenInput
 
-from .models import Subtitle
+from .models import MovieSubtitle
 
 CONTENT_TYPES = ['image', 'video', 'smi']
 FILE_EXTENSIONS = ['.psb', '.srt', '.ssa', '.ass', '.sub', '.sami', '.smil', '.smi', '.usf', '.vtt']
@@ -20,12 +20,11 @@ FILE_EXTENSIONS = ['.psb', '.srt', '.ssa', '.ass', '.sub', '.sami', '.smil', '.s
 MAX_UPLOAD_SIZE = "2621440"
 
 
-class SubtitleForm(forms.ModelForm):
+class MovieSubtitleForm(forms.ModelForm):
     class Meta:
-        model = Subtitle
-        fields = ("type", "db_id", "title", 'language', 'sub_file', 'comment')
+        model = MovieSubtitle
+        fields = ("db_id", "title", 'language', 'sub_file', 'comment')
         widgets = {
-            'type': forms.HiddenInput(),
             'db_id': forms.HiddenInput(),
         }
 

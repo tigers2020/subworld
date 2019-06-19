@@ -254,6 +254,8 @@ FLAG = {
 # Create your models here.
 from django.urls import reverse
 
+from search.models import MovieDB, TvSeriesDB
+
 
 class Country(models.Model):
     name = models.CharField(max_length=128)
@@ -275,17 +277,16 @@ class Language(models.Model):
         return self.iso_language_name + '[' + self.native_name + ']'
 
 
-class Subtitle(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
-    type = models.IntegerField()
-    db_id = models.IntegerField()
+class MovieSubtitle(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    db_id = models.ForeignKey(MovieDB, on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
     sub_file = models.FileField()
     language = models.ForeignKey(Language, on_delete=models.CASCADE)
     rate_star = models.IntegerField(default=0)
     rate_good = models.IntegerField(default=0)
     rate_bad = models.IntegerField(default=0)
-    upload_date = models.DateTimeField(auto_now_add=True)
+    upload_date = models.DateTimeField(auto_created=True)
     downloaded = models.IntegerField(default=0)
     comment = RichTextField(blank=True, null=True)
 
@@ -294,3 +295,38 @@ class Subtitle(models.Model):
 
     def get_absolute_url(self):
         return reverse("subtitle:movie_detail", kwargs={"id": self.db_id})
+
+    class Meta:
+        get_latest_by = ["upload_date"]
+        order_with_respect_to = ['db_id']
+        ordering = ['-rate_good', '-downloaded']
+        indexes = [
+            models.Index(fields=['title'], name='movie_title_idx')
+        ]
+
+
+class TvSubtitle(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    db_id = models.ForeignKey(TvSeriesDB, on_delete=models.CASCADE)
+    season_id = models.IntegerField()
+    episode_id = models.IntegerField()
+    name = models.CharField(max_length=255)
+    sub_file = models.FileField(unique=True)
+    language = models.ForeignKey(Language, on_delete=models.CASCADE)
+    rate_star = models.IntegerField(default=0)
+    rate_good = models.IntegerField(default=0)
+    rate_bad = models.IntegerField(default=0)
+    upload_date = models.DateTimeField(auto_created=True)
+    downloaded = models.IntegerField(default=0)
+    comment = RichTextField(blank=True, null=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        get_latest_by = ["upload_date"]
+        order_with_respect_to = ['db_id']
+        ordering = ['season_id', 'episode_id', 'rate_good','-downloaded']
+        indexes = [
+            models.Index(fields=['name'], name='tv_name_idx')
+        ]

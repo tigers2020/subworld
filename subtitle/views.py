@@ -7,49 +7,64 @@ from django.core.files.storage import FileSystemStorage
 from django.urls import reverse_lazy
 from django.views import generic
 
-from subtitle.models import Subtitle
-from .forms import SubtitleForm
+from subtitle.models import MovieSubtitle, TvSubtitle
 from subworld.views import BaseSetMixin
+from .forms import MovieSubtitleForm
 
 
 class MovieDetailList(BaseSetMixin, generic.ListView):
-    model = Subtitle
+    model = MovieSubtitle
     ordering = ('title', 'language',)
     locator = "movie_detail"
+    template_name = 'subtitle/moviesubtitle_list.html'
 
     def get_queryset(self):
         print("kwargs: ", self.kwargs)
-        queryset = Subtitle.objects.filter(db_id=self.kwargs['db_id'])
+        queryset = MovieSubtitle.objects.filter(db_id=self.kwargs['db_id'])[:20]
 
         return queryset
 
     def get_context_data(self, *args, **kwargs):
         context = super(MovieDetailList, self).get_context_data(*args, **kwargs)
-        tmdbsimple.API_KEY = settings.TMDB_API_KEY
         movie = tmdbsimple.Movies(id=self.kwargs['db_id'])
 
         context['movie'] = movie.info()
         context['images'] = movie.images()
         context['persons'] = movie.credits()
         context['videos'] = movie.videos()
-        context['similar'] = movie.similar_movies()
         context['keywords'] = movie.keywords()
         return context
 
 
-class TvDetail(generic.ListView):
-    model = Subtitle
+class TvDetailList(BaseSetMixin, generic.ListView):
+    model = TvSubtitle
+    template_name = 'subtitle/tv_show_subtitle_list.html'
 
-    def get_queryset(self, **kwargs):
-        query = super(TvDetail, self).get_queryset()
+    def get_context_data(self, *args, **kwargs):
+        context = super(TvDetailList, self).get_context_data(*args, **kwargs)
+        tv_show = self.tmdb.TV(id=self.kwargs['db_id'])
 
-        return query
+        context['tv_show'] = tv_show.info()
+        context['images'] = tv_show.images()
+        context['videos'] = tv_show.videos()
+        context['persons'] = tv_show.credits()
+
+        return context
 
 
+class TvSeasonList(BaseSetMixin, generic.ListView):
+    model = TvSubtitle
+    template_name = 'subtitle/tv_season_subtitle_list.html'
 
-class CreateSubView(generic.CreateView):
-    model = Subtitle
-    form_class = SubtitleForm
+
+class TvEpisodeList(BaseSetMixin, generic.ListView):
+    model = TvSubtitle
+    template_name = 'subtitle/tv_episode_subtitle_list.html'
+
+
+class CreateMovieSubView(generic.CreateView):
+    model = MovieSubtitle
+    form_class = MovieSubtitleForm
 
     def get_success_url(self, **kwargs):
 
@@ -58,14 +73,15 @@ class CreateSubView(generic.CreateView):
     def form_invalid(self, form):
         print(form.errors)
 
-        return super(CreateSubView, self).form_invalid(form)
+        return super(CreateMovieSubView, self).form_invalid(form)
+
     def form_valid(self, form):
         print(form.cleaned_data)
         subtitle = form.save(commit=False)
         subtitle.user = self.request.user
         if self.request.FILES:
             upload_file = self.request.FILES['sub_file']
-            subtitles = Subtitle.objects.all()
+            subtitles = MovieSubtitle.objects.all()
             if upload_file.name in subtitles:
                 print("file is already exist.")
             path_1 = ""
@@ -85,10 +101,10 @@ class CreateSubView(generic.CreateView):
 
             form.user = self.request.user
             form.save()
-            return super(CreateSubView, self).form_valid(form)
+            return super(CreateMovieSubView, self).form_valid(form)
 
     def get_context_data(self, **kwargs):
-        context = super(CreateSubView, self).get_context_data(**kwargs)
+        context = super(CreateMovieSubView, self).get_context_data(**kwargs)
 
         if self.request.GET:
             tmdbsimple.API_KEY = settings.TMDB_API_KEY
