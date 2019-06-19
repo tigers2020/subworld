@@ -1,0 +1,297 @@
+{% extends 'parts/base.html' %}
+{% load static %}
+{% load sub_extras %}
+{% load humanize %}
+{% block keywords %}
+    {% for keyword in keywords.keywords %}{{ keyword.name }}, {% endfor %}
+{% endblock %}
+
+{% block custom_css %}
+    <link rel="stylesheet" href="{% static "main/css/custom/movie_detail.css" %}"/>
+
+{% endblock %}
+{% block body %}
+    <section id="searchbar">
+        {% include 'parts/search_bar.html' %}
+    </section>
+    <header>
+
+        <div class="view jarallax" style="height: 30vh;">
+            <img class="jarallax-img lazy" src="{% static 'main/img/lightbox/loading.gif' %}"
+                 data-src="{{ image_base.base_url }}/{{ backdrop_size.original }}{{ movie.backdrop_path }}"
+                 style="background-position: top"
+                 alt="{{ movie.title }}">
+            <div class="mask rgba-blue-slight">
+                <div class="container flex-center text-center">
+                    <div class="row mt-5">
+                        <div class="col-md-12 wow fadeIn mb-3">
+                            <h2 class="h2-responsive display-3 mb-2 wow fadeInDown text-white" style="text-shadow: 2px 2px #000;"
+                                data-wow-delay="0.3s">{{ movie.title }}</h2>
+                            <h5 class="h5-responsive text-uppercase mb-3 mt-1 font-weight-bold wow fadeIn text-white"
+                                style="text-shadow: 2px 2px #000;" data-wow-delay="0.4s">{{ movie.tagline }}</h5>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container-fluid">
+        <div class="row" style="margin-top: -100px">
+            <div class="col-md-12 px-md-5">
+                <ul class="nav nav-tabs nav-justified md-tabs indigo" id="myTabJust" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="home-tab-just" data-toggle="tab" href="#information-just"
+                           role="tab"
+                           aria-controls="information-just"
+                           aria-selected="true">Information</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="subtitle-tab-just" data-toggle="tab" href="#subtitle-just" role="tab"
+                           aria-controls="subtitle-just"
+                           aria-selected="false">Subtitles</a>
+                    </li>
+                </ul>
+                <div class="tab-content card pt-5" id="myTabContentJust">
+                    <div class="tab-pane fade show active" id="information-just" role="tabpanel"
+                         aria-labelledby="information-tab-just">
+                        <p>{{ movie.title }}<span>{{ movie.status }}</span></p>
+                        <p>{{ movie.release_date }}</p>
+                        <p>{{ movie.overview }}</p>
+                    <p>runtime: {{ movie.runtime }}/{{ movie.runtime|strftime }}</p>
+                    <p>budget : ${{ movie.budget|intcomma }}</p>
+                    <p>revenue: ${{ movie.revenue|intcomma }}</p>
+                    <p>homepage : {{ movie.homepage }}</p>
+                    {% for genre in movie.genres %}
+                        <a class="btn btn-amber">{{ genre.name}}</a>
+                    {% endfor %}
+                    <p>{{ movie.imdb_id }}</p>
+
+                        <h3 class="h3-responsive">Videos</h3>
+                        <div class="text-center">
+                        <ul class="scroll">
+                            {% for video in videos.results %}
+                                <li class="list-item">
+                                <button type="button" class="btn btn-info" data-toggle="modal"
+                                        data-target="#video_{{ forloop.counter0 }}">{{ video.type }}</button>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                        </div>
+                        {% for video in videos.results %}
+                            <div class="modal fade" id="video_{{ forloop.counter0 }}" tabindex="-1" role="dialog"
+                                 aria-labelledby="{{ video.name }}" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                                    <!--Content-->
+                                    <div class="modal-content">
+                                        <!--Body-->
+                                        <div class="modal-body mb-0 p-0">
+                                            <div class="embed-responsive embed-responsive-16by9 z-depth-1-half">
+                                                <iframe class="embed-responsive-item"
+                                                        src="https://www.youtube.com/embed/{{ video.key }}"
+                                                        allowfullscreen></iframe>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--/.Content-->
+                                </div>
+                            </div>
+                        {% endfor %}
+                        <h3 class="h3-responsive">Actors</h3>
+                        <div class="row">
+                        <ul class="scroll">
+                            {% for person in persons.cast %}
+                                <li class="list-item">
+                                    <div class="card">
+                                        <div class="card-img-top overlay zoom">
+                                            {% if person.profile_path %}
+                                                <img class="img-fluid lazy"
+                                                     src="{% static 'main/img/lightbox/loading.gif' %}"
+                                                     data-src="{{ image_base.base_url }}/{{ profile_size.w185 }}{{ person.profile_path }}"
+                                                     alt="{{ person.name }}"/>
+                                            {% else %}
+                                                <p class="text-center">{{ person.name }}</p>
+                                            {% endif %}
+                                        </div>
+                                        <div class="card-body">
+                                            <h6 class=" pink-text h6-responsive">{{ person.character }}</h6>
+                                            <h6 class="title h6-responsive">{{ person.name }}</h6>
+                                        </div>
+                                    </div>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                        </div>
+
+
+                        <h3 class="h3-responsive">Companies</h3>
+                        <ul class="scroll">
+                            {% for production_company in movie.production_companies %}
+                                <li class="list-item">
+                                    <div class="card">
+                                        <div class="card-body text-center align-middle">
+                                            {% if production_company.logo_path %}
+                                                <img src="{% static 'main/img/lightbox/loading.gif' %}"
+                                                     data-src="{{ image_base.base_url }}/{{ logo_size.w185 }}{{ production_company.logo_path }}"
+                                                     alt="{{ production_company.name }}" class="img-thumbnail lazy"/>
+                                            {% else %}
+                                                <p>{{ production_company.name }}</p>
+                                            {% endif %}
+                                        </div>
+                                </div>
+                                </li>
+                            {% endfor %}
+                        </ul>
+
+
+                    </div>
+                    <div class="tab-pane fade" id="subtitle-just" role="tabpanel" aria-labelledby="subtitle-tab-just">
+                        <div class="container">
+                            <form method="get" action="{% url "sub-upload" %}" class="text-center">
+
+                                <input class="form-control" type="hidden" name="movie_id" value="{{ movie.id }}"/>
+                                <button class="btn btn-action" type="submit">Upload Subtitle</button>
+
+                            </form>
+                        </div>
+                        <div class="container">
+                            {% if not subtitle_list %}
+                                <h5>There is no Subtitle for {{ movie.title }}</h5>
+                                <h6> Be the First upload Subtitle for this movie/Tv Show</h6>
+                            {% else %}
+                                {% regroup subtitle_list by language as language_list %}
+                                <div class="accordion md-accordion" id="subtitle_list_accordion"
+                                     aria-multiselectable="true">
+                                    {% for language in language_list %}
+                                        <div class="card">
+                                            <div class="card-header" role="tab" id="heading_{{ language.grouper.id }}">
+                                                <a data-toggle="collapse" data-parent="#subtitle_list_accordion"
+                                                   href="#collapse_{{ language.grouper.id }}"
+                                                   aria-expanded="true"
+                                                   aria-controls="collapse_{{ language.grouper.id }}">
+                                                    <h5 class="mb-0">
+                                                        {{ language.grouper }}<i
+                                                            class="fas fa-angle-down rotate-icon"></i>
+                                                    </h5>
+                                                </a>
+                                            </div>
+                                            <div class="collapse {% if forloop.first %}show{% endif %}"
+                                                 id="collapse_{{ language.grouper.id }}"
+                                                 role="tabpanel" aria-labelledby="heading_{{ language.grouper.id }}"
+                                                 data-parent="#subtitle_list_accordion">
+                                                <div class="card-body">
+                                                    {% for subtitle in language.list %}
+                                                        <div class="card mt-3">
+                                                            <div class="card-header">
+                                                                <div class="row">
+                                                                    <div class="col-md-7">
+                                                                        <h5 class="h5-responsive">{{ subtitle.sub_file.name }}</h5>
+                                                                    </div>
+                                                                    <div class="col-md-5">
+                                                                        <div class="text-right">Uploaded by: <span
+                                                                                class="small">{{ subtitle.user }}</span>
+                                                                            <div class="text-right">Created by: <span
+                                                                                    class="small">
+                                                                                {{ subtitle.upload_date }}
+                                                                            </span></div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="card-body">
+                                                                <div class="row text-center">
+                                                                    <div class="col-md-6">
+                                                                        <div class="rounded-circle success-color">{{ subtitle.rate_good }}</div>
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <div class="rounded-circle danger-color">{{ subtitle.rate_bad }}</div>
+                                                                    </div>
+                                                                    <div class="col-md-12">
+                                                                        <p>{{ subtitle.rate_star }}</p>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-12">
+                                                                    <a href="{{ subtitle.sub_file.url }}"
+                                                                       class="card-link">{{ subtitle.sub_file.name }}</a>
+                                                                </div>
+
+                                                                <div>{{ subtitle.comment|safe }}</div>
+                                                            </div>
+                                                        </div>
+                                                    {% endfor %}
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {#                            <div class="card">#}
+                                        {#                                <div class="card-header">#}
+                                        {#                                    <h4 class="h4-responsive">{{ language.grouper }}</h4>#}
+                                        {#                                </div>#}
+                                        {#                                <div class="card-body">#}
+                                        {#                                                            {% for subtitle in language.list %}#}
+                                        {#                            <div class="card mt-3">#}
+                                        {#                                <div class="card-header">#}
+                                        {#                                    <div class="row">#}
+                                        {#                                        <div class="col-md-8">#}
+                                        {#                                            <h5 class="h5-responsive">{{ subtitle.sub_file.name }}</h5>#}
+                                        {#                                        </div>#}
+                                        {#                                        <div class="col-md-4">#}
+                                        {#                                            <div class="text-right">Uploaded by: <span#}
+                                        {#                                                    class="small">{{ subtitle.user }}</span>#}
+                                        {#                                            </div>#}
+                                        {#                                        </div>#}
+                                        {#                                    </div>#}
+                                        {#                                </div>#}
+                                        {#                                <div class="card-body">#}
+                                        {#                                    <div>{{ subtitle.sub_file.name }}</div>#}
+                                        {#                                    <div>{{ subtitle.language }}#}
+                                        {#                                    </div>#}
+                                        {#                                    <div>{{ subtitle.rate_good }}#}
+                                        {#                                    </div>#}
+                                        {#                                    <div>#}
+                                        {#                                        {{ subtitle.rate_bad }}#}
+                                        {#                                    </div>#}
+                                        {#                                    <div>{{ subtitle.rate_star }}#}
+                                        {#                                    </div>#}
+                                        {#                                    <div>{{ subtitle.downloaded }}#}
+                                        {#                                    </div>#}
+                                        {#                                    <div>{{ subtitle.run_time }}#}
+                                        {#                                    </div>#}
+                                        {#                                    <div>{{ subtitle.upload_date }}</div>#}
+                                        {#                                    <div>{{ subtitle.user.name }}</div>#}
+                                        {#                                    <div>{{ subtitle.comment|safe }}</div>#}
+                                        {#                                </div>#}
+                                        {#                            </div>#}
+                                        {##}
+                                        {#                        {% endfor %}#}
+                                        {#                                </div>#}
+                                        {#                            </div>#}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script>
+        $('.collapse').collapse();
+        // object-fit polyfill run
+        objectFitImages();
+
+        /* init Jarallax */
+        jarallax(document.querySelectorAll('.jarallax'));
+
+        jarallax(document.querySelectorAll('.jarallax-keep-img'), {
+            keepImg: true,
+        });
+    </script>
+{% endblock %}

@@ -1,23 +1,23 @@
-{% extends 'base/base.html' %}
+{% extends 'parts/base.html' %}
 {% load static %}
 {% load django_tables2 %}
 
 {% block body %}
     <div class="row">
         <div class="col-4">
-            {% include 'base/search_side_bar.html' %}
+            {% include 'parts/search_side_bar.html' %}
         </div>
         <div class="col-8">
             <div class="container mt-5">
                 <section class="p-5 mt-3" id="searchbar">
-                    {% include 'base/search_bar.html' %}
+                    {% include 'parts/search_bar.html' %}
                 </section>
 
                 <div class="row">
                     {% for info in lists.results %}
                         {% if info.media_type == 'movie' or info.media_type == 'tv' %}
                             <!-- Card Wider -->
-                            <div class="card card-cascade wider col-md-4 col-sm-6">
+                            <div class="card card-cascade wider col-md-4 col-sm-6 my-3">
 
                                 <!-- Card image -->
                                 <div class="view view-cascade overlay">
@@ -48,7 +48,7 @@
                         {% endif %}
                     {% endfor %}
                     {% if paginator.has_other_pages %}
-                        {% include 'base/pagination.html' %}
+                        {% include 'parts/pagination.html' %}
                     {% endif %}
                 </div>
 

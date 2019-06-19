@@ -1,16 +1,16 @@
-{% extends 'base/base.html' %}
+{% extends 'parts/base.html' %}
 {% load static %}
 {% load django_tables2 %}
 
 {% block body %}
     <div class="row">
         <div class="col-4">
-            {% include 'base/search_side_bar.html' %}
+            {% include 'parts/search_side_bar.html' %}
         </div>
         <div class="col-8">
             <div class="container mt-5">
                 <section class="p-5 mt-3" id="searchbar">
-                    {% include 'base/search_bar.html' %}
+                    {% include 'parts/search_bar.html' %}
                 </section>
                 <div class="col-md-12">
                     <ul class="list-group">
@@ -55,7 +55,7 @@
                         {% endfor %}
                     </ul>
                     {% if paginator.has_other_pages %}
-                        {% include 'base/pagination.html' %}
+                        {% include 'parts/pagination.html' %}
                     {% endif %}
 
                 </div>

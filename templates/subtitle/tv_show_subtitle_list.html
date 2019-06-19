@@ -1,28 +1,35 @@
-{% extends 'base/base.html' %}
+{% extends 'parts/base.html' %}
 {% load static %}
+{% load sub_extras %}
+{% load humanize %}
 {% block keywords %}
     {% for keyword in keywords.keywords %}{{ keyword.name }}, {% endfor %}
 {% endblock %}
 
+{% block custom_css %}
+    <link rel="stylesheet" href="{% static "main/css/custom/tv_show_detail.css" %}"/>
+
+{% endblock %}
 {% block body %}
     <section id="searchbar">
-        {% include 'base/search_bar.html' %}
+        {% include 'parts/search_bar.html' %}
     </section>
     <header>
 
         <div class="view jarallax" style="height: 30vh;">
             <img class="jarallax-img lazy" src="{% static 'main/img/lightbox/loading.gif' %}"
-                 data-src="https://image.tmdb.org/t/p/original{{ movie.backdrop_path }}"
+                 data-src="{{ image_base.base_url }}/{{ backdrop_size.original }}{{ tv_show.backdrop_path }}"
                  style="background-position: top"
-                 alt="{{ movie.title }}">
+                 alt="{{ tv_show.title }}">
             <div class="mask rgba-blue-slight">
                 <div class="container flex-center text-center">
                     <div class="row mt-5">
                         <div class="col-md-12 wow fadeIn mb-3">
-                            <h2 class="display-3 mb-2 wow fadeInDown text-white" style="text-shadow: 2px 2px #000;"
-                                data-wow-delay="0.3s">{{ movie.title }}</h2>
-                            <h5 class="text-uppercase mb-3 mt-1 font-weight-bold wow fadeIn text-white"
-                                style="text-shadow: 2px 2px #000;" data-wow-delay="0.4s">{{ movie.tagline }}</h5>
+                            <h2 class="h2-responsive display-3 mb-2 wow fadeInDown text-white"
+                                style="text-shadow: 2px 2px #000;"
+                                data-wow-delay="0.3s">{{ tv_show.name }}</h2>
+                            <h5 class="h5-responsive text-uppercase mb-3 mt-1 font-weight-bold wow fadeIn text-white"
+                                style="text-shadow: 2px 2px #000;" data-wow-delay="0.4s">{{ tv_show.tagline }}</h5>
 
                         </div>
                     </div>
@@ -50,15 +57,49 @@
                 <div class="tab-content card pt-5" id="myTabContentJust">
                     <div class="tab-pane fade show active" id="information-just" role="tabpanel"
                          aria-labelledby="information-tab-just">
-                        <p>{{ movie.title }}</p>
-                        <p>{{ movie.release_date }}</p>
-                        <p>{{ movie.overview }}</p>
+                        <p>{{ tv_show.name }}<span>{{ tv_show.status }}</span></p>
+                        <p>{{ tv_show.first_air_date }}</p>
+                        <p>{{ tv_show.last_air_date }}</p>
+                        <p>{{ tv_show.overview }}</p>
+                        <p>runtime: {{ tv_show.episode_run_time.0|strftime }}</p>
+                        <p>homepage : {{ tv_show.homepage }}</p>
+                        {% for genre in tv_show.genres %}
+                            <a class="btn btn-amber">{{ genre.name }}</a>
+                        {% endfor %}
+                        <p>{{ tv_show.imdb_id }}</p>
+                        <h3 class="h3-responsive">Seasons</h3>
+                    <ul class="scroll">
+                        {% for seasons in tv_show.seasons %}
+                        <li class="list-item">
+                        <div class="card">
+                            <div class="card-img-top">
+                                <img class="card-img lazy" src="{% static 'main/img/lightbox/loading.gif' %}"
+                                 data-src="{{ image_base.base_url }}/{{ poster_size.w185 }}{{ seasons.poster_path }}" alt="{{ seasons.name }}">
+                            </div>
+                            <div class="card-body">
+                                <h4 class="h4-responsive">{{ seasons.name }}</h4>
+                                <h5 class="pink-text">{{ seasons.air_date }}</h5>
+                                <p class="description">{{ seasons.overview|truncatechars:100 }}</p>
+                            </div>
+                            <div class="card-footer">
+                                <p>{{ seasons.id }}</p>
+                                <button class="btn btn-primary">more detail</button>
+                            </div>
+                        </div>
+                        </li>
+                        {% endfor %}
+
+                    </ul>
                         <h3 class="h3-responsive">Videos</h3>
                         <div class="text-center">
-                            {% for video in videos.results %}
-                                <button type="button" class="btn btn-info" data-toggle="modal"
-                                        data-target="#video_{{ forloop.counter0 }}">{{ video.type }}</button>
-                            {% endfor %}
+                            <ul class="scroll">
+                                {% for video in videos.results %}
+                                    <li class="list-item">
+                                        <button type="button" class="btn btn-info" data-toggle="modal"
+                                                data-target="#video_{{ forloop.counter0 }}">{{ video.type }}</button>
+                                    </li>
+                                {% endfor %}
+                            </ul>
                         </div>
                         {% for video in videos.results %}
                             <div class="modal fade" id="video_{{ forloop.counter0 }}" tabindex="-1" role="dialog"
@@ -81,62 +122,66 @@
                         {% endfor %}
                         <h3 class="h3-responsive">Actors</h3>
                         <div class="row">
-                            {% for person in persons.cast %}
-                                <div class="col-lg-2 col-md-3 col-sm-4 p-3">
-                                    <div class="card">
-                                        <div class="card-img-top overlay zoom">
-                                            {% if person.profile_path %}
-                                                <img class="img-fluid lazy"
-                                                     src="{% static 'main/img/lightbox/loading.gif' %}"
-                                                     data-src="https://image.tmdb.org/t/p/w500{{ person.profile_path }}"
-                                                     alt="{{ person.name }}"/>
-                                            {% else %}
-                                                <p class="text-center">{{ person.name }}</p>
-                                            {% endif %}
+                            <ul class="scroll">
+                                {% for person in persons.cast %}
+                                    <li class="list-item">
+                                        <div class="card">
+                                            <div class="card-img-top overlay zoom">
+                                                {% if person.profile_path %}
+                                                    <img class="img-fluid lazy"
+                                                         src="{% static 'main/img/lightbox/loading.gif' %}"
+                                                         data-src="{{ image_base.base_url }}/
+                                                                 {{ profile_size.w185 }}{{ person.profile_path }}"
+                                                         alt="{{ person.name }}"/>
+                                                {% else %}
+                                                    <p class="text-center">{{ person.name }}</p>
+                                                {% endif %}
+                                            </div>
+                                            <div class="card-body">
+                                                <h6 class=" pink-text h6-responsive">{{ person.character }}</h6>
+                                                <h6 class="title h6-responsive">{{ person.name }}</h6>
+                                            </div>
                                         </div>
-                                        <div class="card-body">
-                                            <h6 class=" pink-text h6-responsive">{{ person.character }}</h6>
-                                            <h6 class="title h6-responsive">{{ person.name }}</h6>
-                                        </div>
-                                    </div>
-                                </div>
-                            {% endfor %}
+                                    </li>
+                                {% endfor %}
+                            </ul>
                         </div>
 
 
                         <h3 class="h3-responsive">Companies</h3>
-                        <div class="row">
-                            {% for production_company in movie.production_companies %}
-                                <div class="col-md-3">
+                        <ul class="scroll">
+                            {% for production_company in tv_show.production_companies %}
+                                <li class="list-item">
                                     <div class="card">
                                         <div class="card-body text-center align-middle">
                                             {% if production_company.logo_path %}
                                                 <img src="{% static 'main/img/lightbox/loading.gif' %}"
-                                                     data-src="https://image.tmdb.org/t/p/w500{{ production_company.logo_path }}"
+                                                     data-src="{{ image_base.base_url }}/
+                                                             {{ logo_size.w185 }}{{ production_company.logo_path }}"
                                                      alt="{{ production_company.name }}" class="img-thumbnail lazy"/>
                                             {% else %}
                                                 <p>{{ production_company.name }}</p>
                                             {% endif %}
-
                                         </div>
                                     </div>
-                                </div>
+                                </li>
                             {% endfor %}
-                        </div>
+                        </ul>
+
 
                     </div>
                     <div class="tab-pane fade" id="subtitle-just" role="tabpanel" aria-labelledby="subtitle-tab-just">
                         <div class="container">
                             <form method="get" action="{% url "sub-upload" %}" class="text-center">
 
-                                <input class="form-control" type="hidden" name="movie_id" value="{{ movie.id }}"/>
+                                <input class="form-control" type="hidden" name="movie_id" value="{{ tv_show.id }}"/>
                                 <button class="btn btn-action" type="submit">Upload Subtitle</button>
 
                             </form>
                         </div>
                         <div class="container">
                             {% if not subtitle_list %}
-                                <h5>There is no Subtitle for {{ movie.title }}</h5>
+                                <h5>There is no Subtitle for {{ tv_show.title }}</h5>
                                 <h6> Be the First upload Subtitle for this movie/Tv Show</h6>
                             {% else %}
                                 {% regroup subtitle_list by language as language_list %}
@@ -203,50 +248,6 @@
                                                 </div>
                                             </div>
                                         </div>
-
-                                        {#                            <div class="card">#}
-                                        {#                                <div class="card-header">#}
-                                        {#                                    <h4 class="h4-responsive">{{ language.grouper }}</h4>#}
-                                        {#                                </div>#}
-                                        {#                                <div class="card-body">#}
-                                        {#                                                            {% for subtitle in language.list %}#}
-                                        {#                            <div class="card mt-3">#}
-                                        {#                                <div class="card-header">#}
-                                        {#                                    <div class="row">#}
-                                        {#                                        <div class="col-md-8">#}
-                                        {#                                            <h5 class="h5-responsive">{{ subtitle.sub_file.name }}</h5>#}
-                                        {#                                        </div>#}
-                                        {#                                        <div class="col-md-4">#}
-                                        {#                                            <div class="text-right">Uploaded by: <span#}
-                                        {#                                                    class="small">{{ subtitle.user }}</span>#}
-                                        {#                                            </div>#}
-                                        {#                                        </div>#}
-                                        {#                                    </div>#}
-                                        {#                                </div>#}
-                                        {#                                <div class="card-body">#}
-                                        {#                                    <div>{{ subtitle.sub_file.name }}</div>#}
-                                        {#                                    <div>{{ subtitle.language }}#}
-                                        {#                                    </div>#}
-                                        {#                                    <div>{{ subtitle.rate_good }}#}
-                                        {#                                    </div>#}
-                                        {#                                    <div>#}
-                                        {#                                        {{ subtitle.rate_bad }}#}
-                                        {#                                    </div>#}
-                                        {#                                    <div>{{ subtitle.rate_star }}#}
-                                        {#                                    </div>#}
-                                        {#                                    <div>{{ subtitle.downloaded }}#}
-                                        {#                                    </div>#}
-                                        {#                                    <div>{{ subtitle.run_time }}#}
-                                        {#                                    </div>#}
-                                        {#                                    <div>{{ subtitle.upload_date }}</div>#}
-                                        {#                                    <div>{{ subtitle.user.name }}</div>#}
-                                        {#                                    <div>{{ subtitle.comment|safe }}</div>#}
-                                        {#                                </div>#}
-                                        {#                            </div>#}
-                                        {##}
-                                        {#                        {% endfor %}#}
-                                        {#                                </div>#}
-                                        {#                            </div>#}
                                     {% endfor %}
                                 </div>
                             {% endif %}
@@ -264,8 +265,6 @@
     <script>
         $('.collapse').collapse();
         // object-fit polyfill run
-        objectFitImages();
-
         /* init Jarallax */
         jarallax(document.querySelectorAll('.jarallax'));
 
