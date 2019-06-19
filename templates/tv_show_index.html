@@ -1,4 +1,4 @@
-{% extends 'parts/base.html' %}
+{% extends 'base/base.html' %}
 {% load sub_extras %}
 {% load static %}
 {% block keywords %}
@@ -6,7 +6,7 @@
 {% endblock %}
 {% block body %}
     <section class="p-5" id="searchbar">
-        {% include "parts/search_bar.html" %}
+        {% include "base/search_bar.html" %}
     </section>
     <section>
     <div class="row">
@@ -28,7 +28,7 @@
                         </div>
                     </div>
                 {% endfor %}
-                {% include 'parts/pagination.html' %}
+                {% include 'base/pagination.html' %}
             </div>
         </div>
 

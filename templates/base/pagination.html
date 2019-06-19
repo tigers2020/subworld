@@ -1,0 +1,44 @@
+{% load django_tables2 %}
+<nav aria-label="movie page navigation">
+<div class="container text-center">
+    <ul class="pagination pagination-circle pg-blue">
+        <li>
+            <a href="{% querystring "page"='1' %}" class="page-link">First</a>
+        </li>
+        {% if paginator.has_previous %}
+            <li>
+                <a href="{% querystring "page"=paginator.previous_page_number %}" class="page-link"><i
+                        class="fas fa-backward"></i></a>
+            </li>
+        {% else %}
+            <li class="page-link disabled"><i class="fas fa-backward"></i></li>
+        {% endif %}
+     <li class="page-item {% if paginator.number == 1 %} active{% endif %}">
+                    <a href="{% querystring "page"=1 %}" class="page-link">1</a>
+                </li>
+        {% for i in paginator.paginator.page_range %}
+
+            {% if i > paginator.start_display_page_number and i < paginator.end_display_page_number %}
+                <li class="page-item {% if paginator.number == i %} active{% endif %}">
+                    <a href="{% querystring "page"=i %}" class="page-link">{{ i }}</a>
+                </li>
+            {% endif %}
+
+        {% endfor %}
+     <li class="page-item {% if paginator.number == paginator.paginator.num_pages %} active{% endif %}">
+                    <a href="{% querystring "page"=paginator.paginator.num_pages %}" class="page-link">{{ paginator.paginator.num_pages }}</a>
+                </li>
+
+        {% if paginator.has_next %}
+            <li>
+                <a href="{% querystring "page"=paginator.next_page_number %}" class="page-link">
+                    <i class="fas fa-forward"></i> </a>
+            </li>
+        {% endif %}
+        <li>
+            <a href="{% querystring "page"=paginator.paginator.num_pages %}" class="page-link">Last</a>
+        </li>
+</div>
+    </ul>
+</nav>
+

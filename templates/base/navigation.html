@@ -1,0 +1,70 @@
+<!-- Navigation -->
+<nav class="navbar navbar-expand-md fixed-top navbar-dark scrolling-navbar">
+    <a class="navbar-brand" href="{% url 'index' %}">SubWorld</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent-555"
+            aria-controls="navbarSupportedContent-555" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent-555">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item {% if locator == 'index' %}active{% endif %}">
+                <a class="nav-link" href="{% url 'index' %}">Home
+                    {% if locator == 'index' %}<span class="sr-only">(current)</span>{% endif %}
+                </a>
+            </li>
+            <li class="nav-item {% if locator == 'movie_index' %}active{% endif %}">
+                <a class="nav-link" href="{% url 'movie_index' %}">Movie
+                    {% if locator == 'movie_index' %}<span class="sr-only">(current)</span>{% endif %}
+                </a>
+
+            </li>
+            <li class="nav-item {% if locator == 'tv_show_index' %}active{% endif %}">
+                <a class="nav-link" href="{% url 'tv_show_index' %}">Tv Show
+                    {% if locator == 'tv_show_index' %}<span class="sr-only">(current)</span>{% endif %}
+                </a>
+            </li>
+            <li class="nav-item {% if locator == 'sub_upload' %}active{% endif %}">
+                <a class="nav-link " href="{% url 'sub-upload' %}">Upload
+                    {% if locator == 'sub_upload' %}<span class="sr-only">(current)</span>{% endif %}
+                </a>
+            </li>
+            <li class="nav-item {% if locator == 'forum' %}active{% endif %}">
+                <a class="nav-link " href="#">Forum
+                    {% if locator == 'forum' %}<span class="sr-only">(current)</span>{% endif %}
+                </a>
+            </li>
+        </ul>
+        <ul class="navbar-nav ml-auto nav-flex-icons">
+            <li class="nav-item">
+                <a class="nav-link waves-effect waves-light">1
+                    <i class="fas fa-envelope"></i>
+                </a>
+            </li>
+            <li class="nav-item avatar dropdown">
+                <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink-55" data-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false">
+                    {% if user.is_authenticated %}
+                        <img src="{{ user.socialaccount_set.all.0.get_avatar_url }}"
+                             class="rounded-circle z-depth-0"
+                             alt="avatar image">{{ user.name }}
+                        <p>{{ user }}
+                        </p>
+                    {% endif %}
+                </a>
+                <div class="dropdown-menu dropdown-menu-lg-right dropdown-secondary"
+                     aria-labelledby="navbarDropdownMenuLink-55">
+                    {% if user.is_authenticated %}
+                        <a class="dropdown-item" href="#">account</a>
+                        <a class="dropdown-item" href="#">edit</a>
+                        <a class="dropdown-item" href="{% url "account_logout" %}">log out</a>
+                    {% else %}
+                        <a href="{% url "account_login" %}" class="dropdown-item">login</a>
+                        <a href="{% url "account_signup" %}" class="dropdown-item">Sign Up</a>
+                    {% endif %}
+
+                </div>
+            </li>
+        </ul>
+    </div>
+</nav>
+<!--/.Navbar -->
