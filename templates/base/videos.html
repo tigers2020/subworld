@@ -1,0 +1,6 @@
+{% load sub_extras %}
+<div class="card" style="width: 320px">
+    <div class="embed-responsive embed-responsive-16by9 embed-720p">
+        <iframe class="lazy embed-responsive-item" src="{{ video.site|get_video_url }}{{ video.key }}" allowfullscreen></iframe>
+    </div>
+</div>

@@ -1,0 +1,41 @@
+{% load static %}
+<H2>Loading</H2>
+
+<div class="view view-cascade">
+    <img src="{% static 'main/img/lightbox/loading.gif'  %}"
+         data-src="{{ image_base.base_url }}/{{ backdrop_size.w780 }}{{ info.backdrop_path }}"
+         class="card-img-top lazy"/>
+    <a href="#"><div class="mask rgba-white-light"></div> </a>
+</div>
+
+<div class="card-body card-body-cascade text-center">
+    <h4 class="card-title"><strong>{{ info.title }}</strong></h4>
+    <h4 class="indigo-text"><strong>{{ info.tagline }}</strong></h4>
+    <p class="card-text">{{ info.overview }}</p>
+</div>
+
+{#adult = {bool} False#}
+{#backdrop_path = {str} '/8YW4rwWQgC2JRlBcpStMNUko13k.jpg'#}
+{#belongs_to_collection = {NoneType} None#}
+{#budget = {int} 60000000#}
+{#genres = {list} <class 'list'>: [{'id': 53, 'name': 'Thriller'}, {'id': 878, 'name': 'Science Fiction'}]#}
+{#homepage = {NoneType} None#}
+{#id = {int} 9320#}
+{#imdb_id = {str} 'tt0118661'#}
+{#original_language = {str} 'en'#}
+{#original_title = {str} 'The Avengers'#}
+{#overview = {str} 'British Ministry agent John Steed, under direction from "Mother", investigates a diabolical plot by arch-villain Sir August de Wynter to rule the world with his weather control machine. Steed investigates the beautiful Doctor Mrs. Emma Peel, the only susp#}
+{#popularity = {float} 8.966#}
+{#poster_path = {str} '/zxjJ2IxhilZLzl8eXjj7S0apZ7k.jpg'#}
+{#production_companies = {list} <class 'list'>: [{'id': 2596, 'logo_path': None, 'name': 'Jerry Weintraub Productions', 'origin_country': 'US'}, {'id': 174, 'logo_path': '/ky0xOc5OrhzkZ1N6KyUxacfQsCk.png', 'name': 'Warner Bros. Pictures', 'origin_country': 'US'}]#}
+{#production_countries = {list} <class 'list'>: [{'iso_3166_1': 'US', 'name': 'United States of America'}]#}
+{#release_date = {str} '1998-08-13'#}
+{#revenue = {int} 48585416#}
+{#runtime = {int} 89#}
+{#spoken_languages = {list} <class 'list'>: [{'iso_639_1': 'en', 'name': 'English'}]#}
+{#status = {str} 'Released'#}
+{#tagline = {str} 'Saving the World in Style.'#}
+{#title = {str} 'The Avengers'#}
+{#video = {bool} False#}
+{#vote_average = {float} 4.3#}
+{#vote_count = {int} 340#}

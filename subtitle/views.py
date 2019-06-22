@@ -7,8 +7,9 @@ from django.core.files.storage import FileSystemStorage
 from django.urls import reverse_lazy
 from django.views import generic
 
+from search.models import MovieDB, TvSeriesDB
 from subtitle.models import MovieSubtitle, TvSubtitle
-from subworld.views import BaseSetMixin
+from subworld.views import BaseSetMixin, create_update_db
 from .forms import MovieSubtitleForm
 
 
@@ -20,7 +21,7 @@ class MovieDetailList(BaseSetMixin, generic.ListView):
 
     def get_queryset(self):
         print("kwargs: ", self.kwargs)
-        queryset = MovieSubtitle.objects.filter(db_id=self.kwargs['db_id'])[:20]
+        queryset = MovieSubtitle.objects.filter(db_id_id=self.kwargs['db_id'])[:20]
 
         return queryset
 
@@ -28,6 +29,7 @@ class MovieDetailList(BaseSetMixin, generic.ListView):
         context = super(MovieDetailList, self).get_context_data(*args, **kwargs)
         movie = tmdbsimple.Movies(id=self.kwargs['db_id'])
 
+        create_update_db(MovieDB, movie.info())
         context['movie'] = movie.info()
         context['images'] = movie.images()
         context['persons'] = movie.credits()
@@ -43,7 +45,7 @@ class TvDetailList(BaseSetMixin, generic.ListView):
     def get_context_data(self, *args, **kwargs):
         context = super(TvDetailList, self).get_context_data(*args, **kwargs)
         tv_show = self.tmdb.TV(id=self.kwargs['db_id'])
-
+        create_update_db(TvSeriesDB, tv_show.info())
         context['tv_show'] = tv_show.info()
         context['images'] = tv_show.images()
         context['videos'] = tv_show.videos()
@@ -62,13 +64,14 @@ class TvEpisodeList(BaseSetMixin, generic.ListView):
     template_name = 'subtitle/tv_episode_subtitle_list.html'
 
 
-class CreateMovieSubView(generic.CreateView):
+class CreateMovieSubView(BaseSetMixin, generic.CreateView):
     model = MovieSubtitle
     form_class = MovieSubtitleForm
+    locator = 'upload_movie'
 
     def get_success_url(self, **kwargs):
 
-        return reverse_lazy("movie_detail", args=(self.object.db_id,))
+        return reverse_lazy("movie_detail", args=(self.object.db_id.pk,))
 
     def form_invalid(self, form):
         print(form.errors)
@@ -87,14 +90,9 @@ class CreateMovieSubView(generic.CreateView):
             path_1 = ""
             fs = FileSystemStorage()
 
-            video_type = subtitle.type
             db_id = subtitle.db_id
             language = subtitle.language
 
-            if video_type == 1:
-                path_1 = "movie"
-            elif video_type == 2:
-                path_1 = "tv"
             file_path = os.path.join(path_1, str(db_id), language.iso_639_1, upload_file.name)
             print(file_path)
             fs.save(file_path, upload_file)
@@ -115,8 +113,6 @@ class CreateMovieSubView(generic.CreateView):
                 context['info'] = tmdbsimple.TV(self.request.GET.get('tv_show_id')).info()
                 context['show_type'] = 2
 
-            context['image_url'] = settings.TMDB_IMAGE_BASE
-            context['poster_size'] = settings.TMDB_POSTER_SIZE
             return context
 
         return context

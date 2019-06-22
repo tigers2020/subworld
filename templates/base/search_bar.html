@@ -14,13 +14,3 @@
     </form>
 </div>
 <!-- Search form -->
-
-<script>
-    $('.mdb-select').select();
-    $(function () {
-        $("#search").autocomplete({
-            source: "{% url '_autocomplete' %}",
-            minLength: 2,
-        });
-    });
-</script>

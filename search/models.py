@@ -6,6 +6,8 @@ from django.db import models
 class MovieDB(models.Model):
     adult = models.BooleanField(default=False)
     original_title = models.CharField(max_length=255)
+    poster_path = models.CharField(max_length=255, default="")
+    backdrop_path = models.CharField(max_length=255, default="")
     popularity = models.FloatField()
     video = models.BooleanField(default=False)
 
@@ -37,6 +39,8 @@ class KeywordDB(models.Model):
 class PersonDB(models.Model):
     adult = models.BooleanField(default=False)
     name = models.CharField(max_length=255)
+    poster_path = models.CharField(max_length=255, default="")
+    backdrop_path = models.CharField(max_length=255, default="")
     popularity = models.FloatField()
 
     def __str__(self):
@@ -59,6 +63,8 @@ class TvNetworkDB(models.Model):
 
 class TvSeriesDB(models.Model):
     original_name = models.CharField(max_length=255)
+    poster_path = models.CharField(max_length=255, default="")
+    backdrop_path = models.CharField(max_length=255, default="")
     popularity = models.FloatField()
 
     def __str__(self):

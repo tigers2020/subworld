@@ -56,8 +56,10 @@ class IndexView(BaseSetMixin, TemplateView):
         for now in populars['results'][:3]:
             keywords.append(tmdbsimple.Movies(now['id']).keywords())
 
-        check_new_db(MovieDB, populars)
-        check_new_db(MovieDB, nowplaying)
+        for info in populars['results']:
+            create_update_db(MovieDB, info)
+        for info in nowplaying['results']:
+            create_update_db(MovieDB, info)
         paginator = Paginator(object_lists=populars['results'], total_pages=populars['total_pages'],
                               total_results=populars['total_results']).get_page(page)
 
@@ -105,8 +107,10 @@ class TvShowIndexView(BaseSetMixin, TemplateView):
 
         popular = tv_show.popular(page=page)
         on_the_air = tv_show.on_the_air(page=page)
-        check_new_db(TvSeriesDB, popular)
-        check_new_db(TvSeriesDB, on_the_air)
+        for info in popular['results']:
+            create_update_db(TvSeriesDB, info)
+        for info in on_the_air['results']:
+            create_update_db(TvSeriesDB, info)
         paginator = Paginator(object_lists=popular['results'], total_results=popular['total_results'],
                               total_pages=popular['total_pages']).get_page(page)
 
@@ -117,8 +121,22 @@ class TvShowIndexView(BaseSetMixin, TemplateView):
         return context
 
 
-def check_new_db(db, data):
+def create_update_db(db, data):
+    info, created = db.objects.update_or_create(id=data['id'], defaults=data)
+    if created:
+        print("create {}".format(info))
+    else:
+        print("update {}".format(info))
+
+
+def check_movie_new_db(db, data):
+    if data['result']:
+        for info in data['results']:
+            print("create/update: ", info['title'])
+            db.objects.update_or_create(id=info['id'], defaults=info)
+
+def check_tv_new_db(db, data):
     for info in data['results']:
-        print("create/update: ", info['title'])
+        print("create/update: ", info['name'])
         db.objects.update_or_create(id=info['id'],
                                     defaults=info)

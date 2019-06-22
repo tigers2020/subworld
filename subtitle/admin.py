@@ -20,14 +20,16 @@ class LanguageAdmin(ImportExportModelAdmin):
 
 class MovieSubtitleAdmin(admin.ModelAdmin):
     list_display = (
-    "title", "db_id", "language", "rate_star", "rate_good", "rate_bad", "upload_date", "downloaded", "sub_file",
-    "comment")
+        "title", "db_id", "language", "rate_star", "rate_good", "rate_bad", "upload_date", "downloaded", "sub_file",
+        "comment")
+    raw_id_fields = ("db_id",)
 
 
 class TvSubtitleAdmin(admin.ModelAdmin):
     list_display = (
-    "name", "db_id", "language", "rate_star", "rate_good", "rate_bad", "upload_date", "downloaded", "sub_file",
-    "comment")
+        "name", "db_id", "language", "rate_star", "rate_good", "rate_bad", "upload_date", "downloaded", "sub_file",
+        "comment")
+    raw_id_fields = ("db_id",)
 
 
 admin.site.register(models.Language, LanguageAdmin)

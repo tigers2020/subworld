@@ -7,37 +7,37 @@ from search import models
 # Register your models here.
 
 
-class MovieDBAdmin(ImportExportModelAdmin):
-    list_display = ("original_title", "id", "adult", "popularity", "video")
-    search_fields = ("original_title", )
+class MovieDBAdmin(admin.ModelAdmin):
+    list_display = ("original_title", "id", "poster_path", "backdrop_path", "adult", "popularity", "video")
+    search_fields = ("original_title",)
 
 
-class GenreDBAdmin(ImportExportModelAdmin):
+class GenreDBAdmin(admin.ModelAdmin):
     list_display = ("name",)
 
 
-class CollectionDBAdmin(ImportExportModelAdmin):
-    list_display = ("name",)
-    search_fields = ("name",)
-
-
-class KeywordDBAdmin(ImportExportModelAdmin):
+class CollectionDBAdmin(admin.ModelAdmin):
     list_display = ("name",)
     search_fields = ("name",)
 
 
-class PersonDBAdmin(ImportExportModelAdmin):
+class KeywordDBAdmin(admin.ModelAdmin):
+    list_display = ("name",)
+    search_fields = ("name",)
+
+
+class PersonDBAdmin(admin.ModelAdmin):
     list_display = ("name", "adult", "popularity")
     search_fields = ("name",)
 
 
-class ProductionCompanyDBAdmin(ImportExportModelAdmin):
+class ProductionCompanyDBAdmin(admin.ModelAdmin):
     list_display = ("name",)
     search_fields = ("name",)
 
 
-class TvSeriesDBAdmin(ImportExportModelAdmin):
-    list_display = ("original_name", "popularity")
+class TvSeriesDBAdmin(admin.ModelAdmin):
+    list_display = ("original_name", "poster_path", "backdrop_path", "popularity")
     search_fields = ("original_name",)
 
 

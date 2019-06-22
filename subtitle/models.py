@@ -286,7 +286,7 @@ class MovieSubtitle(models.Model):
     rate_star = models.IntegerField(default=0)
     rate_good = models.IntegerField(default=0)
     rate_bad = models.IntegerField(default=0)
-    upload_date = models.DateTimeField(auto_created=True)
+    upload_date = models.DateTimeField(auto_now_add=True)
     downloaded = models.IntegerField(default=0)
     comment = RichTextField(blank=True, null=True)
 
@@ -294,11 +294,10 @@ class MovieSubtitle(models.Model):
         return self.title
 
     def get_absolute_url(self):
-        return reverse("subtitle:movie_detail", kwargs={"id": self.db_id})
+        return reverse("subtitle:movie_detail", args=[str(self.db_id.id)])
 
     class Meta:
         get_latest_by = ["upload_date"]
-        order_with_respect_to = ['db_id']
         ordering = ['-rate_good', '-downloaded']
         indexes = [
             models.Index(fields=['title'], name='movie_title_idx')
@@ -316,7 +315,7 @@ class TvSubtitle(models.Model):
     rate_star = models.IntegerField(default=0)
     rate_good = models.IntegerField(default=0)
     rate_bad = models.IntegerField(default=0)
-    upload_date = models.DateTimeField(auto_created=True)
+    upload_date = models.DateTimeField(auto_now_add=True)
     downloaded = models.IntegerField(default=0)
     comment = RichTextField(blank=True, null=True)
 
@@ -325,7 +324,6 @@ class TvSubtitle(models.Model):
 
     class Meta:
         get_latest_by = ["upload_date"]
-        order_with_respect_to = ['db_id']
         ordering = ['season_id', 'episode_id', 'rate_good','-downloaded']
         indexes = [
             models.Index(fields=['name'], name='tv_name_idx')

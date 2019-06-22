@@ -3,12 +3,12 @@ import json
 import tmdbsimple
 from django.conf import settings
 from django.core.paginator import PageNotAnInteger, EmptyPage
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.views import generic
 
 from search import models
 from subworld.Paginator import Paginator
-from subworld.views import BaseSetMixin
+from subworld.views import BaseSetMixin, create_update_db
 
 
 # Create your views here.
@@ -76,17 +76,16 @@ class TvShowSearch(BaseSetMixin, generic.TemplateView):
         return context
 
 
-def autocomplete(request):
+def movie_autocomplete(request):
     result = []
     if request.is_ajax():
-        search = request.GET.get('term', default="")
+        search = request.GET.get('term', default="avenger")
         db = search_data(models.MovieDB, search)
         for r in db:
-            result.append(r.original_title)
-        tv = search_data(models.TvSeriesDB, search)
-        for r in tv:
-            result.append(r.original_name)
-
+            result.append({
+                'label': r.original_title,
+                'value': r.id,
+            })
     data = json.dumps(result)
     mimetype = 'application/json'
     return HttpResponse(data, mimetype)
@@ -98,8 +97,10 @@ def tv_autocomplete(request):
         search = request.GET.get('term', default="")
         db = search_data(models.TvSeriesDB, search)
         for r in db:
-            result.append(r.original_name)
-
+            result.append({
+                'label': r.original_name,
+                'value': r.id,
+            })
     data = json.dumps(result)
     mimetype = 'application/json'
     return HttpResponse(data, mimetype)
@@ -112,10 +113,10 @@ def search_data(model, search):
         return model.objects.filter(original_name__icontains=search)[:10]
 
 
-def autoinfo(request):
-    print('autoinfo')
-    print(request.GET)
-    if request.is_ajax():
-        search = request.GET.get('term', default='')
+def autoinfo(request, db_id):
+    tmdb = tmdbsimple
+    tmdb.API_KEY = settings.TMDB_API_KEY
 
-    return None
+    detail = tmdb.Movies(id=db_id).info()
+    create_update_db(detail)
+    return JsonResponse(detail)

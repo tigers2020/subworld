@@ -61,3 +61,14 @@ def flag(value):
     FLAG = sub_models.FLAG
 
     return FLAG[value]
+
+@register.filter(name="get_video_url")
+def get_video_url(value):
+    url = ""
+    print(value)
+    if value == 'YouTube':
+        url = "https://www.youtube.com/embed/"
+    if value == "Vimeo":
+        url = "ttps://player.vimeo.com/video/"
+
+    return url

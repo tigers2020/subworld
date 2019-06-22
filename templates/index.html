@@ -78,7 +78,7 @@
         </div>
     </section>
     <section class="p-5" id="searchbar">
-        {% include "parts/search_bar.html" %}
+        {% include "base/search_bar.html" %}
     </section>
     <section>
         <div class="row">
@@ -109,7 +109,7 @@
                 <h4>Resent Subtitles</h4>
                 <div class="list-group">
                     {% for subtitle in subtitles %}
-                        <a href="{% url 'movie_detail'  subtitle.db_id %}"
+                        <a href="{% url 'movie_detail'  subtitle.db_id.id %}"
                            class="list-group-item list-group-item-action">
                             <div class="row">
                                 <div class="col-9">

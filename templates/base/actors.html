@@ -1,0 +1,20 @@
+{% load static %}
+<div class="card" style="width: 220px">
+    <div class="view overlay zoom">
+        {% if person.profile_path %}
+            <img class="card-img lazy"
+                 src="{% static 'main/img/lightbox/loading.gif' %}"
+                 data-src="{{ image_base.base_url }}/{{ profile_size.w185 }}{{ person.profile_path }}"
+                 alt="{{ person.name }}"/>
+        {% else %}
+            <p class="text-center">{{ person.name }}</p>
+        {% endif %}
+    <a href="#">
+        <div class="mask rgba-white-light"></div>
+    </a>
+    </div>
+    <div class="card-body">
+        <h6 class=" pink-text card-title">{{ person.character }}</h6>
+        <p class="card-text">{{ person.name }}</p>
+    </div>
+</div>
