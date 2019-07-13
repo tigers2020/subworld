@@ -21,7 +21,9 @@ urlpatterns = [
     path("movie/<int:db_id>", views.MovieDetailList.as_view(), name="movie_detail"),
     path("tv/<int:db_id>", views.TvDetailList.as_view(), name="tv_detail"),
     path("tv/<int:db_id>/season/<int:season_number>/", views.TvSeasonList.as_view(), name="tv_seasons"),
-    path("tv/<int:db_id>/season/<int:season_number>/episode/<int:episode_number>", views.TvEpisodeList.as_view(), name="tv_seasons"),
+    path("tv/<int:db_id>/season/<int:season_number>/episode/<int:episode_number>", views.TvEpisodeList.as_view(),
+         name="tv_episodes"),
     # path("collection/<int:id>", views.CollectionDetail.as_view(), name="collection_detail"),
-    path("upload", views.CreateMovieSubView.as_view(), name="sub-upload"),
+    path("movie_upload", views.CreateMovieSubView.as_view(), name="movie-sub-upload"),
+    path("tv_upload", views.CreateTvSubView.as_view(), name="tv-sub-upload"),
 ]

@@ -1,0 +1,58 @@
+{% extends 'base/base.html' %}
+
+{% block title %}
+  Database check
+{% endblock %}
+
+{% block body %}
+  <div class="container-fluid">
+    <h1>Check Database</h1>
+
+    <div class="row">
+      {% for data in database %}
+        <div class="col-md-4">
+          <div class="card">
+            <div class="card-header">
+              <h6 class="h6-responsive">
+                {{ data.name }}
+              </h6>
+            </div>
+            <div class="card-body">
+              {{ data.queryset }}
+              : {{ data.queryset.count }}
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+    <div class="container text-center">
+      <form action="{% url 'check-db' %}" class="form" method="POST">
+        {% csrf_token %}
+        <select class="mdb-select md-form" name="db_type" id="id_db_type" aria-label="db_type">
+          <option value="" disabled selected>Choose Db Type</option>
+          <option value="1">Genre</option>
+          <option value="2">Country</option>
+          <option value="3">Language</option>
+          <option value="4">Movie</option>
+          <option value="5">Person</option>
+          <option value="6">Keyword</option>
+          <option value="7">Network</option>
+          <option value="8">Tv</option>
+          <option value="9">collection</option>
+        </select>
+        <button type="submit" class="btn btn-primary">Check DB</button>
+      </form>
+    </div>
+
+  </div>
+{% endblock %}
+
+{% block script %}
+  <script type="text/javascript">
+
+      $(document).ready(function () {
+          $('.mdb-select').material_select();
+      });
+  </script>
+{% endblock %}

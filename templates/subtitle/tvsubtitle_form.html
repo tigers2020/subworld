@@ -14,7 +14,7 @@
                              class="card-img"/>
                     </div>
                     <div class="col-md-8">
-                        <h4 class="card-title" id="info_title"><strong>{{ info.title }}</strong></h4>
+                        <h4 class="card-title" id="info_title"><strong>{{ info.name }}</strong></h4>
                         <h4 class="indigo-text" id="info_tagline"><strong>{{ info.tagline }}</strong></h4>
                         <p class="card-text" id="info_overview">{{ info.overview }}</p>
 
@@ -26,7 +26,6 @@
 
             <form class="form-elegant z-depth-1 range-field" method="post" action="{% url 'movie-sub-upload' %}"
                   enctype="multipart/form-data">
-                {#<div class="field {{ field|field_type }} {{ field|widget_type }} {{ field.html_name }}">#}
                 {% csrf_token %}
                 {{ form.media }}
                 {% for hidden in form.hidden_fields %}
@@ -36,6 +35,8 @@
                     <div class="form-group">
                         {% if field|field_type == "modelchoicefield" %}
                             {{ field|add_class:'mdb-select md-form'|attr:"searchable=search here" }}
+                        {% elif field|field_type == "integerfield" %}
+                            {{ field|add_class:'mdb-select md-form' }}
                         {% else %}
                             {{ field|add_class:"form-control" }}
                         {% endif %}
@@ -60,88 +61,92 @@
 
 {% block script %}
     <script>
-
-        $('#id_title').autocomplete({
-            source: function (request, response) {
+        var $name = $("#id_name");
+        $name.val("{{ info.name }}");
+        var $seasons = {{% for season in info.seasons %}
+                '{{ forloop.counter }}': '{{ season.name }}',{% endfor %}
+        };
+        var $episodes = {
+            {% for season in info.seasons %}
+                "{{ forloop.counter }}": {{% for i in season.episode_count|rjust:season.episode_count %}
+                        "{{ forloop.counter }}": "{{ forloop.counter }}",{% endfor %}
+                },{% endfor %}
+        };
+        $name.autocomplete({
+            source: function(request, response){
                 $.ajax({
-                    url: '{% url 'tv_autocomplete' %}',
-                    type: "get",
-                    dataType: "json",
-                    data: {
-                        search: request.term, type: 'movie'
+                    url:'{% url 'tv_autocomplete' %}',
+                    type:"get",
+                    dataType:"json",
+                    data:{
+                        search:request.term,type:'tv_show'
                     },
-                    success: function (data) {
+                    success:function (data) {
                         response(data);
                     }
                 });
             },
             minLength: 2,
+            data:{
+              "type":"tv_show",
+            },
             delay: 300,
             select: function (e, info) {
                 $("#id_db_id").val(info.item.value);
                 e.preventDefault();
-                $('#id_title').val(info.item.label);
+                $('#id_name').val(info.item.label);
                 $.ajax({
                     type: "GET",
                     delay: 300,
-                    url: "{% url 'movie-auto-info' '123' %}".replace(/123/, info.item.value),
+                    url: "{% url 'auto-info' %}",
+                    data:{
+                        "type": 'tv_show',
+                        "db_id": info.item.value,
+                    },
                     success: function (data) {
                         info = $('#movie_info');
-                        info.find('#info_title').html(data.title);
-                        $(this).val(data.title);
-                        var backdrop = "{{ image_base.base_url }}/{{ backdrop_size.w780 }}" + data.backdrop_path;
+                        info.find('#info_title').html(data.name);
+                        $(this).val(data.name);
                         var poster = "{{ image_base.base_url }}/{{ poster_size.w185 }}" + data.poster_path;
                         info.find("#info_poster").attr({"src": poster});
-                        info.find("#info_image").attr({"src": backdrop});
                         info.find('#info_tagline').html(data.tagline);
                         info.find('#info_overview').html(data.overview);
+                        $seasons = [];
+                        $episodes = [];
+                        console.log(data.seasons);
+                        $.each(data.seasons, function (key, value) {
+                            $seasons += {key: value};
+                            $.each(new Array(data.seasons.episode_count), function (e_key) {
+                                $episodes[key] += {e_key: e_key};
+                                console.log('updated episodes', $episodes);
+                            })
+                        })
+
                     }
                 });
             },
             focus: function (e, info) {
                 e.preventDefault();
                 $('#id_title').val(info.item.label);
-
             }
         });
-
-
-        {#$("#id_title").autocomplete({#}
-        {#    source: "{% url 'movie_autocomplete' %}",#}
-        {#    minLength: 2,#}
-        {#    create: function () {#}
-        {#        $(this).data('ui-autocomplete')._renderItem = function (ul, item) {#}
-        {#            return $("<li>")#}
-        {#                .append(item.id + ":" + item.name)#}
-        {#                .appendTo(ul);#}
-        {#        }#}
-        {#    },#}
-        {#    select: function (e, info) {#}
-        {#        console.log("select", info.item.name);#}
-        {#        $("#id_db_id").val(info.item.id);#}
-        {#        console.log("this", $(this));#}
-        {#        $(this).val(info.item.name);#}
-        {#        $.ajax({#}
-        {#            type: "GET",#}
-        {#            delay: 300,#}
-        {#            url: "{% url 'autoinfo' '123' %}".replace(/123/, info.item.id),#}
-        {#            success: function (data) {#}
-        {#                info = $('#movie_info');#}
-        {#                info.find('#info_title').html(data.title);#}
-        {#                $(this).val(data.title);#}
-        {#                var backdrop = "{{ image_base.base_url }}/{{ backdrop_size.w780 }}" + data.backdrop_path;#}
-        {#                var poster = "{{ image_base.base_url }}/{{ poster_size.w185 }}" + data.poster_path;#}
-        {#                info.find("#info_poster").attr({"src": poster});#}
-        {#                info.find("#info_image").attr({"src": backdrop});#}
-        {#                info.find('#info_tagline').html(data.tagline);#}
-        {#                info.find('#info_overview').html(data.overview);#}
-        {#            }#}
-        {#        });#}
-        {#    }#}
-        {#  });  #}
-
         $(document).ready(function () {
             $('.mdb-select').materialSelect();
+
+            update_selection = function(selection, object){
+                console.log("update_selection", object);
+                selection.empty();
+                $.each(object, function (key, value) {
+                    selection.append($("<option></option>").attr("value", key).text(value));
+                });
+            };
+            season_select = $("#id_season_id");
+            update_selection(season_select, $seasons);
+            season_select.change(function () {
+                var $season_id = $(this).val();
+                update_selection($("#id_episode_id"), $episodes[$season_id]);
+            });
+
         });
     </script>
 {% endblock %}

@@ -18,11 +18,14 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
+
+
+
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'c@m3p-9e5gx*$l2d92!ox9swchlt3ask!6bvz)@f)3wdmhbuu5'
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 TMDB_IMAGE_BASE = {
-    "base_url": "http://image.tmdb.org/t/p",
+    "base_url": "http://image.tmdb.org/t/p/",
     "secure_base_url": "https://image.tmdb.org/t/p/"
 }
 TMDB_BACKDROP_SIZE = {
@@ -61,9 +64,9 @@ TMDB_STIL_SIZE = {
     "w300": 'w300',
     "original": "original",
 }
-TMDB_API_KEY = "c479f9ce20ccbcc06dbcce991a238120"
+TMDB_API_KEY = os.getenv('TMDB_API_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG')
 
 ALLOWED_HOSTS = []
 
@@ -78,9 +81,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sites',
     'django.contrib.humanize',
-    
-    'django_tables2',
 
+    'django_tables2',
 
     'allauth',
     'allauth.account',
@@ -91,6 +93,7 @@ INSTALLED_APPS = [
     'search',
     'import_export',
     'users',
+    'moviedb',
 
     'ckeditor',
     'widget_tweaks',
@@ -112,6 +115,8 @@ ACCOUNT_USERNAME_REQUIRED = True
 
 LOGIN_REDIRECT_URL = "index"
 LOGOUT_REDIRECT_URL = "index"
+
+### End All Auth ###
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -214,8 +219,7 @@ CKEDITOR_CONFIGS = {
         'toolbar_DefaultToolbarConfig': [
             {
                 'name': 'basicstyles',
-                'items': ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript',
-                          'Superscript', ],
+                'items': ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript','Superscript', ],
             },
             {
                 'name': 'clipboard',
@@ -224,8 +228,7 @@ CKEDITOR_CONFIGS = {
             {
                 'name': 'paragraph',
                 'items': ['NumberedList', 'BulletedList', 'Outdent', 'Indent',
-                          'HorizontalRule', 'JustifyLeft', 'JustifyCenter',
-                          'JustifyRight', 'JustifyBlock', ],
+                          'HorizontalRule', 'JustifyLeft', 'JustifyCenter','JustifyRight', 'JustifyBlock', ],
             },
             {
                 'name': 'format',
@@ -233,8 +236,7 @@ CKEDITOR_CONFIGS = {
             },
             {
                 'name': 'extra',
-                'items': ['Link', 'Unlink', 'Blockquote', 'Image', 'Table',
-                          'CodeSnippet', 'Mathjax', 'Embed', ],
+                'items': ['Link', 'Unlink', 'Blockquote', 'Image', 'Table','CodeSnippet', 'Mathjax', 'Embed', ],
             },
             {
                 'name': 'source',
@@ -287,4 +289,3 @@ CKEDITOR_CONFIGS = {
         ]),
     }
 }
-

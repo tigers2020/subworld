@@ -65,12 +65,12 @@
     $(document).ready(function () {
         $('.mdb-select').select();
     });
-    $(function () {
-        $("#search").autocomplete({
-            source: "{% url 'movie_autocomplete' %}",
-            minLength: 2,
-        });
-    });
+    {#$(function () {#}
+    {#    $("#search").autocomplete({#}
+    {#        source: "{% url 'movie_autocomplete' %}",#}
+    {#        minLength: 2,#}
+    {#    });#}
+    {#});#}
 </script>
 {% block script %}
 

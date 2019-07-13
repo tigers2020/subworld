@@ -110,7 +110,7 @@
                     </div>
                     <div class="tab-pane fade" id="subtitle-just" role="tabpanel" aria-labelledby="subtitle-tab-just">
                         <div class="container">
-                            <form method="get" action="{% url "sub-upload" %}" class="text-center">
+                            <form method="get" action="{% url "movie-sub-upload" %}" class="text-center">
 
                                 <input class="form-control" type="hidden" name="movie_id" value="{{ movie.id }}"/>
                                 <button class="btn btn-action" type="submit">Upload Subtitle</button>

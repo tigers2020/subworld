@@ -1,0 +1,22 @@
+{% extends 'base/base.html' %}
+
+{% block body %}
+  <div class="container">
+    <h2>Init DB Completed</h2>
+    {% if success %}
+      <div class="success-color">
+        <p>{{ success }}</p>
+      </div>
+    {% endif %}
+    {% if failed %}
+      <div class="warning-color">
+        <p>{{ failed }}</p>
+      </div>
+    {% endif %}
+  <div class="card">
+  <div class="card-body">
+    <p>{{ database.count }}</p>
+  </div>
+  </div>
+  </div>
+{% endblock %}

@@ -8,8 +8,9 @@ from search import models
 
 
 class MovieDBAdmin(admin.ModelAdmin):
-    list_display = ("original_title", "id", "poster_path", "backdrop_path", "adult", "popularity", "video")
-    search_fields = ("original_title",)
+    list_display = ('title', "original_title", "id", "poster_path", "backdrop_path", "adult", "popularity", "video")
+    search_fields = ("original_title", 'title')
+    ordering = ('-popularity',)
 
 
 class GenreDBAdmin(admin.ModelAdmin):
@@ -29,6 +30,7 @@ class KeywordDBAdmin(admin.ModelAdmin):
 class PersonDBAdmin(admin.ModelAdmin):
     list_display = ("name", "adult", "popularity")
     search_fields = ("name",)
+    ordering = ('-popularity',)
 
 
 class ProductionCompanyDBAdmin(admin.ModelAdmin):
@@ -37,8 +39,9 @@ class ProductionCompanyDBAdmin(admin.ModelAdmin):
 
 
 class TvSeriesDBAdmin(admin.ModelAdmin):
-    list_display = ("original_name", "poster_path", "backdrop_path", "popularity")
-    search_fields = ("original_name",)
+    list_display = ('name', "original_name", "poster_path", "backdrop_path", "popularity")
+    search_fields = ("original_name", 'name',)
+    ordering = ('-popularity',)
 
 
 admin.site.register(models.MovieDB, MovieDBAdmin)

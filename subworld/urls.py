@@ -18,7 +18,6 @@ from django.contrib import admin
 from django.urls import path, include
 
 from . import views
-from search import views as search_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -31,6 +30,7 @@ urlpatterns = [
     path("users/", include("users.urls")),
     path("accounts/", include("allauth.urls")),
     path('ckeditor/', include('ckeditor_uploader.urls')),
+    path('moviedb/', include('moviedb.urls')),
 ]
 
 if settings.DEBUG:

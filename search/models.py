@@ -5,9 +5,10 @@ from django.db import models
 
 class MovieDB(models.Model):
     adult = models.BooleanField(default=False)
+    title = models.CharField(max_length=255, null=True)
     original_title = models.CharField(max_length=255)
-    poster_path = models.CharField(max_length=255, default="")
-    backdrop_path = models.CharField(max_length=255, default="")
+    poster_path = models.CharField(max_length=255, default="", null=True)
+    backdrop_path = models.CharField(max_length=255, default="", null=True)
     popularity = models.FloatField()
     video = models.BooleanField(default=False)
 
@@ -39,8 +40,8 @@ class KeywordDB(models.Model):
 class PersonDB(models.Model):
     adult = models.BooleanField(default=False)
     name = models.CharField(max_length=255)
-    poster_path = models.CharField(max_length=255, default="")
-    backdrop_path = models.CharField(max_length=255, default="")
+    poster_path = models.CharField(max_length=255, default="", null=True)
+    backdrop_path = models.CharField(max_length=255, default="", null=True)
     popularity = models.FloatField()
 
     def __str__(self):
@@ -63,8 +64,9 @@ class TvNetworkDB(models.Model):
 
 class TvSeriesDB(models.Model):
     original_name = models.CharField(max_length=255)
-    poster_path = models.CharField(max_length=255, default="")
-    backdrop_path = models.CharField(max_length=255, default="")
+    name = models.CharField(max_length=255, null=True)
+    poster_path = models.CharField(max_length=255, default="", null=True)
+    backdrop_path = models.CharField(max_length=255, default="", null=True)
     popularity = models.FloatField()
 
     def __str__(self):

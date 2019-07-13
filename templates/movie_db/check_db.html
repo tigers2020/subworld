@@ -1,0 +1,22 @@
+{% extends 'base/base.html' %}
+
+{% block body %}
+<div class="container">
+  <h1>{{ name }} Checking</h1>
+
+  <div class="card">
+    <div class="cardbody">
+      {% for data in queryset %}
+        <p>  {{ data }}</p>
+      {% endfor %}
+    </div>
+  </div>
+
+<form class="form" method="post" action="{% url 'init-db' %}">
+  {% csrf_token %}
+    <input type="hidden" name="db_type" value="{{ db_type }}"/>
+  <button type="submit" class="btn-primary btn">Init DB</button>
+</form>
+
+</div>
+{% endblock %}

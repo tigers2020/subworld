@@ -10,7 +10,7 @@ from django.views import generic
 from search.models import MovieDB, TvSeriesDB
 from subtitle.models import MovieSubtitle, TvSubtitle
 from subworld.views import BaseSetMixin, create_update_db
-from .forms import MovieSubtitleForm
+from .forms import MovieSubtitleForm, TvShowSubtitleForm
 
 
 class MovieDetailList(BaseSetMixin, generic.ListView):
@@ -87,6 +87,7 @@ class CreateMovieSubView(BaseSetMixin, generic.CreateView):
             subtitles = MovieSubtitle.objects.all()
             if upload_file.name in subtitles:
                 print("file is already exist.")
+
             path_1 = ""
             fs = FileSystemStorage()
 
@@ -103,16 +104,9 @@ class CreateMovieSubView(BaseSetMixin, generic.CreateView):
 
     def get_context_data(self, **kwargs):
         context = super(CreateMovieSubView, self).get_context_data(**kwargs)
-
         if self.request.GET:
             tmdbsimple.API_KEY = settings.TMDB_API_KEY
-            if self.request.GET.get('movie_id'):
-                context['info'] = tmdbsimple.Movies(self.request.GET.get('movie_id')).info()
-                context['show_type'] = 1
-            elif self.request.GET.get('tv_show_id'):
-                context['info'] = tmdbsimple.TV(self.request.GET.get('tv_show_id')).info()
-                context['show_type'] = 2
-
+            context['info'] = tmdbsimple.Movies(self.request.GET.get('movie_id')).info()
             return context
 
         return context
@@ -120,3 +114,21 @@ class CreateMovieSubView(BaseSetMixin, generic.CreateView):
 
 class CollectionDetail(generic.TemplateView):
     pass
+
+
+class CreateTvSubView(BaseSetMixin, generic.CreateView):
+    model = TvSubtitle
+    form_class = TvShowSubtitleForm
+    locator = 'upload_tv_show'
+
+    def get_success_url(self, **kwargs):
+        return reverse_lazy("tv_detail", args=(self.object.db_id.pk,))
+
+    def get_context_data(self, **kwargs):
+        context = super(CreateTvSubView, self).get_context_data(**kwargs)
+        if self.request.GET:
+            tmdbsimple.API_KEY = settings.TMDB_API_KEY
+            context['info'] = tmdbsimple.TV(self.request.GET.get('tv_id')).info()
+            return context
+
+        return context
