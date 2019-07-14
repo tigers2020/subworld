@@ -52,10 +52,10 @@ class Genre(models.Model, TmdbInitMixin):
             tv_genre = genres.tv_list()
             for data in movie_genre['genres']:
                 print('{} add'.format(data))
-                Genre.objects.update_or_create(_id=int(data['id']), media_type=1, name=data['name'])
+                Genre.objects.update_or_create(id=int(data['id']), name=data['name'])
             for data in tv_genre['genres']:
                 print('{} add'.format(data))
-                Genre.objects.update_or_create(_id=int(data['id']), media_type=1, name=data['name'])
+                Genre.objects.update_or_create(id=int(data['id']), name=data['name'])
         return Genre.objects.all()
 
 
