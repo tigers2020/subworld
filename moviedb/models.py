@@ -1,6 +1,7 @@
 import datetime
 import json
 import os
+from time import sleep
 
 import colorama
 import tmdbsimple
@@ -67,19 +68,18 @@ class Country(models.Model, TmdbInitMixin):
         return "[{}]{}".format(self.iso_3166_1, self.english_name)
 
     def initiate_data(self):
-        if not Country.objects.exists():
-            import http.client
-
-            conn = http.client.HTTPSConnection("api.themoviedb.org")
-
-            payload = "{}"
-
-            conn.request("GET", "/3/configuration/countries?api_key=c479f9ce20ccbcc06dbcce991a238120", payload)
-
-            res = conn.getresponse()
-            data = res.read()
-
-            Country.objects.update_or_create(iso_3166_1=data['iso_3166_1'], english_name=data['english_name'] )
+        # if not Country.objects.exists():
+        # import http.client
+        #
+        # conn = http.client.HTTPSConnection("api.themoviedb.org")
+        #
+        # payload = "{}"
+        #
+        # conn.request("GET", "/3/configuration/countries?api_key=c479f9ce20ccbcc06dbcce991a238120", payload)
+        #
+        # res = conn.getresponse()
+        # data = res.read()
+        # Country.objects.update_or_create(iso_3166_1=data['iso_3166_1'], english_name=data['english_name'] )
         return Country.objects.all()
 
     def get_count(self):
@@ -229,7 +229,8 @@ class Movie(models.Model, TmdbInitMixin):
                             except HTTPError:
                                 pc_obj = None
                                 continue
-                            print(colorama.Fore.YELLOW + "{}-{} company been added".format(idx, pc_obj.name) + colorama.Style.RESET_ALL)
+                            print(colorama.Fore.YELLOW + "{}-{} company been added".format(idx,
+                                                                                           pc_obj.name) + colorama.Style.RESET_ALL)
                         obj.production_companies.add(pc_obj)
 
                     obj.adult = movie_info['adult']
@@ -256,8 +257,11 @@ class Movie(models.Model, TmdbInitMixin):
                     obj.vote_count = movie_info['vote_count']
                     obj.save()
                     print(colorama.ansi.clear_screen())
-                    print(colorama.Back.BLUE + colorama.Fore.BLACK + '{}-create id: {} title: {}({})'.format(idx,obj.id, obj.title, obj.original_title) + colorama.Style.RESET_ALL)
-
+                    print(
+                        colorama.Back.BLUE + colorama.Fore.BLACK + '{}-create id: {} title: {}({})'.format(idx, obj.id,
+                                                                                                           obj.title,
+                                                                                                           obj.original_title) + colorama.Style.RESET_ALL)
+                    sleep(0.035)
             return Movie.objects.all()
 
 
@@ -366,6 +370,7 @@ class Person(models.Model, TmdbInitMixin):
                         obj.also_known_as.add(aka_obj)
 
                     obj.save()
+                    sleep(0.035)
         return Person.objects.all()
 
 
