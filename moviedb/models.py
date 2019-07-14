@@ -66,6 +66,22 @@ class Country(models.Model, TmdbInitMixin):
     def __str__(self):
         return "[{}]{}".format(self.iso_3166_1, self.english_name)
 
+    def initiate_data(self):
+        if not Country.objects.exists():
+            import http.client
+
+            conn = http.client.HTTPSConnection("api.themoviedb.org")
+
+            payload = "{}"
+
+            conn.request("GET", "/3/configuration/countries?api_key=c479f9ce20ccbcc06dbcce991a238120", payload)
+
+            res = conn.getresponse()
+            data = res.read()
+
+            Country.objects.update_or_create(iso_3166_1=data['iso_3166_1'], english_name=data['english_name'] )
+        return Country.objects.all()
+
     def get_count(self):
         return _get_count(self)
 
