@@ -214,18 +214,16 @@ class Movie(models.Model, TmdbInitMixin):
                         except Company.DoesNotExist:
                             try:
                                 company_info = self.tmdb.Companies(production_company['id']).info()
-                                pc_obj = Company(id=company_info['id'])
+                                pc_obj = Company(
+                                    id=company_info['id'],
+                                    description=company_info['description'],
+                                    headquarters=company_info['headquarters'],
+                                    homepage=company_info['homepage'],
+                                    logo_path=company_info['logo_path'],
+                                    name=company_info['name'],
+                                    origin_country=Country.objects.get(iso_3166_1=company_info['origin_country', None])
+                                )
                                 pc_obj.save()
-                                pc_obj.description = company_info['description']
-                                pc_obj.headquarters = company_info['headquarters']
-                                pc_obj.homepage = company_info['homepage']
-                                pc_obj.logo_path = company_info['logo_path']
-                                pc_obj.name = company_info['name']
-                                if company_info['origin_country'] is not None:
-                                    origin_country = Country.objects.get(iso_3166_1=company_info['origin_country'])
-                                else:
-                                    origin_country = None
-                                pc_obj.origin_country = origin_country
                             except HTTPError:
                                 pc_obj = None
                                 continue
@@ -261,7 +259,7 @@ class Movie(models.Model, TmdbInitMixin):
                         colorama.Back.BLUE + colorama.Fore.BLACK + '{}-create id: {} title: {}({})'.format(idx, obj.id,
                                                                                                            obj.title,
                                                                                                            obj.original_title) + colorama.Style.RESET_ALL)
-                    sleep(0.035)
+                    sleep(0.8)
             return Movie.objects.all()
 
 
@@ -370,7 +368,7 @@ class Person(models.Model, TmdbInitMixin):
                         obj.also_known_as.add(aka_obj)
 
                     obj.save()
-                    sleep(0.035)
+                    sleep(0.5)
         return Person.objects.all()
 
 
