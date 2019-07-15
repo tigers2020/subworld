@@ -19,8 +19,6 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 
-
-
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv('SECRET_KEY')
 
@@ -98,6 +96,8 @@ INSTALLED_APPS = [
     'ckeditor',
     'widget_tweaks',
 
+    'django_mysql',
+
 ]
 
 ### All Auth ###
@@ -156,9 +156,25 @@ WSGI_APPLICATION = 'subworld.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'subworld',
+        'USER': 'root',
+        'PASSWORD': '1548510q',
+        'HOST': 'localhost',
+        'PORT': '3306',
+        'OPTIONS': {
+            'init_command': "SET sql_mode = 'STRICT_TRANS_TABLES'",
+            'charset': 'utf8mb4',
+        },
+        'TEST': {
+            'CHARSET': 'utf8mb4',
+            'COLLATION': 'utf8mb4_unicode_ci',
+        }
+    },
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    # },
 }
 
 # Password validation
@@ -219,7 +235,7 @@ CKEDITOR_CONFIGS = {
         'toolbar_DefaultToolbarConfig': [
             {
                 'name': 'basicstyles',
-                'items': ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript','Superscript', ],
+                'items': ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', ],
             },
             {
                 'name': 'clipboard',
@@ -228,7 +244,7 @@ CKEDITOR_CONFIGS = {
             {
                 'name': 'paragraph',
                 'items': ['NumberedList', 'BulletedList', 'Outdent', 'Indent',
-                          'HorizontalRule', 'JustifyLeft', 'JustifyCenter','JustifyRight', 'JustifyBlock', ],
+                          'HorizontalRule', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', ],
             },
             {
                 'name': 'format',
@@ -236,7 +252,7 @@ CKEDITOR_CONFIGS = {
             },
             {
                 'name': 'extra',
-                'items': ['Link', 'Unlink', 'Blockquote', 'Image', 'Table','CodeSnippet', 'Mathjax', 'Embed', ],
+                'items': ['Link', 'Unlink', 'Blockquote', 'Image', 'Table', 'CodeSnippet', 'Mathjax', 'Embed', ],
             },
             {
                 'name': 'source',

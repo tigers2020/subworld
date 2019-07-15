@@ -37,29 +37,6 @@ def _get_count(obj):
     return obj.objects.all().count() or 0
 
 
-class Genre(models.Model, TmdbInitMixin):
-    name = models.CharField(max_length=32)
-
-    def __str__(self):
-        return self.name
-
-    def get_count(self):
-        return _get_count(self)
-
-    def initiate_data(self):
-        if not Genre.objects.exists():
-            genres = self.tmdb.Genres()
-            movie_genre = genres.movie_list()
-            tv_genre = genres.tv_list()
-            for data in movie_genre['genres']:
-                print('{} add'.format(data))
-                Genre.objects.update_or_create(id=int(data['id']), name=data['name'])
-            for data in tv_genre['genres']:
-                print('{} add'.format(data))
-                Genre.objects.update_or_create(id=int(data['id']), name=data['name'])
-        return Genre.objects.all()
-
-
 class Country(models.Model, TmdbInitMixin):
     iso_3166_1 = models.CharField(max_length=2, unique=True)
     english_name = models.CharField(max_length=16)
@@ -84,6 +61,29 @@ class Country(models.Model, TmdbInitMixin):
 
     def get_count(self):
         return _get_count(self)
+
+
+class Genre(models.Model, TmdbInitMixin):
+    name = models.CharField(max_length=32)
+
+    def __str__(self):
+        return self.name
+
+    def get_count(self):
+        return _get_count(self)
+
+    def initiate_data(self):
+        if not Genre.objects.exists():
+            genres = self.tmdb.Genres()
+            movie_genre = genres.movie_list()
+            tv_genre = genres.tv_list()
+            for data in movie_genre['genres']:
+                print('{} add'.format(data))
+                Genre.objects.update_or_create(id=int(data['id']), name=data['name'])
+            for data in tv_genre['genres']:
+                print('{} add'.format(data))
+                Genre.objects.update_or_create(id=int(data['id']), name=data['name'])
+        return Genre.objects.all()
 
 
 class Company(models.Model, TmdbInitMixin):
@@ -214,6 +214,10 @@ class Movie(models.Model, TmdbInitMixin):
                         except Company.DoesNotExist:
                             try:
                                 company_info = self.tmdb.Companies(production_company['id']).info()
+                                if company_info['origin_country']:
+                                    origin_country = Country.objects.get(iso_3166_1=company_info['origin_country'])
+                                else:
+                                    origin_country = Country.objects.get(iso_3166_1='XX')
                                 pc_obj = Company(
                                     id=company_info['id'],
                                     description=company_info['description'],
@@ -221,8 +225,7 @@ class Movie(models.Model, TmdbInitMixin):
                                     homepage=company_info['homepage'],
                                     logo_path=company_info['logo_path'],
                                     name=company_info['name'],
-                                    origin_country=Country.objects.get(
-                                        iso_3166_1=company_info['origin_country']) or None
+                                    origin_country=origin_country,
                                 )
                                 pc_obj.save()
                             except HTTPError:
@@ -473,7 +476,7 @@ class Tv(models.Model):
     Network = models.ManyToManyField(Network)
     number_of_episodes = models.IntegerField()
     number_of_seasons = models.IntegerField()
-    origin_country = models.ManyToManyField(Country, related_name='origin_country+')
+    origin_country = models.ManyToManyField(Country, related_name='country+')
     original_language = models.ForeignKey(Language, on_delete=models.CASCADE)
     original_name = models.CharField(max_length=32)
     overview = models.TextField()
