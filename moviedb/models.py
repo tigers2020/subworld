@@ -91,7 +91,7 @@ class Company(models.Model, TmdbInitMixin):
     headquarters = models.CharField(max_length=255, default="")
     homepage = models.URLField(null=True)
     logo_path = models.CharField(max_length=64, null=True)
-    name = models.CharField(max_length=32, default="")
+    name = models.CharField(max_length=255, default="")
     origin_country = models.ForeignKey(Country, on_delete=models.CASCADE, null=True)
     parent_company = models.ForeignKey('self', on_delete=models.CASCADE, null=True)
 
