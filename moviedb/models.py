@@ -221,7 +221,8 @@ class Movie(models.Model, TmdbInitMixin):
                                     homepage=company_info['homepage'],
                                     logo_path=company_info['logo_path'],
                                     name=company_info['name'],
-                                    origin_country=Country.objects.get(iso_3166_1=company_info['origin_country', None])
+                                    origin_country=Country.objects.get(
+                                        iso_3166_1=company_info['origin_country']) or None
                                 )
                                 pc_obj.save()
                             except HTTPError:
