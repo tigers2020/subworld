@@ -13,12 +13,10 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 import os
 from dotenv import load_dotenv
 
-
-project_folder = os.path.expanduser('~/subworld')
-load_dotenv(os.path.join(project_folder, '.env'))
-
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+SETTING_DIR = os.path.join(BASE_DIR, 'subworld')
+load_dotenv(os.path.join(SETTING_DIR, '.env'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
@@ -71,7 +69,12 @@ TMDB_API_KEY = os.getenv('TMDB_API_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG')
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
+
+_allowed_hosts = os.getenv('ALLOWED_HOSTS')
+
+if _allowed_hosts:
+    ALLOWED_HOSTS = _allowed_hosts.split(',')
 
 # Application definition
 

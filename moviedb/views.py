@@ -1,5 +1,9 @@
+import uuid
+
+from django.http import HttpResponse
 from django.shortcuts import render
 # Create your views here.
+from django.template.loader import render_to_string
 from django.views.generic import TemplateView
 
 from moviedb import models
@@ -20,6 +24,7 @@ def get_db_from_model(argument):
     }
 
     return switcher.get(argument, "no db found")
+
 
 def check_db(request):
     context = {}
@@ -53,6 +58,7 @@ def init_db(request):
 
     return render(request, 'movie_db/init_db.html', context)
 
+
 class CheckDBLIst(TemplateView, BaseSetMixin):
     template_name = 'movie_db/index.html'
 
@@ -68,3 +74,18 @@ class CheckDBLIst(TemplateView, BaseSetMixin):
         context['database'] = database
 
         return context
+
+
+class Monitor(TemplateView):
+    template_name = 'movie_db/monitor.html'
+
+
+def ajax_monitor(request):
+    if request.is_ajax():
+        if request.GET:
+            print(request)
+            db_type = request.GET.get('db_type')
+            name = uuid.uuid4().hex[:6].upper()
+            html = render_to_string('movie_db/monitor_list.html', {'db_type': db_type, 'name': name})
+            return HttpResponse(html)
+    return "Failed"

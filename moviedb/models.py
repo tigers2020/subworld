@@ -149,7 +149,7 @@ class Movie(models.Model, TmdbInitMixin):
     runtime = models.IntegerField(null=True)
     spoken_languages = models.ManyToManyField(Language, related_name='spoken_language+')
     status = models.CharField(max_length=32, choices=STATUS, default="")
-    tagline = models.CharField(max_length=32, null=True)
+    tagline = models.CharField(max_length=255, null=True)
     title = models.CharField(max_length=255, default="")
     video = models.BooleanField(default=False)
     vote_average = models.FloatField(default=0)

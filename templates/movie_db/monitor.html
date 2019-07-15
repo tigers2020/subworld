@@ -1,0 +1,235 @@
+{% extends 'base/base.html' %}
+
+{% block title %}
+  Monitoring data
+{% endblock %}
+
+{% block body %}
+  <div class="container">
+    <H2 class="text-center h2-responsive">Monitoring Database</H2>
+    <div class="row">
+      <div class="col-md-4 my-3">
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">Company</h2>
+          </div>
+          <div class="card-body">
+            <div id="company_data">
+
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 my-3">
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">Movie</h2>
+          </div>
+          <div class="card-body">
+            <div id="movie_data">
+
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 my-3">
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">Person</h2>
+          </div>
+          <div class="card-body">
+            <div id="person_data">
+
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 my-3">
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">Keyword</h2>
+          </div>
+          <div class="card-body">
+            <div id="keyword_data">
+
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 my-3">
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">Network</h2>
+          </div>
+          <div class="card-body">
+            <div id="network_data">
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4 my-3">
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">collection</h2>
+          </div>
+          <div class="card-body">
+            <div id="collection_data">
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4 my-3">
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">TV</h2>
+          </div>
+          <div class="card-body">
+            <div id="tv_data">
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+    <div class="col-md-4 my-3">
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">Tv episode</h2>
+        </div>
+        <div class="card-body">
+          <div id="episode_data">
+
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4 my-3">
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">Tv season</h2>
+        </div>
+        <div class="card-body">
+          <div id="season_data">
+
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4 my-3">
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">Video</h2>
+        </div>
+        <div class="card-body">
+          <div id="video_data">
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block script %}
+<script type="text/javascript">
+$(document).ready(function () {
+    console.log("setInterval");
+    setInterval(ajaxd, 1000);
+});
+
+let company;
+let movie;
+let person;
+let keyword;
+let network;
+let collection;
+let tv;
+let tv_episode;
+let tv_season;
+let video;
+function ajaxd(){
+    console.log("ajaxd");
+    $.when(
+        $.ajax({
+            url: "{% url 'ajax_monitor' %}",
+            type:"GET",
+            data: {'db_type': 'company'},
+            success: function (data) {
+                company = data
+            }
+        }),
+        $.ajax({
+            url: "{% url 'ajax_monitor' %}",
+            type:"GET",
+            data: {'db_type': 'movie'},
+            success: function (data) {
+                movie = data
+            }
+        }),$.ajax({
+            url: "{% url 'ajax_monitor' %}",
+            type:"GET",
+            data: {'db_type': 'person'},
+            success: function (data) {
+                person = data
+            }
+        }),$.ajax({
+            url: "{% url 'ajax_monitor' %}",
+            type:"GET",
+            data: {'db_type': 'movie'},
+            success: function (data) {
+                movie = data
+            }
+        }),$.ajax({
+            url: "{% url 'ajax_monitor' %}",
+            type:"GET",
+            data: {'db_type': 'movie'},
+            success: function (data) {
+                movie = data
+            }
+        }),$.ajax({
+            url: "{% url 'ajax_monitor' %}",
+            type:"GET",
+            data: {'db_type': 'movie'},
+            success: function (data) {
+                movie = data
+            }
+        }),$.ajax({
+            url: "{% url 'ajax_monitor' %}",
+            type:"GET",
+            data: {'db_type': 'movie'},
+            success: function (data) {
+                movie = data
+            }
+        }),$.ajax({
+            url: "{% url 'ajax_monitor' %}",
+            type:"GET",
+            data: {'db_type': 'movie'},
+            success: function (data) {
+                movie = data
+            }
+        }),$.ajax({
+            url: "{% url 'ajax_monitor' %}",
+            type:"GET",
+            data: {'db_type': 'movie'},
+            success: function (data) {
+                movie = data
+            }
+        }),$.ajax({
+            url: "{% url 'ajax_monitor' %}",
+            type:"GET",
+            data: {'db_type': 'movie'},
+            success: function (data) {
+                movie = data
+            }
+        }),
+    ).then(function () {
+        $('#movie_data').html(movie);
+    })
+
+}
+</script>
+{% endblock %}

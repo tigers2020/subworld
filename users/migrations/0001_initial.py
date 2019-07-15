@@ -2,6 +2,7 @@
 
 import django.contrib.auth.validators
 from django.db import migrations, models
+# noinspection PyPackageRequirements
 import django.utils.timezone
 import users.models
 
