@@ -20,27 +20,28 @@ class CountryAdmin(ImportExportModelAdmin):
 
 @admin.register(models.Company)
 class CompanyAdmin(admin.ModelAdmin):
-    list_display = ('name', 'headquarters', 'homepage', 'logo', 'description', )
-    ordering = ('name', )
+    list_display = ('name', 'headquarters', 'homepage', 'logo', 'description',)
+    ordering = ('name',)
 
 
 @admin.register(models.Language)
 class LanguageAdmin(ImportExportModelAdmin):
     list_display = ('english_name', 'name', 'iso_639_1')
-    ordering = ('english_name', )
+    ordering = ('english_name',)
 
 
 @admin.register(models.Movie)
 class MovieAdmin(admin.ModelAdmin):
     list_display = ('title', 'original_title', 'poster', 'popularity', 'runtime', 'status', 'vote_average')
     readonly_fields = ('poster',)
-    ordering = ('title', 'popularity')
+    ordering = ('-popularity',)
+    search_fields = ('title', 'original_title')
 
 
 @admin.register(models.AlsoKnownAs)
 class AlsoKnownAsAdmin(admin.ModelAdmin):
     model = models.AlsoKnownAs
-    ordering = ('name', )
+    ordering = ('name',)
 
 
 @admin.register(models.Person)

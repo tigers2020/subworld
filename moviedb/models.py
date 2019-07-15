@@ -91,7 +91,7 @@ class Company(models.Model, TmdbInitMixin):
     headquarters = models.CharField(max_length=255, default="")
     homepage = models.URLField(null=True)
     logo_path = models.CharField(max_length=64, null=True)
-    name = models.CharField(max_length=255, default="")
+    name = models.CharField(max_length=1024, default="")
     origin_country = models.ForeignKey(Country, on_delete=models.CASCADE, null=True)
     parent_company = models.ForeignKey('self', on_delete=models.CASCADE, null=True)
 
@@ -138,7 +138,7 @@ class Movie(models.Model, TmdbInitMixin):
     homepage = models.URLField(null=True)
     imdb_id = models.CharField(max_length=9, null=True)
     original_language = models.CharField(max_length=4, default="")
-    original_title = models.CharField(max_length=255, default="")
+    original_title = models.CharField(max_length=1024, default="")
     overview = models.TextField(null=True)
     popularity = models.FloatField(default=0)
     poster_path = models.CharField(max_length=128, null=True)
@@ -149,8 +149,8 @@ class Movie(models.Model, TmdbInitMixin):
     runtime = models.IntegerField(null=True)
     spoken_languages = models.ManyToManyField(Language, related_name='spoken_language+')
     status = models.CharField(max_length=32, choices=STATUS, default="")
-    tagline = models.CharField(max_length=255, null=True)
-    title = models.CharField(max_length=255, default="")
+    tagline = models.CharField(max_length=1024, null=True)
+    title = models.CharField(max_length=1024, default="")
     video = models.BooleanField(default=False)
     vote_average = models.FloatField(default=0)
     vote_count = models.IntegerField(default=0)
@@ -185,7 +185,10 @@ class Movie(models.Model, TmdbInitMixin):
                 except Movie.DoesNotExist:
                     movie = self.tmdb.Movies(movie_id)
                     movie_info = movie.info()
-                    print(colorama.Fore.GREEN + "{}-{}".format(idx, movie_info) + colorama.Style.RESET_ALL)
+                    print(colorama.Fore.GREEN + "{}-{}({})".format(
+                        idx,
+                        movie_info['title'],
+                        movie_info['original_title']) + colorama.Style.RESET_ALL)
                     obj = Movie.objects.create(id=movie_id)
                     # many to many field relate add
                     for genre in movie_info['genres']:
@@ -214,6 +217,9 @@ class Movie(models.Model, TmdbInitMixin):
                         except Company.DoesNotExist:
                             try:
                                 company_info = self.tmdb.Companies(production_company['id']).info()
+                                print(colorama.Fore.MAGENTA)
+                                print(company_info)
+                                print(colorama.Style.RESET_ALL)
                                 if company_info['origin_country']:
                                     origin_country = Country.objects.get(iso_3166_1=company_info['origin_country'])
                                 else:
@@ -263,7 +269,7 @@ class Movie(models.Model, TmdbInitMixin):
                         colorama.Back.BLUE + colorama.Fore.BLACK + '{}-create id: {} title: {}({})'.format(idx, obj.id,
                                                                                                            obj.title,
                                                                                                            obj.original_title) + colorama.Style.RESET_ALL)
-                    sleep(0.8)
+                    sleep(0.5)
             return Movie.objects.all()
 
 
