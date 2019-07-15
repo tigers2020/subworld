@@ -11,6 +11,11 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
+from dotenv import load_dotenv
+
+
+project_folder = os.path.expanduser('~/subworld')
+load_dotenv(os.path.join(project_folder, '.env'))
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -167,6 +172,7 @@ DATABASES = {
             'charset': 'utf8mb4',
         },
         'TEST': {
+            'NAME': os.getenv('MYSQL_TEST'),
             'CHARSET': 'utf8mb4',
             'COLLATION': 'utf8mb4_unicode_ci',
         }
