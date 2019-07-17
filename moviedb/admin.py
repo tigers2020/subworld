@@ -22,6 +22,8 @@ class CountryAdmin(ImportExportModelAdmin):
 class CompanyAdmin(admin.ModelAdmin):
     list_display = ('name', 'headquarters', 'homepage', 'logo', 'description',)
     ordering = ('name',)
+    search_fields = ('name',)
+    autocomplete_fields = ('parent_company',)
 
 
 @admin.register(models.Language)
@@ -32,17 +34,11 @@ class LanguageAdmin(ImportExportModelAdmin):
 
 @admin.register(models.Movie)
 class MovieAdmin(admin.ModelAdmin):
-    list_display = ('title', 'original_title', 'poster', 'popularity', 'runtime', 'status', 'vote_average')
+    list_display = ('id', 'title', 'original_title', 'poster', 'popularity', 'runtime', 'status', 'vote_average')
     readonly_fields = ('poster',)
-    ordering = ('-popularity',)
+    ordering = ('-id',)
     search_fields = ('title', 'original_title')
-
-
-@admin.register(models.AlsoKnownAs)
-class AlsoKnownAsAdmin(admin.ModelAdmin):
-    model = models.AlsoKnownAs
-    ordering = ('name',)
-
+    autocomplete_fields = ('production_companies', )
 
 @admin.register(models.Person)
 class PersonAdmin(admin.ModelAdmin):
@@ -50,6 +46,7 @@ class PersonAdmin(admin.ModelAdmin):
         'name', 'profile', 'imdb_id', 'known_for_department', 'popularity', 'birthday', 'deathday', 'get_gender',
         'short_biography',
         'homepage')
+    search_fields = ('name',)
 
 
 @admin.register(models.Keyword)
@@ -65,22 +62,27 @@ class VideoAdmin(admin.ModelAdmin):
 @admin.register(models.Network)
 class NetworkAdmin(admin.ModelAdmin):
     list_display = ('name', 'headquarters', 'origin_country')
+    search_fields = ('name','headquarters',)
 
 
 @admin.register(models.TvEpisode)
 class TvEpisodeAdmin(admin.ModelAdmin):
-    list_display = ('name', 'air_date',)
+    list_display = ('id', 'name', 'air_date',)
+    search_fields = ('name',)
 
 
 @admin.register(models.TvSeason)
 class TvSeasonAdmin(admin.ModelAdmin):
-    list_display = ('name', 'air_date',)
+    list_display = ('id', 'name', 'air_date',)
+    search_fields = ('name',)
 
 
 @admin.register(models.Tv)
 class TvAdmin(admin.ModelAdmin):
     list_display = (
-        'original_name', 'status', 'in_production', 'last_air_date', 'number_of_episodes', 'number_of_seasons')
+        'id', 'name', 'original_name', 'status', 'in_production', 'last_air_date', 'number_of_episodes', 'number_of_seasons')
+    search_fields = ('name', 'original_name',)
+    autocomplete_fields = ('created_by', 'networks', 'production_companies', 'seasons',)
 
 
 @admin.register(models.ExternalID)
@@ -142,4 +144,6 @@ class TvCertificationAdmin(ImportExportModelAdmin):
 
 @admin.register(models.Collection)
 class CollectionAdmin(admin.ModelAdmin):
-    list_display = ('name',)
+    list_display = ('id', 'name',)
+    autocomplete_fields = ('parts',)
+    search_fields = ('name', )

@@ -5,6 +5,7 @@
 {% endblock %}
 
 {% block body %}
+  {% if user.is_staff or user.is_superuser %}
   <div class="container-fluid">
     <h1>Check Database</h1>
 
@@ -14,12 +15,14 @@
           <div class="card">
             <div class="card-header">
               <h6 class="h6-responsive">
-                {{ data.name }}
+                {{ data.name }} : {{ data.count }}
               </h6>
             </div>
             <div class="card-body">
-              {{ data.queryset }}
-              : {{ data.queryset.count }}
+              {% for queryset in data.queryset %}
+                <li class="list-group-item small p-1"> {{ queryset.id }}: {{ queryset }}</li>
+              {% endfor %}
+
             </div>
           </div>
         </div>
@@ -31,21 +34,27 @@
         {% csrf_token %}
         <select class="mdb-select md-form" name="db_type" id="id_db_type" aria-label="db_type">
           <option value="" disabled selected>Choose Db Type</option>
-          <option value="1">Genre</option>
-          <option value="2">Country</option>
-          <option value="3">Language</option>
-          <option value="4">Movie</option>
-          <option value="5">Person</option>
-          <option value="6">Keyword</option>
-          <option value="7">Network</option>
-          <option value="8">Tv</option>
-          <option value="9">collection</option>
+          <option value="genre">Genre</option>
+          <option value="country">Country</option>
+          <option value="language">Language</option>
+          <option value="movie">Movie</option>
+          <option value="person">Person</option>
+          <option value="keyword">Keyword</option>
+          <option value="network">Network</option>
+          <option value="tv">Tv</option>
+          <option value="collection">collection</option>
         </select>
         <button type="submit" class="btn btn-primary">Check DB</button>
       </form>
     </div>
 
   </div>
+    {% else %}
+    <div class="login">
+    <h3>Login</h3>
+    </div>
+  {% endif %}
+
 {% endblock %}
 
 {% block script %}

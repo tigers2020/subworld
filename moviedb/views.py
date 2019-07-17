@@ -1,5 +1,3 @@
-import uuid
-
 from django.http import HttpResponse
 from django.shortcuts import render
 # Create your views here.
@@ -9,29 +7,32 @@ from django.views.generic import TemplateView
 from moviedb import models
 from subworld.views import BaseSetMixin
 
+SWITCHER = {
+    'genre': models.Genre,
+    'country': models.Country,
+    'company': models.Company,
+    'language': models.Language,
+    'movie': models.Movie,
+    'person': models.Person,
+    'keyword': models.Keyword,
+    'network': models.Network,
+    'tv': models.Tv,
+    'tv_season': models.TvSeason,
+    'tv_episode': models.TvEpisode,
+    'collection': models.Collection
+}
+
 
 def get_db_from_model(argument):
-    switcher = {
-        1: models.Genre,
-        2: models.Country,
-        3: models.Language,
-        4: models.Movie,
-        5: models.Person,
-        6: models.Keyword,
-        7: models.Network,
-        8: models.Tv,
-        9: models.Collection
-    }
-
-    return switcher.get(argument, "no db found")
+    return SWITCHER.get(argument, "no db found")
 
 
 def check_db(request):
     context = {}
     if request.POST:
-        db_type = int(request.POST.get('db_type'))
+        db_type = request.POST.get('db_type')
         db = get_db_from_model(db_type)
-        print("get db: ", db)
+        print("get db: ", db, db_type)
 
         context['db_type'] = db_type
         context['name'] = db.__name__
@@ -43,7 +44,7 @@ def check_db(request):
 def init_db(request):
     context = {}
     if request.POST:
-        db_type = int(request.POST.get('db_type'))
+        db_type = request.POST.get('db_type')
         db = get_db_from_model(db_type)
 
         print("initiating db: ", db)
@@ -66,10 +67,11 @@ class CheckDBLIst(TemplateView, BaseSetMixin):
         context = super(CheckDBLIst, self).get_context_data(**kwargs)
 
         database = []
-        for i in range(1, 10):
-            db = get_db_from_model(i)
-
-            database.append({'name': db.__name__, 'queryset': db.objects.all()})
+        for v in SWITCHER:
+            db = get_db_from_model(v)
+            database.append({
+                'name': db.__name__, 'queryset': db.objects.all().order_by('-id')[:20], 'count': db.objects.count()
+                             })
 
         context['database'] = database
 
@@ -83,9 +85,12 @@ class Monitor(TemplateView):
 def ajax_monitor(request):
     if request.is_ajax():
         if request.GET:
-            print(request)
             db_type = request.GET.get('db_type')
-            name = uuid.uuid4().hex[:6].upper()
-            html = render_to_string('movie_db/monitor_list.html', {'db_type': db_type, 'name': name})
+            html = render_to_string('movie_db/monitor_list.html',
+                                    {'db_type': db_type,
+                                     'data': get_db_from_model(db_type).objects.order_by('-id').all()[:5].values(),
+                                     'count': get_db_from_model(db_type).objects.count(),
+                                     'tmdb': BaseSetMixin()
+                                     })
             return HttpResponse(html)
     return "Failed"

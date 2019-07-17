@@ -5,8 +5,14 @@
 {% endblock %}
 
 {% block body %}
-  <div class="container">
+  <div class="container text-center">
     <H2 class="text-center h2-responsive">Monitoring Database</H2>
+  {% if user.is_staff or user_is_superuser %}
+  <button class="btn-primary btn" id="sync">Sync</button>
+    {% else %}
+    <button class="btn btn-primary" disabled>Sync</button>
+  {% endif %}
+
     <div class="row">
       <div class="col-md-4 my-3">
         <div class="card">
@@ -138,7 +144,10 @@
 <script type="text/javascript">
 $(document).ready(function () {
     console.log("setInterval");
-    setInterval(ajaxd, 1000);
+    $('#sync').click(function (e) {
+        ajaxd();
+    });
+    ajaxd();
 });
 
 let company;
@@ -179,55 +188,59 @@ function ajaxd(){
         }),$.ajax({
             url: "{% url 'ajax_monitor' %}",
             type:"GET",
-            data: {'db_type': 'movie'},
+            data: {'db_type': 'keyword'},
             success: function (data) {
-                movie = data
+                keyword = data
             }
         }),$.ajax({
             url: "{% url 'ajax_monitor' %}",
             type:"GET",
-            data: {'db_type': 'movie'},
+            data: {'db_type': 'network'},
             success: function (data) {
-                movie = data
+                network = data
             }
         }),$.ajax({
             url: "{% url 'ajax_monitor' %}",
             type:"GET",
-            data: {'db_type': 'movie'},
+            data: {'db_type': 'tv'},
             success: function (data) {
-                movie = data
+                tv = data
             }
         }),$.ajax({
             url: "{% url 'ajax_monitor' %}",
             type:"GET",
-            data: {'db_type': 'movie'},
+            data: {'db_type': 'tv_season'},
             success: function (data) {
-                movie = data
-            }
-        }),$.ajax({
-            url: "{% url 'ajax_monitor' %}",
-            type:"GET",
-            data: {'db_type': 'movie'},
-            success: function (data) {
-                movie = data
-            }
-        }),$.ajax({
-            url: "{% url 'ajax_monitor' %}",
-            type:"GET",
-            data: {'db_type': 'movie'},
-            success: function (data) {
-                movie = data
-            }
-        }),$.ajax({
-            url: "{% url 'ajax_monitor' %}",
-            type:"GET",
-            data: {'db_type': 'movie'},
-            success: function (data) {
-                movie = data
+                tv_season = data
             }
         }),
+        $.ajax({
+            url: "{% url 'ajax_monitor' %}",
+            type:"GET",
+            data: {'db_type': 'tv_episode'},
+            success: function (data) {
+                tv_episode = data
+            }
+        }),
+        $.ajax({
+            url: "{% url 'ajax_monitor' %}",
+            type:"GET",
+            data: {'db_type': 'collection'},
+            success: function (data) {
+                collection = data
+            }
+        })
     ).then(function () {
         $('#movie_data').html(movie);
+        $('#company_data').html(company);
+        $('#person_data').html(person);
+        $('#keyword_data').html(keyword);
+        $('#network_data').html(network);
+        $('#collection_data').html(collection);
+        $('#tv_data').html(tv);
+        $('#season_data').html(tv_season);
+        $('#episode_data').html(tv_episode);
+
     })
 
 }
