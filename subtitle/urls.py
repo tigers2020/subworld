@@ -18,7 +18,7 @@ from django.urls import path
 from subtitle import views
 
 urlpatterns = [
-    path("movie/<int:db_id>", views.MovieDetailList.as_view(), name="movie_detail"),
+    path("movie/<int:db_id>", views.MovieDetailWithSubtitleList.as_view(), name="movie_detail"),
     path("tv/<int:db_id>", views.TvDetailList.as_view(), name="tv_detail"),
     path("tv/<int:db_id>/season/<int:season_number>/", views.TvSeasonList.as_view(), name="tv_seasons"),
     path("tv/<int:db_id>/season/<int:season_number>/episode/<int:episode_number>", views.TvEpisodeList.as_view(),

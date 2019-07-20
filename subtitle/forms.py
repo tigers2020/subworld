@@ -4,7 +4,7 @@ from django import forms
 from django.template.defaultfilters import filesizeformat
 from django.utils.translation import ugettext_lazy as _
 
-from .models import MovieSubtitle, TvSubtitle
+from .models import MovieSubtitleInfo, TvSubtitleInfo
 
 CONTENT_TYPES = ['image', 'video', 'smi']
 FILE_EXTENSIONS = ['.psb', '.srt', '.ssa', '.ass', '.sub', '.sami', '.smil', '.smi', '.usf', '.vtt']
@@ -21,10 +21,10 @@ MAX_UPLOAD_SIZE = "2621440"
 
 class TvShowSubtitleForm(forms.ModelForm):
     class Meta:
-        model = TvSubtitle
-        fields = ("db_id", "name", "season_id", "episode_id", "language", "sub_file", "comment")
+        model = TvSubtitleInfo
+        fields = ("title", "tv_series", "tv_season", "tv_episode", "language", "comment")
         widgets = {
-            'db_id': forms.HiddenInput(),
+            'movie': forms.HiddenInput(),
             'season_id': forms.Select(),
             'episode_id': forms.Select(),
         }
@@ -47,10 +47,10 @@ class TvShowSubtitleForm(forms.ModelForm):
 
 class MovieSubtitleForm(forms.ModelForm):
     class Meta:
-        model = MovieSubtitle
-        fields = ("db_id", "title", 'language', 'sub_file', 'comment')
+        model = MovieSubtitleInfo
+        fields = ("movie", "title", 'language', 'comment')
         widgets = {
-            'db_id': forms.HiddenInput(),
+            'movie': forms.HiddenInput(),
         }
 
     def clean_sub_file(self):

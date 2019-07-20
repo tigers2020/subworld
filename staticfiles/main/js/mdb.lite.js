@@ -1,6 +1,6 @@
 /* !
  * Material Design for Bootstrap 4
- * Version: MDB Lite 4.8.2
+ * Version: MDB Lite 4.8.5
  *
  *
  * Copyright: Material Design for Bootstrap
@@ -1442,13 +1442,24 @@ var _this = void 0;
 })(jQuery);
 "use strict";
 
+// 'use strict';
+var loader_path = '../dev/dist/mdb-addons/preloader.html';
+var windowLoaded = false;
+$(window).on('load', function () {
+  windowLoaded = true;
+});
 $(document).ready(function () {
   $('body').attr('aria-busy', true);
-  $('#preloader-markup').load('mdb-addons/preloader.html', function () {
-    $(window).on('load', function () {
+  $('#preloader-markup').load(loader_path, function () {
+    if (windowLoaded) {
       $('#mdb-preloader').fadeOut('slow');
       $('body').removeAttr('aria-busy');
-    });
+    } else {
+      $(window).on('load', function () {
+        $('#mdb-preloader').fadeOut('slow');
+        $('body').removeAttr('aria-busy');
+      });
+    }
   });
 });
 "use strict";
@@ -3342,14 +3353,12 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
       this.uuid = this.options.nativeID !== null && this.options.nativeID !== '' && this.options.nativeID !== undefined && typeof this.options.nativeID === 'string' ? this.options.nativeID : this._randomUUID();
       this.$selectWrapper = $('<div class="select-wrapper"></div>');
       this.$materialOptionsList = $("<ul id=\"select-options-".concat(this.uuid, "\" class=\"dropdown-content select-dropdown w-100 ").concat(this.isMultiple ? 'multiple-select-dropdown' : '', "\"></ul>"));
-      this.$materialSelectedOption = this.$nativeSelect.find('option:selected');
-      this.$materialSelectInitialOption = this.$nativeSelect.find('option:first').text() || '';
+      this.$materialSelectInitialOption = $nativeSelect.find('option:selected').text() || $nativeSelect.find('option:first').text() || '';
       this.$nativeSelectChildren = this.$nativeSelect.children('option, optgroup');
       this.$materialSelect = $("<input type=\"text\" class=\"".concat(this.options.BSinputText ? 'browser-default custom-select multi-bs-select select-dropdown' : 'select-dropdown', "\" readonly=\"true\" ").concat(this.$nativeSelect.is(' :disabled') ? 'disabled' : '', " data-activates=\"select-options-").concat(this.uuid, "\" value=\"\"/>"));
       this.$dropdownIcon = this.options.BSinputText ? '' : $('<span class="caret">&#9660;</span>');
       this.$searchInput = null;
       this.$toggleAll = $('<li class="select-toggle-all"><span><input type="checkbox" class="form-check-input"><label>Select all</label></span></li>');
-      this.label = this.$nativeSelect.next('label').not('.mdb-main-label');
       this.mainLabel = this.$nativeSelect.next('.mdb-main-label');
       this.valuesSelected = [];
       this.keyCodes = {
@@ -3394,18 +3403,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
         this.$nativeSelect.data('select-id', this.uuid);
         var sanitizedLabelHtml = this.$materialSelectInitialOption.replace(/"/g, '&quot;').replace(/  +/g, ' ').trim();
-
-        if (this.mainLabel.length === 0) {
-          this.$materialSelect.val(sanitizedLabelHtml);
-        } else {
-          this.mainLabel.text();
-        }
-
-        if (this.$materialSelectedOption.length > 0 && this.$nativeSelect.hasClass('md-selected')) {
-          this.mainLabel.addClass('active');
-          this.$materialSelect.val(this.$materialSelectedOption.text());
-        }
-
+        this.mainLabel.length === 0 ? this.$materialSelect.val(sanitizedLabelHtml) : this.mainLabel.text();
         this.renderMaterialSelect();
         this.bindEvents();
 
@@ -3489,8 +3487,14 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
             _this.$materialOptionsList.find('li:not(.optgroup):not(.select-toggle-all)').eq(index).find(':checkbox').prop('checked', true);
           });
         } else {
-          var index = this.$nativeSelect.find('option:selected').index();
-          this.$materialOptionsList.find('li').eq(index).addClass('active');
+          var preselectedOption = this.$nativeSelect.find('option[selected]');
+          var index = preselectedOption.index();
+
+          if (preselectedOption.attr('disabled') !== 'disabled' && index >= 0) {
+            this._toggleSelectedValue(index);
+
+            this.$materialOptionsList.find('li').eq(index).addClass('active');
+          }
         }
 
         this.$nativeSelect.addClass('initialized');
@@ -3552,7 +3556,13 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
     }, {
       key: "appendToggleAllCheckbox",
       value: function appendToggleAllCheckbox() {
-        this.$materialOptionsList.find('li.disabled').first().after(this.$toggleAll);
+        var firstOption = this.$materialOptionsList.find('li').first();
+
+        if (firstOption.hasClass('disabled') && firstOption.find('input').prop('disabled')) {
+          firstOption.after(this.$toggleAll);
+        } else {
+          this.$materialOptionsList.find('li').first().before(this.$toggleAll);
+        }
       }
     }, {
       key: "appendSaveSelectButton",
@@ -3650,7 +3660,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
         }
 
         if (this.isSearchable) {
-          this.$searchInput.find('.search').on('keyup', this._onSearchInputKeyup);
+          this.$searchInput.find('.search').on('keyup', this._onSearchInputKeyup.bind(this));
         }
 
         $('html').on('click', this._onHTMLClick.bind(this));
@@ -3771,7 +3781,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
         }
 
         if (!this.isMultiple) {
-          this.mainLabel.addClass('active ');
+          this.mainLabel.addClass('active');
         }
 
         $(document).find('input.select-dropdown').each(function (i, el) {
@@ -3783,7 +3793,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
     }, {
       key: "_onMaterialSelectClick",
       value: function _onMaterialSelectClick(e) {
-        this.mainLabel.addClass('active ');
+        this.mainLabel.addClass('active');
         e.stopPropagation();
       }
     }, {
@@ -3835,15 +3845,22 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
         var checkbox = $(this.$toggleAll).find('input[type="checkbox"]').first();
         var state = !$(checkbox).prop('checked');
+        var firstOption = this.$materialOptionsList.find('li').first();
+        var hasDisabledAndSelectedOption = false;
+
+        if (firstOption.hasClass('disabled') && firstOption.find('input').prop('disabled')) {
+          hasDisabledAndSelectedOption = true;
+        }
+
         $(checkbox).prop('checked', state);
         this.$materialOptionsList.find('li:not(.optgroup):not(.disabled):not(.select-toggle-all)').each(function (materialOptionIndex, materialOption) {
           var $optionCheckbox = $(materialOption).find('input[type="checkbox"]');
 
-          if (state && $optionCheckbox.is(':checked') || !state && !$optionCheckbox.is(':checked')) {
+          if (state && $optionCheckbox.is(':checked') || !state && !$optionCheckbox.is(':checked') || $(materialOption).is(':hidden')) {
             return;
           }
 
-          if (_this4._isToggleAllPresent()) {
+          if (hasDisabledAndSelectedOption) {
             materialOptionIndex++;
           }
 
@@ -4015,6 +4032,8 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
             }
           }
         });
+
+        this._updateToggleAllOption();
       }
     }, {
       key: "_isToggleAllPresent",
@@ -4024,7 +4043,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
     }, {
       key: "_updateToggleAllOption",
       value: function _updateToggleAllOption() {
-        var $allOptionsButToggleAll = this.$materialOptionsList.find('li').not('.select-toggle-all, .disabled').find('[type=checkbox]');
+        var $allOptionsButToggleAll = this.$materialOptionsList.find('li').not('.select-toggle-all, .disabled, :hidden').find('[type=checkbox]');
         var $checkedOptionsButToggleAll = $allOptionsButToggleAll.filter(':checked');
         var isToggleAllChecked = this.$toggleAll.find('[type=checkbox]').is(':checked');
 
@@ -4372,15 +4391,19 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
 (function ($) {
-  var INPUT_DATA = {};
-  var DATA_COLOR = '';
-  var BUTTON_X_COLOR = '';
-  var BUTTON_X_BLUR_COLOR = '#ced4da';
-  var INPUT_FOCUS = '1px solid #4285f4';
-  var INPUT_BLUR = '1px solid #ced4da';
-  var INPUT_FOCUS_SHADOW = '0 1px 0 0 #4285f4';
-  var INPUT_BLUR_SHADOW = '';
-  var ENTER_CHAR_CODE = 13;
+  var inputData = {};
+  var dataColor = '';
+  var buttonCloseColor = '';
+  var buttonCloseBlurColor = '#ced4da';
+  var inputFocus = '1px solid #4285f4';
+  var inputBlur = '1px solid #ced4da';
+  var inputFocusShadow = '0 1px 0 0 #4285f4';
+  var inputBlurShadow = '';
+  var enterCharCode = 13;
+  var arrowUpCharCode = 38;
+  var arrowDownCharCode = 40;
+  var count = -1;
+  var nextScrollHeight = -45;
 
   var mdbAutocomplete =
   /*#__PURE__*/
@@ -4389,14 +4412,14 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
       _classCallCheck(this, mdbAutocomplete);
 
       this.defaults = {
-        data: INPUT_DATA,
-        dataColor: DATA_COLOR,
-        xColor: BUTTON_X_COLOR,
-        xBlurColor: BUTTON_X_BLUR_COLOR,
-        inputFocus: INPUT_FOCUS,
-        inputBlur: INPUT_BLUR,
-        inputFocusShadow: INPUT_FOCUS_SHADOW,
-        inputBlurShadow: INPUT_BLUR_SHADOW
+        data: inputData,
+        dataColor: dataColor,
+        closeColor: buttonCloseColor,
+        closeBlurColor: buttonCloseBlurColor,
+        inputFocus: inputFocus,
+        inputBlur: inputBlur,
+        inputFocusShadow: inputFocusShadow,
+        inputBlurShadow: inputBlurShadow
       };
       this.$input = input;
       this.options = this.assignOptions(options);
@@ -4417,8 +4440,8 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
       }
     }, {
       key: "assignOptions",
-      value: function assignOptions(newOptions) {
-        return $.extend({}, this.defaults, newOptions);
+      value: function assignOptions(options) {
+        return $.extend({}, this.defaults, options);
       }
     }, {
       key: "setData",
@@ -4455,6 +4478,22 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
         var _this3 = this;
 
         this.$input.on('keyup', function (e) {
+          if (e.which === enterCharCode) {
+            if (!_this3.options.data.includes(_this3.$input.val())) {
+              _this3.options.data.push(_this3.$input.val());
+            }
+
+            _this3.$autocompleteWrap.find('.selected').trigger('click');
+
+            _this3.$autocompleteWrap.empty();
+
+            _this3.inputBlur();
+
+            count = -1;
+            nextScrollHeight = -45;
+            return count;
+          }
+
           var $inputValue = _this3.$input.val();
 
           _this3.$autocompleteWrap.empty();
@@ -4467,21 +4506,51 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
                 _this3.$autocompleteWrap.append(option);
               }
             }
-          }
 
-          if (e.which === ENTER_CHAR_CODE) {
-            _this3.$autocompleteWrap.children(':first').trigger('click');
+            var $ulList = _this3.$autocompleteWrap;
 
-            _this3.$autocompleteWrap.empty();
-          }
+            var $ulItems = _this3.$autocompleteWrap.find('li');
 
-          if ($inputValue.length === 0) {
-            _this3.$input.parent().find('.mdb-autocomplete-clear').css('visibility', 'hidden');
+            var nextItemHeight = $ulItems.eq(count).outerHeight();
+            var previousItemHeight = $ulItems.eq(count - 1).outerHeight();
+
+            if (e.which === arrowDownCharCode) {
+              if (count > $ulItems.length - 2) {
+                count = -1;
+                $ulItems.scrollTop(0);
+                nextScrollHeight = -45;
+                return;
+              } else {
+                count++;
+              }
+
+              nextScrollHeight += nextItemHeight;
+              $ulList.scrollTop(nextScrollHeight);
+              $ulItems.eq(count).addClass('selected');
+            } else if (e.which === arrowUpCharCode) {
+              if (count < 1) {
+                count = $ulItems.length;
+                $ulList.scrollTop($ulList.prop('scrollHeight'));
+                nextScrollHeight = $ulList.prop('scrollHeight') - nextItemHeight;
+              } else {
+                count--;
+              }
+
+              nextScrollHeight -= previousItemHeight;
+              $ulList.scrollTop(nextScrollHeight);
+              $ulItems.eq(count).addClass('selected');
+            }
+
+            if ($inputValue.length === 0) {
+              _this3.$clearButton.css('visibility', 'hidden');
+            } else {
+              _this3.$clearButton.css('visibility', 'visible');
+            }
+
+            _this3.$autocompleteWrap.children().css('color', _this3.options.dataColor);
           } else {
-            _this3.$input.parent().find('.mdb-autocomplete-clear').css('visibility', 'visible');
+            _this3.$clearButton.css('visibility', 'hidden');
           }
-
-          _this3.$autocompleteWrap.children().css('color', _this3.options.dataColor);
         });
       }
     }, {
@@ -4503,6 +4572,8 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
         var _this5 = this;
 
         this.$clearButton.on('click', function (e) {
+          count = -1;
+          nextScrollHeight = -45;
           e.preventDefault();
           var $this = $(e.currentTarget);
           $this.parent().find('.mdb-autocomplete').val('');
@@ -4521,11 +4592,11 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
         if (this.$input.hasClass('mdb-autocomplete')) {
           this.$input.on('click keyup', function (e) {
             e.preventDefault();
-            $(e.target).parent().find('.mdb-autocomplete-clear').find('svg').css('fill', _this6.options.xColor);
+            $(e.target).parent().find('.mdb-autocomplete-clear').find('svg').css('fill', _this6.options.closeColor);
           });
           this.$input.on('blur', function (e) {
             e.preventDefault();
-            $(e.target).parent().find('.mdb-autocomplete-clear').find('svg').css('fill', _this6.options.xBlurColor);
+            $(e.target).parent().find('.mdb-autocomplete-clear').find('svg').css('fill', _this6.options.closeBlurColor);
           });
         }
       }
@@ -4579,3 +4650,21 @@ for (i = 0; i < toggler.length; i++) {
     this.classList.toggle("down");
   });
 }
+
+(function ($) {
+  var $allPanels = $('.treeview-animated .nested').hide();
+  var $elements = $('.treeview-animated-element');
+  $('.closed').click(function () {
+    $this = $(this);
+    $target = $this.siblings('.treeview-animated .nested');
+    $pointer = $this.children('.treeview-animated .fa-angle-right');
+    $this.toggleClass('open');
+    $pointer.toggleClass('down');
+    !$target.hasClass('active') ? $target.addClass('active').slideDown() : $target.removeClass('active').slideUp();
+    return false;
+  });
+  $elements.click(function () {
+    $this = $(this);
+    $this.hasClass('opened') ? $this.removeClass('opened') : ($elements.removeClass('opened'), $this.addClass('opened'));
+  });
+})(jQuery);

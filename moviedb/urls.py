@@ -10,5 +10,6 @@ urlpatterns = [
     path('', views.CheckDBLIst.as_view(), name='moviedb_index'),
     path('init_db/', views.init_db, name='init-db'),
     path('monitor/', views.Monitor.as_view(), name='monitor'),
-    path('ajax_monitor/', views.ajax_monitor, name='ajax_monitor')
+    path('ajax_monitor/', views.ajax_monitor, name='ajax_monitor'),
+    path('initialize_no_data', views.initialize_no_data, name='no-data'),
 ]

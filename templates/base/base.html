@@ -3,47 +3,48 @@
 {% load socialaccount %}
 <html lang="en">
 <head>
-    <title>Sub World - {% block title %} {% endblock %}</title>
-    {% block head_favicon %}
-        <link rel="icon" type="image/png" href="{{ STATIC_URL }}main/img/favicon.ico">
-    {% endblock head_favicon %}
-    {% block head_meta %}
-        {% block head_meta_charset %}
-            <meta charset="UTF-8" content="text/html" http-equiv="Content-Type">
-        {% endblock head_meta_charset %}
-        {% block head_meta_content_langauge %}
-            <meta http-equiv="Content-Language" value="en-US"/>
-        {% endblock head_meta_content_langauge %}
-        {% block head_meta_viewport %}
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        {% endblock head_meta_viewport %}
-        <meta name="description" content="Subtitle for World Wide Movie, Tv Series, etc.
+  <title>Sub World - {% block title %} {% endblock %}</title>
+  {% block head_favicon %}
+    <link rel="icon" type="image/png" href="{{ STATIC_URL }}main/img/favicon.ico">
+  {% endblock head_favicon %}
+  {% block head_meta %}
+    {% block head_meta_charset %}
+      <meta charset="UTF-8" content="text/html" http-equiv="Content-Type">
+    {% endblock head_meta_charset %}
+    {% block head_meta_content_langauge %}
+      <meta http-equiv="Content-Language" value="en-US"/>
+    {% endblock head_meta_content_langauge %}
+    {% block head_meta_viewport %}
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% endblock head_meta_viewport %}
+    <meta name="description" content="Subtitle for World Wide Movie, Tv Series, etc.
 {% block head_meta_description %}{% endblock %}">
-        <meta name="keywords"
-              content="multi language, subtitles, movie subtitles, download subtitles, english subtitles, fansub, subs, tv subtitles, series subtitles,
+    <meta name="keywords"
+          content="multi language, subtitles, movie subtitles, download subtitles, english subtitles, fansub, subs, tv subtitles, series subtitles,
                   {% block head_meta_keywords %}{% endblock %}">
-    {% endblock head_meta %}
+  {% endblock head_meta %}
 
-    {% block head_css %}
-        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css">
+  {% block head_css %}
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css">
 
-        <link rel="stylesheet" href="{% static "main/css/bootstrap.css" %}"/>
-        <link rel="stylesheet" href="{% static "main/css/mdb.css" %}"/>
-        <link rel="stylesheet" href="{% static "main/css/style.css" %}"/>
-        <link rel="stylesheet" href="{% static "main/jquery-ui/jquery-ui.css" %}"/>
-        <link rel="stylesheet" href="{% static "main/jquery-ui/jquery-ui.theme.css" %}"/>
-        {% block custom_css %}
+    <link rel="stylesheet" href="{% static "main/css/bootstrap.css" %}"/>
+    <link rel="stylesheet" href="{% static "main/css/mdb.css" %}"/>
+    <link rel="stylesheet" href="{% static "main/css/style.css" %}"/>
+    <link rel="stylesheet" href="{% static "main/jquery-ui/jquery-ui.css" %}"/>
+    <link rel="stylesheet" href="{% static "main/jquery-ui/jquery-ui.theme.css" %}"/>
+    {% block custom_css %}
 
-        {% endblock custom_css %}
-    {% endblock head_css %}
+    {% endblock custom_css %}
+  {% endblock head_css %}
 </head>
 <body class="indigo-skin">
 {% include 'base/navigation.html' %}
-<main class="mt-5 pt-5">
-    {% block body %}
+  <div class="my5">t</div>
+  <div class="container mt-5 pb-5">
+    {% block content %}
 
     {% endblock %}
-</main>
+  </div>
 {% include 'base/footer.html' %}
 <!--SCRIPTS -->
 <!-- JQuery -->
@@ -61,16 +62,7 @@
 
 <script>window.CKEDITOR_BASEPATH = '/static/ckeditor/ckeditor/';</script>
 <script>
-    $(".lazy").lazy()
-    $(document).ready(function () {
-        $('.mdb-select').select();
-    });
-    {#$(function () {#}
-    {#    $("#search").autocomplete({#}
-    {#        source: "{% url 'movie_autocomplete' %}",#}
-    {#        minLength: 2,#}
-    {#    });#}
-    {#});#}
+    $(".lazy").lazy();
 </script>
 {% block script %}
 

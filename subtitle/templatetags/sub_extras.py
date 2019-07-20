@@ -1,6 +1,6 @@
 from django import template
 
-from search import models as search_modules
+from moviedb import models as db_modules
 from subtitle import models as sub_models
 
 register = template.Library()
@@ -21,7 +21,7 @@ def divide(value, arg):
 @register.filter(name="get_genre")
 def get_genre(value):
     value = int(value)
-    return search_modules.GenreDB.objects.get(id=value)
+    return db_modules.Genre.initialize.get(id=value)
 
 
 @register.filter(name="get_color")

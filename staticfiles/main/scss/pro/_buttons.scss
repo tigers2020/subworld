@@ -97,8 +97,3 @@ button, html [type="button"], [type="reset"], [type="submit"] {
 .btn-rounded {
   border-radius: $btn-rounded-border-radius;
 }
-
-// Gradient buttons
-@each $name, $val in $gradients {
-  @include make-gradient-button($name, $val);
-}

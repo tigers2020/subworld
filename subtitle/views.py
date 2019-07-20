@@ -7,45 +7,47 @@ from django.core.files.storage import FileSystemStorage
 from django.urls import reverse_lazy
 from django.views import generic
 
-from search.models import MovieDB, TvSeriesDB
-from subtitle.models import MovieSubtitle, TvSubtitle
+from moviedb.models import Movie, TvSeries, Credit, Videos, Keyword
+from subtitle.models import MovieSubtitleInfo, TvSubtitleInfo
 from subworld.views import BaseSetMixin, create_update_db
 from .forms import MovieSubtitleForm, TvShowSubtitleForm
 
 
-class MovieDetailList(BaseSetMixin, generic.ListView):
-    model = MovieSubtitle
+class MovieDetailWithSubtitleList(BaseSetMixin, generic.ListView):
+    model = MovieSubtitleInfo
     ordering = ('title', 'language',)
     locator = "movie_detail"
-    template_name = 'subtitle/moviesubtitle_list.html'
+    template_name = 'subtitle/movie_detail.html'
 
     def get_queryset(self):
         print("kwargs: ", self.kwargs)
-        queryset = MovieSubtitle.objects.filter(db_id_id=self.kwargs['db_id'])[:20]
+        queryset = MovieSubtitleInfo.objects.filter(movie_id=self.kwargs['db_id'])[:20]
 
         return queryset
 
     def get_context_data(self, *args, **kwargs):
-        context = super(MovieDetailList, self).get_context_data(*args, **kwargs)
-        movie = tmdbsimple.Movies(id=self.kwargs['db_id'])
+        context = super(MovieDetailWithSubtitleList, self).get_context_data(*args, **kwargs)
+        movie_id = self.kwargs['db_id']
+        movie = Movie.initialize.get_or_create_movie(movie_id=movie_id)
+        credit = Credit.movie_initialize.update_or_create_credit(movie_id=movie_id)
+        video = Videos.movie_initialize.get_or_create_video(movie_id=movie_id)
+        keyword = Movie.initialize.get_or_create_movie(movie_id).keyword
 
-        create_update_db(MovieDB, movie.info())
-        context['movie'] = movie.info()
-        context['images'] = movie.images()
-        context['persons'] = movie.credits()
-        context['videos'] = movie.videos()
-        context['keywords'] = movie.keywords()
+        context['movie'] = movie
+        context['credits'] = credit
+        context['videos'] = video
+        context['keywords'] = keyword
         return context
 
 
 class TvDetailList(BaseSetMixin, generic.ListView):
-    model = TvSubtitle
+    model = TvSubtitleInfo
     template_name = 'subtitle/tv_show_subtitle_list.html'
 
     def get_context_data(self, *args, **kwargs):
         context = super(TvDetailList, self).get_context_data(*args, **kwargs)
         tv_show = self.tmdb.TV(id=self.kwargs['db_id'])
-        create_update_db(TvSeriesDB, tv_show.info())
+        create_update_db(TvSeries, tv_show.info())
         context['tv_show'] = tv_show.info()
         context['images'] = tv_show.images()
         context['videos'] = tv_show.videos()
@@ -55,17 +57,17 @@ class TvDetailList(BaseSetMixin, generic.ListView):
 
 
 class TvSeasonList(BaseSetMixin, generic.ListView):
-    model = TvSubtitle
+    model = TvSubtitleInfo
     template_name = 'subtitle/tv_season_subtitle_list.html'
 
 
 class TvEpisodeList(BaseSetMixin, generic.ListView):
-    model = TvSubtitle
+    model = TvSubtitleInfo
     template_name = 'subtitle/tv_episode_subtitle_list.html'
 
 
 class CreateMovieSubView(BaseSetMixin, generic.CreateView):
-    model = MovieSubtitle
+    model = MovieSubtitleInfo
     form_class = MovieSubtitleForm
     locator = 'upload_movie'
 
@@ -84,7 +86,7 @@ class CreateMovieSubView(BaseSetMixin, generic.CreateView):
         subtitle.user = self.request.user
         if self.request.FILES:
             upload_file = self.request.FILES['sub_file']
-            subtitles = MovieSubtitle.objects.all()
+            subtitles = MovieSubtitleInfo.objects.all()
             if upload_file.name in subtitles:
                 print("file is already exist.")
 
@@ -117,7 +119,7 @@ class CollectionDetail(generic.TemplateView):
 
 
 class CreateTvSubView(BaseSetMixin, generic.CreateView):
-    model = TvSubtitle
+    model = TvSubtitleInfo
     form_class = TvShowSubtitleForm
     locator = 'upload_tv_show'
 

@@ -118,15 +118,15 @@
       position: absolute;
       top: $card-share-social-reveal-top;
       right: $card-share-social-reveal-right;
-      visibility: hidden;
+      opacity: 0;
       width: auto;
       transform: translateZ(0);
-      transform: translateX(0);
+      transform: translateX(80px);
       transition: $card-share-social-reveal-transition;
     }
     .social-reveal-active {
       z-index: 11;
-      visibility: visible;
+      opacity: 1;
       transform: translateZ(0);
       transform: translateX(-48px);
       transition: $card-share-social-reveal-transition;

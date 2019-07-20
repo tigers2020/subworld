@@ -68,6 +68,7 @@ def check_files_expired():
 def extract_json(local_filename):
     with gzip.GzipFile(local_filename, 'r') as fin:
         filename = local_filename.split("_ids_")[0] + ".json"
+        filename = os.path.join('initialize_data', filename)
         open(filename, 'wb').write(fin.read())
 
 

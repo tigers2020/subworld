@@ -1,4 +1,5 @@
 <!-- Navigation -->
+{% load i18n %}
 <nav class="navbar navbar-expand-md fixed-top navbar-dark scrolling-navbar">
     <a class="navbar-brand" href="{% url 'index' %}">SubWorld</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent-555"
@@ -35,20 +36,16 @@
             </li>
         </ul>
         <ul class="navbar-nav ml-auto nav-flex-icons">
-            <li class="nav-item">
-                <a class="nav-link waves-effect waves-light">1
-                    <i class="fas fa-envelope"></i>
-                </a>
-            </li>
+
             <li class="nav-item avatar dropdown">
                 <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink-55" data-toggle="dropdown"
                    aria-haspopup="true" aria-expanded="false">
                     {% if user.is_authenticated %}
-                        <img src="{{ user.socialaccount_set.all.0.get_avatar_url }}"
-                             class="rounded-circle z-depth-0"
-                             alt="avatar image">{{ user.name }}
-                        <p>{{ user }}
-                        </p>
+                      <button class="btn-floating btn-sm btn-fb d-flex justify-content-center" type="button" role="button">
+                       {{ user|make_list|first|upper }}
+                      </button>
+                      {% else %}
+                      {% trans 'Sign In' %}
                     {% endif %}
                 </a>
                 <div class="dropdown-menu dropdown-menu-lg-right dropdown-secondary"

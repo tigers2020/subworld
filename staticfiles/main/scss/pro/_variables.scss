@@ -103,7 +103,7 @@ $card-reveal-title-i-right:                       .63rem !default;
 $card-share-social-reveal-top:                    $card-btn-action-my !default;
 $card-share-social-reveal-right:                  1.88rem !default;
 $card-share-social-reveal-transition-ease:        ease ;
-$card-share-social-reveal-transition:             transform .35s ease !default;
+$card-share-social-reveal-transition:             transform .35s ease, opacity .35s ease !default;
 
 $panel-cascade-view-color:                        $white !default;
 $panel-cascade-list-group-item-border-bottom:     $grey-lighten-3 !default;

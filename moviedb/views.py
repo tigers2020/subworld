@@ -16,11 +16,12 @@ SWITCHER = {
     'person': models.Person,
     'keyword': models.Keyword,
     'network': models.Network,
-    'tv': models.Tv,
+    'tv': models.TvSeries,
     'tv_season': models.TvSeason,
     'tv_episode': models.TvEpisode,
     'collection': models.Collection
 }
+NO_DATA_ID = 9999999
 
 
 def get_db_from_model(argument):
@@ -36,9 +37,37 @@ def check_db(request):
 
         context['db_type'] = db_type
         context['name'] = db.__name__
-        context['database'] = db.objects.all()
 
     return render(request, 'movie_db/check_db.html', context)
+
+
+def initialize_no_data(request):
+    OBJECTS = [
+        models.Language,
+        models.Country,
+        models.Genre,
+        models.Company,
+        models.Keyword,
+        models.Movie,
+        models.Person,
+        models.Network,
+        models.TvEpisode,
+        models.TvSeason,
+        models.TvSeries,
+        models.Collection,
+    ]
+
+    for objects in OBJECTS:
+
+        obj, created = objects.initialize.update_or_create(id=NO_DATA_ID)
+
+        if created:
+            obj.save()
+            print('{} no data been setup'.format(obj.__class__))
+        else:
+            print('{} no data already setup'.format(obj.__class__))
+
+    return HttpResponse("OK")
 
 
 def init_db(request):
@@ -49,10 +78,10 @@ def init_db(request):
 
         print("initiating db: ", db)
 
-        inited_db = db().initiate_data()
+        inited_db = db.initialize.initialize_data()
 
-        if inited_db.exists() or inited_db.exists() is not None:
-            context['database'] = inited_db.all()
+        if inited_db:
+            context['count'] = db.initialize.count()
             context['success'] = "Initiating complete"
         else:
             context['failed'] = "Initiating Failed"
@@ -70,8 +99,9 @@ class CheckDBLIst(TemplateView, BaseSetMixin):
         for v in SWITCHER:
             db = get_db_from_model(v)
             database.append({
-                'name': db.__name__, 'queryset': db.objects.all().order_by('-id')[:20], 'count': db.objects.count()
-                             })
+                'name': db.__name__, 'queryset': db.initialize.all().order_by('-id')[:20],
+                'count': db.initialize.count()
+            })
 
         context['database'] = database
 
@@ -88,8 +118,8 @@ def ajax_monitor(request):
             db_type = request.GET.get('db_type')
             html = render_to_string('movie_db/monitor_list.html',
                                     {'db_type': db_type,
-                                     'data': get_db_from_model(db_type).objects.order_by('-id').all()[:5].values(),
-                                     'count': get_db_from_model(db_type).objects.count(),
+                                     'data': get_db_from_model(db_type).initialize.order_by('-id').all()[:5].values(),
+                                     'count': get_db_from_model(db_type).initialize.count(),
                                      'tmdb': BaseSetMixin()
                                      })
             return HttpResponse(html)

@@ -8,7 +8,6 @@ from django.http import HttpResponse, JsonResponse
 from django.views import generic
 
 from search import models
-from subtitle.models import TvSeriesDB, MovieDB
 from subworld.Paginator import Paginator
 from subworld.views import BaseSetMixin, create_update_db
 
@@ -124,16 +123,4 @@ def search_data(model, search):
 
 
 def auto_info(request):
-    detail = []
-    if request.is_ajax():
-        tmdb = tmdbsimple
-        tmdb.API_KEY = settings.TMDB_API_KEY
-        db_id = request.GET.get('db_id', 1)
-        if request.GET['type'] == "tv_show":
-            detail = tmdb.TV(id=db_id).info()
-            create_update_db(TvSeriesDB, detail)
-        if request.GET['type'] == "movie":
-            detail = tmdb.Movies(id=db_id).info()
-            create_update_db(MovieDB, detail)
-
-        return JsonResponse(detail)
+    pass

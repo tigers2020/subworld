@@ -4,8 +4,8 @@
 {% block keywords %}
     {% for keyword in keywords %}{% for key in keyword.keywords %}{{ key.name }}, {% endfor %}{% endfor %}
 {% endblock %}
-{% block body %}
-
+{% block content %}
+<div class="container-fluid">
     <section class="carousel" id="popular_header">
         <div class="row">
             <div class="col-4 pr-0">
@@ -13,8 +13,13 @@
                     {% for now in nowplaying %}
                         <a class="list-group-item list-group-item-action {% if forloop.first %}active{% endif %}"
                            id="list_{{ now.id }}_list" data-toggle="list" href="#list_{{ now.id }}"
-                           role="tab" aria-controls="{{ now.title }}">{{ now.title }}<br/>
-                            <small>{{ now.original_title }} </small>
+                           role="tab" aria-controls="{{ now.title }}">
+                          <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-2 h5-responsive">{{ now.title }}</h5>
+                            <small>{{ now.release_date }}</small>
+                          </div>
+                          <p class="mb-2">{{ now.original_title }}</p>
+
                         </a>
                     {% endfor %}
                 </div>
@@ -38,7 +43,6 @@
                                                  data-src="{{ image_base.base_url }}/{{ poster_size.w185 }}{{ now.poster_path }}"
                                                  class="img-fluid z-depth-1 lazy" alt="Post Image">
                                             <div class="mask rgba-white-slight"></div>
-
                                         </div>
                                         <!-- Image -->
                                     </div>
@@ -126,6 +130,7 @@
             </div>
         </div>
     </section>
+  </div>
 {% endblock %}
 
 {% block script %}

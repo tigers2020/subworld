@@ -54,14 +54,12 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
       this.uuid = this.options.nativeID !== null && this.options.nativeID !== '' && this.options.nativeID !== undefined && typeof this.options.nativeID === 'string' ? this.options.nativeID : this._randomUUID();
       this.$selectWrapper = $('<div class="select-wrapper"></div>');
       this.$materialOptionsList = $("<ul id=\"select-options-".concat(this.uuid, "\" class=\"dropdown-content select-dropdown w-100 ").concat(this.isMultiple ? 'multiple-select-dropdown' : '', "\"></ul>"));
-      this.$materialSelectedOption = this.$nativeSelect.find('option:selected');
-      this.$materialSelectInitialOption = this.$nativeSelect.find('option:first').text() || '';
+      this.$materialSelectInitialOption = $nativeSelect.find('option:selected').text() || $nativeSelect.find('option:first').text() || '';
       this.$nativeSelectChildren = this.$nativeSelect.children('option, optgroup');
       this.$materialSelect = $("<input type=\"text\" class=\"".concat(this.options.BSinputText ? 'browser-default custom-select multi-bs-select select-dropdown' : 'select-dropdown', "\" readonly=\"true\" ").concat(this.$nativeSelect.is(' :disabled') ? 'disabled' : '', " data-activates=\"select-options-").concat(this.uuid, "\" value=\"\"/>"));
       this.$dropdownIcon = this.options.BSinputText ? '' : $('<span class="caret">&#9660;</span>');
       this.$searchInput = null;
       this.$toggleAll = $('<li class="select-toggle-all"><span><input type="checkbox" class="form-check-input"><label>Select all</label></span></li>');
-      this.label = this.$nativeSelect.next('label').not('.mdb-main-label');
       this.mainLabel = this.$nativeSelect.next('.mdb-main-label');
       this.valuesSelected = [];
       this.keyCodes = {
@@ -106,18 +104,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
         this.$nativeSelect.data('select-id', this.uuid);
         var sanitizedLabelHtml = this.$materialSelectInitialOption.replace(/"/g, '&quot;').replace(/  +/g, ' ').trim();
-
-        if (this.mainLabel.length === 0) {
-          this.$materialSelect.val(sanitizedLabelHtml);
-        } else {
-          this.mainLabel.text();
-        }
-
-        if (this.$materialSelectedOption.length > 0 && this.$nativeSelect.hasClass('md-selected')) {
-          this.mainLabel.addClass('active');
-          this.$materialSelect.val(this.$materialSelectedOption.text());
-        }
-
+        this.mainLabel.length === 0 ? this.$materialSelect.val(sanitizedLabelHtml) : this.mainLabel.text();
         this.renderMaterialSelect();
         this.bindEvents();
 
@@ -201,8 +188,14 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
             _this.$materialOptionsList.find('li:not(.optgroup):not(.select-toggle-all)').eq(index).find(':checkbox').prop('checked', true);
           });
         } else {
-          var index = this.$nativeSelect.find('option:selected').index();
-          this.$materialOptionsList.find('li').eq(index).addClass('active');
+          var preselectedOption = this.$nativeSelect.find('option[selected]');
+          var index = preselectedOption.index();
+
+          if (preselectedOption.attr('disabled') !== 'disabled' && index >= 0) {
+            this._toggleSelectedValue(index);
+
+            this.$materialOptionsList.find('li').eq(index).addClass('active');
+          }
         }
 
         this.$nativeSelect.addClass('initialized');
@@ -264,7 +257,13 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
     }, {
       key: "appendToggleAllCheckbox",
       value: function appendToggleAllCheckbox() {
-        this.$materialOptionsList.find('li.disabled').first().after(this.$toggleAll);
+        var firstOption = this.$materialOptionsList.find('li').first();
+
+        if (firstOption.hasClass('disabled') && firstOption.find('input').prop('disabled')) {
+          firstOption.after(this.$toggleAll);
+        } else {
+          this.$materialOptionsList.find('li').first().before(this.$toggleAll);
+        }
       }
     }, {
       key: "appendSaveSelectButton",
@@ -362,7 +361,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
         }
 
         if (this.isSearchable) {
-          this.$searchInput.find('.search').on('keyup', this._onSearchInputKeyup);
+          this.$searchInput.find('.search').on('keyup', this._onSearchInputKeyup.bind(this));
         }
 
         $('html').on('click', this._onHTMLClick.bind(this));
@@ -483,7 +482,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
         }
 
         if (!this.isMultiple) {
-          this.mainLabel.addClass('active ');
+          this.mainLabel.addClass('active');
         }
 
         $(document).find('input.select-dropdown').each(function (i, el) {
@@ -495,7 +494,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
     }, {
       key: "_onMaterialSelectClick",
       value: function _onMaterialSelectClick(e) {
-        this.mainLabel.addClass('active ');
+        this.mainLabel.addClass('active');
         e.stopPropagation();
       }
     }, {
@@ -547,15 +546,22 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
         var checkbox = $(this.$toggleAll).find('input[type="checkbox"]').first();
         var state = !$(checkbox).prop('checked');
+        var firstOption = this.$materialOptionsList.find('li').first();
+        var hasDisabledAndSelectedOption = false;
+
+        if (firstOption.hasClass('disabled') && firstOption.find('input').prop('disabled')) {
+          hasDisabledAndSelectedOption = true;
+        }
+
         $(checkbox).prop('checked', state);
         this.$materialOptionsList.find('li:not(.optgroup):not(.disabled):not(.select-toggle-all)').each(function (materialOptionIndex, materialOption) {
           var $optionCheckbox = $(materialOption).find('input[type="checkbox"]');
 
-          if (state && $optionCheckbox.is(':checked') || !state && !$optionCheckbox.is(':checked')) {
+          if (state && $optionCheckbox.is(':checked') || !state && !$optionCheckbox.is(':checked') || $(materialOption).is(':hidden')) {
             return;
           }
 
-          if (_this4._isToggleAllPresent()) {
+          if (hasDisabledAndSelectedOption) {
             materialOptionIndex++;
           }
 
@@ -727,6 +733,8 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
             }
           }
         });
+
+        this._updateToggleAllOption();
       }
     }, {
       key: "_isToggleAllPresent",
@@ -736,7 +744,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
     }, {
       key: "_updateToggleAllOption",
       value: function _updateToggleAllOption() {
-        var $allOptionsButToggleAll = this.$materialOptionsList.find('li').not('.select-toggle-all, .disabled').find('[type=checkbox]');
+        var $allOptionsButToggleAll = this.$materialOptionsList.find('li').not('.select-toggle-all, .disabled, :hidden').find('[type=checkbox]');
         var $checkedOptionsButToggleAll = $allOptionsButToggleAll.filter(':checked');
         var isToggleAllChecked = this.$toggleAll.find('[type=checkbox]').is(':checked');
 

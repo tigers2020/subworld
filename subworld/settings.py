@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
+
 from dotenv import load_dotenv
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -89,11 +90,14 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
 
     'django_tables2',
+    'django_extensions',
 
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
+
     'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.facebook',
 
     'subtitle',
     'search',
@@ -116,6 +120,35 @@ AUTHENTICATION_BACKENDS = (
     "django.contrib.auth.backends.ModelBackend",
     "allauth.account.auth_backends.AuthenticationBackend",
 )
+#
+# SOCIALACCOUNT_PROVIDERS = {
+#     'facebook':
+#         {
+#             'METHOD': 'oauth2',
+#             'SCOPE': ['email', 'public_profile', 'user_friends'],
+#             'AUTH_PARAMS': {'auth_type': 'reauthenticate'},
+#             'FIELDS': [
+#                 'id',
+#                 'email',
+#                 'name',
+#                 'first_name',
+#                 'last_name',
+#                 'verified',
+#                 'locale',
+#                 'timezone',
+#                 'link',
+#                 'gender',
+#                 'updated_time'
+#             ],
+#             'EXCHANGE_TOKEN': True,
+#             'LOCALE_FUNC': lambda request: 'us_EN',
+#             'VERIFIED_EMAIL': False,
+#             'VERSION': 'v2.4'
+#         }
+# }
+
+
+# ACCOUNT_DEFAULT_HTTP_PROTOCOL = "https"
 
 SITE_ID = 1
 ACCOUNT_EMAIL_REQUIRED = True
@@ -143,7 +176,7 @@ ROOT_URLCONF = 'subworld.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')]
+        'DIRS': [os.path.join(BASE_DIR, 'templates'), os.path.join(BASE_DIR, 'templates', 'allauth')]
         ,
         'APP_DIRS': True,
         'OPTIONS': {
