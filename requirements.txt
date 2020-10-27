@@ -17,7 +17,7 @@ Click==7.0
 clint==0.5.1
 colorama==0.4.1
 constantly==15.1.0
-cryptography==2.7
+cryptography==3.2
 daphne==2.3.0
 defusedxml==0.6.0
 diff-match-patch==20181111
